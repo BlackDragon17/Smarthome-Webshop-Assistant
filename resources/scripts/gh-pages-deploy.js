@@ -33,6 +33,11 @@ async function scriptWin() {
     process.exit(exitCode);
 }
 
+async function test() {
+    const {execa} = await import("execa");
+    await print(execa("git", ["update-index", "--refresh"], shell));
+}
+
 async function scriptLinux() {
     const {execa} = await import("execa");
     let exitCode = 0;
@@ -58,7 +63,8 @@ async function scriptLinux() {
 }
 
 if (os === "Windows_NT") {
-    scriptWin();
+    test();
+    //scriptWin();
 } else if (os === "Linux") {
     scriptLinux();
 } else {
