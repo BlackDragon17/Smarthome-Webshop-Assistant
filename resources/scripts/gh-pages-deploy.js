@@ -20,7 +20,7 @@ async function scriptWin() {
         } catch (e) {}
         const { stdout } = await execa("git", ["diff-index", "HEAD"], shell);
         if (stdout) {
-            console.log("Stashing changes...");
+            console.log("Stashing changes...\n");
             stashed = true;
             await execa("git", ["stash"], shell);
         }
@@ -28,7 +28,7 @@ async function scriptWin() {
         console.log("Building...");
         await print(execa("npm", ["run", "build"]));
 
-        console.log("Pushing...");
+        console.log("\nPushing...");
         await print(execa("git", ["checkout", "--orphan", "gh-pages"], shell));
         await print(execa("git", ["--work-tree", "dist", "add", "--all"], shell));
         await print(execa("git", ["--work-tree", "dist", "commit", "-m", "Deploy"], shell));
