@@ -12,7 +12,19 @@ async function print(promise) {
 async function scriptWin() {
     const {execa} = await import("execa");
     let exitCode = 0;
+    let stashed = false;
     try {
+        // Check for uncommitted changes
+        try {
+            await execa("git", ["update-index", "--refresh"], shell);
+        } catch (e) {}
+        const { stdout } = await execa("git", ["diff-index", "HEAD"], shell);
+        if (stdout) {
+            console.log("Stashing changes...");
+            stashed = true;
+            await execa("git", ["stash"], shell);
+        }
+
         console.log("Building...");
         await print(execa("npm", ["run", "build"]));
 
@@ -29,22 +41,14 @@ async function scriptWin() {
     } finally {
         await execa("git", ["checkout", "-f", "main"], shell);
         await execa("git", ["branch", "-D", "gh-pages"], shell);
+        if(stashed) {
+            await execa("git", ["stash", "pop"], shell);
+        }
     }
     process.exit(exitCode);
 }
 
-async function test() {
-    const {execa} = await import("execa");
-    try {
-        await execa("git", ["update-index", "--refresh"], shell);
-    } catch (e) {}
-    const { stdout } = await execa("git", ["diff-index", "HEAD"], shell);
-    console.log("res:", stdout ? true : false);
-    //const {stdout} = await execa("git", ["update-index", "--refresh"], shell);
-    // const aa = await execa("git", ["status"], shell);
-    // console.log(aa);
-}
-
+// Version for GitHub Actions
 async function scriptLinux() {
     const {execa} = await import("execa");
     let exitCode = 0;
@@ -70,8 +74,7 @@ async function scriptLinux() {
 }
 
 if (os === "Windows_NT") {
-    test();
-    //scriptWin();
+    scriptWin();
 } else if (os === "Linux") {
     scriptLinux();
 } else {
