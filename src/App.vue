@@ -1,6 +1,6 @@
 <template>
     <header>
-        <nav class="header">
+        <nav class="header" ref="header">
             <a href="#" class="logo">SH<span>WA</span></a>
             <ul class="header-nav">
                 <li><a href="#">Home Setup</a></li>
@@ -9,7 +9,7 @@
         </nav>
     </header>
 
-    <main id="app" class="app">
+    <main class="app" ref="app">
         <section class="sidebar">
             <button style="margin: 0 1rem" @click="test">Test</button>
             <button class="add-device" @click="">Add new device</button>
@@ -59,15 +59,11 @@
 <script>
 import allProducts from "../resources/products/packed/PackedJSONs.json";
 
-
 const exampleGuid = "93d3b750-8a1a-4b85-8d32-11f35b03815a"
 
 export default {
     data() {
         return {
-            // allProducts: {},
-            // allProductsLoaded: false,
-
             sortByRoom: false,
 
             // Example Home Setup (these could later be written to ´localStorage´)
@@ -142,22 +138,13 @@ export default {
             console.log("sortByRoom:", this.sortByRoom);
             return first;
         }
-
-        // async fetchAllProducts() {
-        //     const products = await fetch(allProductsJson).then(res => res.json());
-        //     for (const product of products.data) {
-        //         allProducts[product.guid] = product;
-        //     }
-        //     console.log("fetched");
-        // },
     },
 
-    // created() {
-    //     this.fetchAllProducts().then(() => this.allProductsLoaded = true, function (err) {
-    //         alert("Loading failed! Trying again...\nError: " + err);
-    //         location.reload();
-    //     });
-    // }
+    mounted() {
+        // Set the height of the Main content to 100vh - headerHeight
+        const headerHeight = this.$refs.header.offsetHeight;
+        this.$refs.app.style.height = `calc(100vh - ${headerHeight}px)`;
+    }
 };
 </script>
 
