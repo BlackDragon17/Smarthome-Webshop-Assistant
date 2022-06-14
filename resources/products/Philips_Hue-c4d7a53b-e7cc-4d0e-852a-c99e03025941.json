@@ -1,0 +1,25 @@
+{
+  "guid": "c4d7a53b-e7cc-4d0e-852a-c99e03025941",
+  "brand": "Philips Hue",
+  "model": "White and Color Ambience",
+  "generation": "N/A",
+  "revision": 2022,
+  "type": "light",
+  "subtype": "bulb",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ],
+    "bluetooth": []
+  },
+  "control": [
+    "brandApp",
+    "alexa",
+    "googleAssistant"
+  ],
+  "lumen": "1100",
+  "varLumen": true,
+  "varKelvin": true,
+  "multicolor": true,
+  "socket": "E27"
+}

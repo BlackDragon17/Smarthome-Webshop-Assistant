@@ -1,0 +1,25 @@
+{
+  "guid": "1721ac8c-747c-4201-bf89-3752c5506168",
+  "brand": "LIFX",
+  "model": "Candle White to Warm E14",
+  "generation": "N/A",
+  "revision": 2020,
+  "type": "light",
+  "subtype": "candle ",
+  "network": {
+    "wifi": [
+      "2.4GHz"
+    ]
+  },
+  "control": [
+    "brandApp",
+    "alexa",
+    "googleAssistant",
+    "homeKit"
+  ],
+  "lumen": 480,
+  "varLumen": true,
+  "varKelvin": true,
+  "multicolor": false,
+  "socket": "E27"
+}

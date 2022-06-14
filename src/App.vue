@@ -59,10 +59,11 @@
 </template>
 
 <script>
+import allProductsJson from "../resources/products/packed/PackedJSONs.json";
+
 export default {
     data() {
         return {
-            allProductsLocation: "./resources/products/packed/PackedJSONs.json",
             allProducts: {},
             allProductsLoaded: false,
 
@@ -126,7 +127,7 @@ export default {
 
     methods: {
         async fetchAllProducts() {
-            const products = await fetch(this.allProductsLocation).then(res => res.json());
+            const products = await fetch(allProductsJson).then(res => res.json());
             for (const product of products.data) {
                 this.allProducts[product.guid] = product;
             }

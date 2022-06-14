@@ -1,0 +1,26 @@
+{
+  "guid": "d0650af1-1786-4c93-8078-32ee23d1683b",
+  "brand": "Philips Hue",
+  "model": "Bridge",
+  "generation": 2,
+  "revision": "N/A",
+  "type": "hub",
+  "subtype": "proprietary",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ],
+    "bluetooth": [],
+    "wifi": [
+      "2.4GHz"
+    ]
+  },
+  "control": [
+    "brandApp",
+    "alexa",
+    "googleAssistant",
+    "homeKit",
+    "cortana"
+  ],
+  "expandable": false
+}
