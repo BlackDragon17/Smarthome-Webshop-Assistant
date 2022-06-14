@@ -31,9 +31,7 @@
             </div>
 
 
-            <div class="products-list-loading" v-if="!allProductsLoaded">Loading</div>
-
-            <div class="products-list" v-else-if="!sortByRoom">
+            <div class="products-list" v-if="!sortByRoom">
                 <div v-for="type in Object.keys(productsByType).sort()">
                     {{ type }}
                     <div class="box" v-for="product in productsByType[type]">
@@ -59,13 +57,16 @@
 </template>
 
 <script>
-import allProductsJson from "../resources/products/packed/PackedJSONs.json";
+import allProducts from "../resources/products/packed/PackedJSONs.json";
+
+
+const exampleGuid = "93d3b750-8a1a-4b85-8d32-11f35b03815a"
 
 export default {
     data() {
         return {
-            allProducts: {},
-            allProductsLoaded: false,
+            // allProducts: {},
+            // allProductsLoaded: false,
 
             sortByRoom: false,
 
@@ -102,11 +103,11 @@ export default {
         productsByType() {
             const byType = {};
             for (const product of this.exampleSetup.products) {
-                const type = this.capitalize(this.allProducts[product.guid].type) + "s";
+                const type = this.capitalize(allProducts.data[product.guid].type) + "s";
                 if (byType[type]) {
-                    byType[type].push(this.allProducts[product.guid]);
+                    byType[type].push(allProducts.data[product.guid]);
                 } else {
-                    byType[type] = [this.allProducts[product.guid]];
+                    byType[type] = [allProducts.data[product.guid]];
                 }
             }
             return byType;
@@ -116,9 +117,9 @@ export default {
             for (const i in this.exampleSetup.products) {
                 const room = this.exampleSetup.products[i].room;
                 if (byRoom[room]) {
-                    byRoom[room].push(this.allProducts[this.exampleSetup.products[i].guid]);
+                    byRoom[room].push(allProducts.data[this.exampleSetup.products[i].guid]);
                 } else {
-                    byRoom[room] = [this.allProducts[this.exampleSetup.products[i].guid]];
+                    byRoom[room] = [allProducts.data[this.exampleSetup.products[i].guid]];
                 }
             }
             return byRoom;
@@ -126,37 +127,37 @@ export default {
     },
 
     methods: {
-        async fetchAllProducts() {
-            const products = await fetch(allProductsJson).then(res => res.json());
-            for (const product of products.data) {
-                this.allProducts[product.guid] = product;
-            }
-            console.log("fetched");
-        },
-
         capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         },
 
         test() {
-            const first = this.allProducts;
+            const first = allProducts.data;
             console.log("read:", first);
-            console.log("keys:", Object.keys(this.allProducts));
-            console.log("type:", this.allProducts[exampleGuid].type);
+            console.log("keys:", Object.keys(allProducts.data));
+            console.log("type:", allProducts.data[exampleGuid].type);
             console.log("byType:", this.productsByType);
             console.log("byTypeKeys:", Object.keys(this.productsByType));
             console.log("byRoomKeys:", Object.keys(this.productsByRoom))
             console.log("sortByRoom:", this.sortByRoom);
             return first;
         }
+
+        // async fetchAllProducts() {
+        //     const products = await fetch(allProductsJson).then(res => res.json());
+        //     for (const product of products.data) {
+        //         allProducts[product.guid] = product;
+        //     }
+        //     console.log("fetched");
+        // },
     },
 
-    created() {
-        this.fetchAllProducts().then(() => this.allProductsLoaded = true, function (err) {
-            alert("Loading failed! Trying again...\nError: " + err);
-            location.reload();
-        });
-    }
+    // created() {
+    //     this.fetchAllProducts().then(() => this.allProductsLoaded = true, function (err) {
+    //         alert("Loading failed! Trying again...\nError: " + err);
+    //         location.reload();
+    //     });
+    // }
 };
 </script>
 
