@@ -1,0 +1,115 @@
+/* Override and set default styles */
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Ubuntu, "Open Sans", sans-serif;
+    line-height: 1.4;
+}
+
+ul, ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Navigation Bar */
+
+header {
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #777;
+    position: sticky;
+    top: 0;
+}
+
+/* Outer flex box to align navbar with logo */
+.header {
+    margin: 0 5vw;
+    padding: 0.3rem;
+    /* max-width: 1800px; */
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 1100px) {
+    .header {
+        margin: 0 auto;
+        max-width: 990px;
+    }
+}
+
+.header a {
+    display: block;
+    text-decoration: none;
+    color: #111;
+}
+
+.logo {
+    /* border: 1px solid darkred; */
+    padding: 0.2rem 1rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.logo :first-child {
+    color: #1A73E8;
+}
+
+/* Inner flex box to align nav items */
+.header-nav {
+    /* border: 1px solid darkgreen; */
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.header-nav > li {
+    /* border: 1px solid darkred; */
+}
+
+.header-nav > li > a {
+    padding: 0.5rem;
+    color: #222;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+
+/* Main Content */
+main.app {
+
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    background-color: #F8F8F8;
+    width: 340px;
+    height: 100%;
+    padding: 0.5rem;
+}
+
+.sidebar > .add-device {
+    margin: 1rem 0;
+}
+
+.sidebar > .products-list {
+    margin: 1rem 0;
+    border: 1px solid darkgoldenrod;
+}
+
+
+/* Temp stuff */
+.box {
+    height: 100px;
+    margin: 10px;
+    background-color: lightgray;
+    border: 1px solid darkgray;
+}
