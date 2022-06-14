@@ -35,7 +35,14 @@ async function scriptWin() {
 
 async function test() {
     const {execa} = await import("execa");
-    await print(execa("git", ["update-index", "--refresh"], shell));
+    try {
+        await execa("git", ["update-index", "--refresh"], shell);
+    } catch (e) {}
+    const { stdout } = await execa("git", ["diff-index", "HEAD"], shell);
+    console.log("res:", stdout ? true : false);
+    //const {stdout} = await execa("git", ["update-index", "--refresh"], shell);
+    // const aa = await execa("git", ["status"], shell);
+    // console.log(aa);
 }
 
 async function scriptLinux() {
