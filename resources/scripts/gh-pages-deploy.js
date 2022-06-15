@@ -14,32 +14,32 @@ async function scriptWin() {
     let exitCode = 0;
     let stashed = false;
     try {
+        console.log("Building...\n");
+        await print(execa("npm", ["run", "build"]));
+
         // Check for uncommitted changes
         try {
             await execa("git", ["update-index", "--refresh"], shell);
         } catch (e) {}
         const mainDiff = await execa("git", ["diff-index", "HEAD"], shell);
         if (mainDiff.stdout) {
-            console.log("Stashing changes...\n");
+            console.log("\nStashing changes on main...");
             stashed = true;
             await execa("git", ["stash"], shell);
         }
 
-        console.log("Building...");
-        await print(execa("npm", ["run", "build"]));
-
-        console.log("\nChecking for changes...")
+        console.log("\nChecking for changes on gh-pages...\n")
         await print(execa("git", ["checkout", "gh-pages"], shell));
         await execa("git", ["--work-tree", "dist", "rm", "--cached", "-r", "."], shell);
         await execa("git", ["--work-tree", "dist", "add", "--all"], shell);
-        const pagesDiff = await execa("git", ["diff-index", "HEAD"], shell);
+        const pagesDiff = await execa("git", ["--work-tree", "dist", "diff-index", "HEAD"], shell);
         if (pagesDiff.stdout) {
             console.log("\nPushing...");
             await print(execa("git", ["--work-tree", "dist", "commit", "-m", "Deploy"], shell));
             await print(execa("git", ["push"], shell));
-            console.log("Successfully deployed");
+            console.log("Successfully deployed!\n");
         } else {
-            console.log("\nNo changes found!");
+            console.log("\nNo changes found!\n");
         }
     } catch (e) {
         console.error(e);
@@ -58,22 +58,27 @@ async function scriptLinux() {
     const {execa} = await import("execa");
     let exitCode = 0;
     try {
-        console.log("Building...");
+        console.log("Building...\n");
         await print(execa("npm", ["run", "build"]));
 
-        console.log("Pushing...");
-        await print(execa("git", ["checkout", "--orphan", "gh-pages"]));
-        await print(execa("git", ["--work-tree", "dist", "add", "--all"]));
-        await print(execa("git", ["--work-tree", "dist", "commit", "-m", "Deploy"]));
-        await print(execa("git", ["push", "origin", "HEAD:gh-pages", "--force"]));
-
-        console.log("Successfully deployed");
+        console.log("\nChecking for changes on gh-pages...\n")
+        await print(execa("git", ["checkout", "gh-pages"]));
+        await execa("git", ["--work-tree", "dist", "rm", "--cached", "-r", "."]);
+        await execa("git", ["--work-tree", "dist", "add", "--all"]);
+        const pagesDiff = await execa("git", ["--work-tree", "dist", "diff-index", "HEAD"]);
+        if (pagesDiff.stdout) {
+            console.log("\nPushing...");
+            await print(execa("git", ["--work-tree", "dist", "commit", "-m", "Deploy"]));
+            await print(execa("git", ["push"]));
+            console.log("Successfully deployed!\n");
+        } else {
+            console.log("\nNo changes found!\n");
+        }
     } catch (e) {
         console.error(e);
         exitCode = 1;
     } finally {
-        await execa("git", ["checkout", "-f", "main"]);
-        await execa("git", ["branch", "-D", "gh-pages"]);
+        await print(execa("git", ["checkout", "-f", "main"]));
     }
     process.exit(exitCode);
 }

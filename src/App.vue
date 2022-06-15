@@ -140,6 +140,7 @@ export default {
         }
     },
 
+    //TODO: fix too much height
     mounted() {
         // Set the height of the Main content to 100vh - headerHeight
         const headerHeight = this.$refs.header.offsetHeight;
