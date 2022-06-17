@@ -1,26 +1,30 @@
-/* Override and set default styles */
+<template>
+    <header>
+        <nav class="header" ref="header">
+            <a href="#" class="logo" @click="headerAction('logo')">SH<span>WA</span></a>
+            <ul class="header-nav">
+                <li><a href="#" @click="headerAction('setup')">Home Setup</a></li>
+                <li><a href="#" @click="headerAction('database')">Product Database</a></li>
+            </ul>
+        </nav>
+    </header>
+</template>
 
-*, ::after, ::before {
-    box-sizing: border-box;
+<script>
+export default {
+    name: "NavHeader",
+
+    emits: ["header-click"],
+
+    methods: {
+        headerAction(target) {
+            this.$emit("header-click", target);
+        }
+    }
 }
+</script>
 
-body {
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    font-family: "Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Ubuntu, "Open Sans", sans-serif;
-    line-height: 1.4;
-}
-
-ul, ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-
-/* Navigation Bar */
-
+<style scoped>
 header {
     background-color: #FAFAFA;
     border-bottom: 1px solid #777;
@@ -79,37 +83,4 @@ header {
     font-size: 1.3rem;
     font-weight: 600;
 }
-
-
-/* Main Content */
-main.app {
-
-}
-
-
-/* Sidebar */
-
-.sidebar {
-    background-color: #F8F8F8;
-    width: 340px;
-    height: 100%;
-    padding: 0.5rem;
-}
-
-.sidebar > .add-device {
-    margin: 1rem 0;
-}
-
-.sidebar > .products-list {
-    margin: 1rem 0;
-    border: 1px solid darkgoldenrod;
-}
-
-
-/* Temp stuff */
-.box {
-    height: 100px;
-    margin: 10px;
-    background-color: lightgray;
-    border: 1px solid darkgray;
-}
+</style>
