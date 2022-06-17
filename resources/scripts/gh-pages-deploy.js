@@ -30,7 +30,7 @@ async function scriptWin() {
     const pagesDiff = await execa("git", ["diff-index", "HEAD"], winGitDist);
     if (pagesDiff.stdout) {
         console.log("\nPushing...");
-        await print(execa("git", ["commit", "-m", '"Manual deploy"'], winGitDist));
+        await print(execa("git", ["commit", "-m", '"Manual deployment"'], winGitDist));
         await print(execa("git", ["push"], winGitDist));
         console.log("Successfully deployed!\n");
     } else {
@@ -49,7 +49,7 @@ async function scriptLinux() {
     await execa("git", ["worktree", "prune"]);
     await print(execa("git", ["worktree", "add", "dist", "gh-pages"]));
 
-    console.log("\nBuilding...\n");
+    console.log("\nBuilding...");
     await print(execa("npm", ["run", "build"]));
 
     console.log("\nChecking for changes...");
@@ -58,7 +58,7 @@ async function scriptLinux() {
     const pagesDiff = await execa("git", ["diff-index", "HEAD"], dist);
     if (pagesDiff.stdout) {
         console.log("\nPushing...");
-        await print(execa("git", ["commit", "-m", 'Automatic deploy'], dist));
+        await print(execa("git", ["commit", "-m", 'Automatic deployment'], dist));
         await print(execa("git", ["push"], dist));
         console.log("Successfully deployed!\n");
     } else {
