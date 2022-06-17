@@ -1,4 +1,4 @@
-name: Deploy to github pages
+name: Deploy to GitHub Pages
 on:
   push:
     branches:
@@ -8,12 +8,12 @@ jobs:
     name: Deploying to gh-pages
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Node.js for use with actions
+      - name: Setup Node.js (LTS)
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
 
-      - name: Checkout branch
+      - name: Setup repository (all branches)
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
