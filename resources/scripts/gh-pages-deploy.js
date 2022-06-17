@@ -19,6 +19,10 @@ async function scriptWin() {
     } catch (e) {
     }
     await execa("git", ["worktree", "prune"], winGit);
+    try {
+        await execa("git", ["branch", "-d", "gh-pages"], winGit);
+    } catch (e) {
+    }
     await print(execa("git", ["worktree", "add", "dist", "gh-pages"], winGit));
 
     console.log("\nBuilding...\n");

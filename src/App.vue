@@ -143,8 +143,8 @@ export default {
     //TODO: fix too much height
     mounted() {
         // Set the height of the Main content to 100vh - headerHeight
-        const headerHeight = this.$refs.header.offsetHeight;
-        this.$refs.app.style.height = `calc(100vh - ${headerHeight}px)`;
+        let headerHeight = this.$refs.header.offsetHeight;
+        this.$refs.app.style.height = `calc(100vh - ${++headerHeight}px)`;
     }
 };
 </script>
