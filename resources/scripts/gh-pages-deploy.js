@@ -58,7 +58,7 @@ async function scriptLinux() {
     const pagesDiff = await execa("git", ["diff-index", "HEAD"], dist);
     if (pagesDiff.stdout) {
         console.log("\nPushing...");
-        await print(execa("git", ["commit", "-m", '"Manual deploy"'], dist));
+        await print(execa("git", ["commit", "-m", '"Automatic deploy"'], dist));
         await print(execa("git", ["push"], dist));
         console.log("Successfully deployed!\n");
     } else {
