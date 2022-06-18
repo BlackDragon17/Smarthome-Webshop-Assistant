@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import { Modal } from "bootstrap";
+
 export default {
     name: "HomeSidebar",
 
@@ -66,7 +68,7 @@ export default {
         },
 
         addNewDevice() {
-            new bootstrap.Modal("#exampleModal");
+            new Modal("#exampleModal").show();
         }
     }
 };
