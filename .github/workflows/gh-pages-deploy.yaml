@@ -10,7 +10,7 @@ jobs:
       - name: Setup Node.js (LTS)
         uses: actions/setup-node@v3
         with:
-          node-version: lts/*
+          node-version: 16
 
       - name: Setup repository (all branches)
         uses: actions/checkout@v3
