@@ -1,5 +1,5 @@
 <template>
-    <section class="sidebar">
+    <aside class="sidebar">
         <button style="margin: 0 1rem" @click="test">Test</button>
         <button class="add-device" @click="">Add new device</button>
         <br>
@@ -37,53 +37,14 @@
                 </div>
             </div>
         </div>
-    </section>
-
-    <section class="room-view">
-
-    </section>
+    </aside>
 </template>
 
 <script>
-import { capitalize } from "vue";
-
 export default {
-    name: "HomeSetup",
+    name: "HomeSidebar",
 
-    data() {
-        return {
-            sortByRoom: false,
-        };
-    },
-
-    props: ["allProducts", "exampleSetup"],
-
-    computed: {
-        productsByType() {
-            const byType = {};
-            for (const product of this.exampleSetup.products) {
-                const type = capitalize(this.allProducts.data[product.guid].type) + "s";
-                if (byType[type]) {
-                    byType[type].push(this.allProducts.data[product.guid]);
-                } else {
-                    byType[type] = [this.allProducts.data[product.guid]];
-                }
-            }
-            return byType;
-        },
-        productsByRoom() {
-            const byRoom = {};
-            for (const i in this.exampleSetup.products) {
-                const room = this.exampleSetup.products[i].room;
-                if (byRoom[room]) {
-                    byRoom[room].push(this.allProducts.data[this.exampleSetup.products[i].guid]);
-                } else {
-                    byRoom[room] = [this.allProducts.data[this.exampleSetup.products[i].guid]];
-                }
-            }
-            return byRoom;
-        }
-    },
+    props: ["allProducts", "exampleSetup", "sortByRoom", "productsByType", "productsByRoom"],
 
     methods: {
         test() {
@@ -99,15 +60,7 @@ export default {
 }
 </script>
 
-<style scoped>
-/* Main Content */
-main.app {
-
-}
-
-
-/* Sidebar */
-
+<style>
 .sidebar {
     background-color: #F8F8F8;
     width: 340px;
