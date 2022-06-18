@@ -49,9 +49,7 @@ export default {
     name: "HomeSidebar",
 
     data() {
-        return {
-
-        };
+        return {};
     },
 
     props: ["allProducts", "exampleSetup", "sortByRoom", "productsByType", "productsByRoom"],
@@ -63,7 +61,7 @@ export default {
             console.log("keys:", Object.keys(this.allProducts.data));
             console.log("byType:", this.productsByType);
             console.log("byTypeKeys:", Object.keys(this.productsByType));
-            console.log("byRoomKeys:", Object.keys(this.productsByRoom))
+            console.log("byRoomKeys:", Object.keys(this.productsByRoom));
             console.log("sortByRoom:", this.sortByRoom);
         },
 
@@ -71,7 +69,7 @@ export default {
             new bootstrap.Modal(document.getElementById("#exampleModal"));
         }
     }
-}
+};
 </script>
 
 <style>

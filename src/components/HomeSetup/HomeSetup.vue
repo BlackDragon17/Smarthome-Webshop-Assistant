@@ -20,7 +20,7 @@ export default {
 
     data() {
         return {
-            sortByRoom: false,
+            sortByRoom: false
         };
     },
 
@@ -51,8 +51,8 @@ export default {
             }
             return byRoom;
         }
-    },
-}
+    }
+};
 </script>
 
 <style scoped>

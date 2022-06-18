@@ -21,7 +21,7 @@ export default {
             this.$emit("header-click", target);
         }
     }
-}
+};
 </script>
 
 <style scoped>

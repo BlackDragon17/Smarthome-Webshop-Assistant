@@ -1,13 +1,22 @@
 const os = require("node:os").type();
+const fs = require("fs");
+
 const dist = {cwd: "./dist"};
 const winGit = {shell: "C:/Program Files/Git/bin/bash.exe"};
 const winGitDist = {...winGit, ...dist};
+const bootstrapPath = "./node_modules/bootstrap/dist/css/bootstrap.css";
 
 async function print(promise) {
     return promise.then(res => {
         console.log(res.stderr);
         console.log(res.stdout);
     }, console.log);
+}
+
+function removeBsCssMap() {
+    const data = fs.readFileSync(bootstrapPath, "utf-8");
+    const newData = data.replace("\n/*# sourceMappingURL=bootstrap.css.map */", "");
+    fs.writeFileSync(bootstrapPath, newData, "utf-8");
 }
 
 // Inspired by https://dev.to/the_one/deploy-to-github-pages-like-a-pro-with-github-actions-4hdg
@@ -70,6 +79,7 @@ async function scriptLinux() {
     }
 }
 
+removeBsCssMap();
 if (os === "Windows_NT") {
     scriptWin();
 } else if (os === "Linux") {

@@ -22,8 +22,8 @@
 
 <script>
 export default {
-    name: "AddDeviceModal",
-}
+    name: "AddDeviceModal"
+};
 </script>
 
 <style scoped>
