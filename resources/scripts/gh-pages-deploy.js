@@ -4,7 +4,8 @@ const fs = require("fs");
 const dist = {cwd: "./dist"};
 const winGit = {shell: "C:/Program Files/Git/bin/bash.exe"};
 const winGitDist = {...winGit, ...dist};
-const bootstrapPath = "./node_modules/bootstrap/dist/css/bootstrap.css";
+const bootstrapPath1 = "./node_modules/bootstrap/dist/css/bootstrap.css";
+const bootstrapPath2 = "./node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 async function print(promise) {
     return promise.then(res => {
@@ -13,10 +14,15 @@ async function print(promise) {
     }, console.log);
 }
 
+// Bootstrap CSS references a dev "map" file which isn't shipped or needed in prod.
 function removeBsCssMap() {
-    const data = fs.readFileSync(bootstrapPath, "utf-8");
-    const newData = data.replace("\n/*# sourceMappingURL=bootstrap.css.map */", "");
-    fs.writeFileSync(bootstrapPath, newData, "utf-8");
+    const data1 = fs.readFileSync(bootstrapPath1, "utf-8");
+    const newData1 = data1.replace("\n/*# sourceMappingURL=bootstrap.css.map */", "");
+    fs.writeFileSync(bootstrapPath1, newData1, "utf-8");
+
+    const data2 = fs.readFileSync(bootstrapPath2, "utf-8");
+    const newData2 = data2.replace("\n/*# sourceMappingURL=bootstrap.min.css.map */", "");
+    fs.writeFileSync(bootstrapPath2, newData2, "utf-8");
 }
 
 // Inspired by https://dev.to/the_one/deploy-to-github-pages-like-a-pro-with-github-actions-4hdg

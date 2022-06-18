@@ -66,7 +66,7 @@ export default {
         },
 
         addNewDevice() {
-            new bootstrap.Modal(document.getElementById("#exampleModal"));
+            new bootstrap.Modal("#exampleModal");
         }
     }
 };
