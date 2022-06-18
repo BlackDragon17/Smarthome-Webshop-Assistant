@@ -1,7 +1,7 @@
 <template>
     <NavHeader ref="header" @header-click="headerAction"/>
 
-    <main class="app" ref="app">
+    <main ref="app">
         <HomeSetup :all-products="allProducts" :example-setup="exampleSetup"/>
     </main>
 </template>
@@ -53,7 +53,7 @@ export default {
     mounted() {
         // Set the height of the Main content to 100vh - headerHeight
         let headerHeight = this.$refs.header.$el.offsetHeight;
-        this.$refs.app.style.height = `calc(100vh - ${++headerHeight}px)`;
+        this.$refs.app.style.height = `calc(100vh - ${headerHeight}px)`;
     }
 };
 </script>

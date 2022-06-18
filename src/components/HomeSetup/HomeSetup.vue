@@ -1,13 +1,15 @@
 <template>
-    <HomeSidebar :all-products="allProducts"
-                 :example-setup="exampleSetup"
-                 :sort-by-room="sortByRoom"
-                 :products-by-type="productsByType"
-                 :products-by-room="productsByRoom"/>
+    <div class="main">
+        <HomeSidebar :all-products="allProducts"
+                     :example-setup="exampleSetup"
+                     :sort-by-room="sortByRoom"
+                     :products-by-type="productsByType"
+                     :products-by-room="productsByRoom"/>
 
-    <section class="room-view">
-        <div class="box" style="width: 300px">Put me in the middle mate</div>
-    </section>
+        <section class="room-view">
+            <div class="box" style="width: 300px">Put me in the middle mate</div>
+        </section>
+    </div>
 </template>
 
 <script>
@@ -54,8 +56,22 @@ export default {
 </script>
 
 <style scoped>
-/* Main Content */
-main.app {
+.main {
+    height: 100%;
 
+    display: flex;
+    flex-direction: row;
+}
+
+.main > * {
+    border: 1px solid darkred;
+}
+
+.sidebar {
+    flex-shrink: 0;
+}
+
+.room-view {
+    flex-grow: 1;
 }
 </style>
