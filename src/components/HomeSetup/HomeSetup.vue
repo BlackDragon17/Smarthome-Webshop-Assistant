@@ -6,9 +6,7 @@
                      :products-by-type="productsByType"
                      :products-by-room="productsByRoom"/>
 
-        <section class="room-view">
-            <div class="box" style="width: 300px">Put me in the middle mate</div>
-        </section>
+        <HomeRoomView/>
     </div>
 </template>
 
@@ -52,10 +50,6 @@ export default {
             return byRoom;
         },
 
-        notOwnedProducts() {
-
-        },
-
         homeSetupBorder() {
             return import.meta.env.PROD ? "none" : "1px solid darkred";
         }
@@ -81,5 +75,13 @@ export default {
 
 .room-view {
     flex-grow: 1;
+}
+
+/* Temp stuff */
+:deep(.box) {
+    height: 100px;
+    margin: 10px;
+    background-color: lightgray;
+    border: 1px solid darkgray;
 }
 </style>

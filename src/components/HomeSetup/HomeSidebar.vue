@@ -3,6 +3,9 @@
         <AddDeviceModal/>
         <button class="add-device" @click="addNewDevice">Add new device</button>
 
+        <AddRoomModal/>
+        <button class="add-room" @click="addNewRoom">Add new room</button>
+
         <button @click="test">Test</button>
 
         <div class="sort-button-group">
@@ -48,7 +51,9 @@ export default {
     name: "HomeSidebar",
 
     data() {
-        return {};
+        return {
+
+        };
     },
 
     props: ["allProducts", "exampleSetup", "sortByRoom", "productsByType", "productsByRoom"],
@@ -72,12 +77,16 @@ export default {
 
         addNewDevice() {
             new Modal("#addDeviceModal").show();
+        },
+
+        addNewRoom() {
+            new Modal("#addRoomModal").show();
         }
     }
 };
 </script>
 
-<style>
+<style scoped>
 .sidebar {
     width: 340px;
     height: 100%;
@@ -99,12 +108,8 @@ export default {
     overflow: auto;
 }
 
-
-/* Temp stuff */
-.box {
-    height: 100px;
-    margin: 10px;
-    background-color: lightgray;
-    border: 1px solid darkgray;
+/* Modal fix */
+.no-margin {
+    margin: 0;
 }
 </style>
