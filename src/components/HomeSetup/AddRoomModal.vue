@@ -8,7 +8,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Add Input here
+                        <form @submit.prevent>
+                            <label for="room-input">Room name: </label>
+                            <input type="text" id="room-input">
+                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -26,4 +29,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#room-input {
+    margin: 0.6rem 2rem;
+}
+</style>
