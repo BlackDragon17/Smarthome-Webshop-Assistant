@@ -50,6 +50,14 @@ export default {
                 }
             }
             return byRoom;
+        },
+
+        notOwnedProducts() {
+
+        },
+
+        homeSetupBorder() {
+            return import.meta.env.PROD ? "none" : "1px solid darkred";
         }
     }
 };
@@ -64,7 +72,7 @@ export default {
 }
 
 .main > * {
-    border: 1px solid darkred;
+    border: v-bind(homeSetupBorder);
 }
 
 .sidebar {

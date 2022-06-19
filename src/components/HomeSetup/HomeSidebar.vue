@@ -1,9 +1,6 @@
 <template>
     <aside class="sidebar">
         <AddDeviceModal/>
-        <button data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Launch demo modal
-        </button>
         <button class="add-device" @click="addNewDevice">Add new device</button>
 
         <button @click="test">Test</button>
@@ -56,6 +53,12 @@ export default {
 
     props: ["allProducts", "exampleSetup", "sortByRoom", "productsByType", "productsByRoom"],
 
+    computed: {
+        productsListBorder() {
+            return import.meta.env.PROD ? "none" : "1px solid darkgoldenrod";
+        }
+    },
+
     methods: {
         test() {
             const first = this.allProducts.data;
@@ -68,7 +71,7 @@ export default {
         },
 
         addNewDevice() {
-            new Modal("#exampleModal").show();
+            new Modal("#addDeviceModal").show();
         }
     }
 };
@@ -92,7 +95,7 @@ export default {
 }
 
 .sidebar > .products-list {
-    border: 1px solid darkgoldenrod;
+    border: v-bind(productsListBorder);
     overflow: auto;
 }
 
