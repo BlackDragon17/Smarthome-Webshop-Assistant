@@ -6,7 +6,7 @@
                      :products-by-type="productsByType"
                      :products-by-room="productsByRoom"/>
 
-        <HomeRoomView/>
+        <HomeRoomView :example-setup="exampleSetup"/>
     </div>
 </template>
 

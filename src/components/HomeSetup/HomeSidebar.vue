@@ -6,7 +6,7 @@
         <AddRoomModal/>
         <button class="add-room" @click="addNewRoom">Add new room</button>
 
-        <button @click="test">Test</button>
+        <button @click="printDebugInfo">Print debug info</button>
 
         <div class="sort-button-group">
             <button @click="sortByRoom = !sortByRoom">Switch sort</button>
@@ -65,7 +65,7 @@ export default {
     },
 
     methods: {
-        test() {
+        printDebugInfo() {
             const first = this.allProducts.data;
             console.log("read:", first);
             console.log("keys:", Object.keys(this.allProducts.data));
