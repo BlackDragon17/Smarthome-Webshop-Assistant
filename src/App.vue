@@ -38,7 +38,37 @@ export default {
                         guid: "e07e5331-e468-4ef9-bf58-17fd315f1c99",
                         room: "Bedroom"
                     }
-                ]
+                ],
+                rooms2: [
+                    {
+                        name: "Living Room",
+                        location: {
+                            x: 0,
+                            y: 0
+                        }
+                    },
+                    {
+                        name: "Kitchen",
+                        location: {
+                            x: -1,
+                            y: 0
+                        }
+                    },
+                    {
+                        name: "Bedroom",
+                        location: {
+                            x: 1,
+                            y: 0
+                        }
+                    },
+                    {
+                        name: "Bathroom",
+                        location: {
+                            x: 1,
+                            y: 1
+                        }
+                    }
+                ],
             }
         };
     },

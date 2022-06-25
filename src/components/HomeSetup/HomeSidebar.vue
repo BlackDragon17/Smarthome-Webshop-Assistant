@@ -104,11 +104,6 @@ export default {
     border: v-bind(productsListBorder);
     overflow: auto;
 }
-
-/* Modal fix */
-.no-margin {
-    margin: 0;
-}
 </style>
 
 <!-- TODO:

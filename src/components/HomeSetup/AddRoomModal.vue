@@ -1,5 +1,5 @@
 <template>
-    <div class="no-margin">
+    <div class="m-0">
         <div class="modal fade" id="add-room-modal" tabindex="-1" aria-labelledby="add-room-modal-label">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -9,18 +9,18 @@
                     </div>
                     <div class="modal-body">
                         <form id="add-room-form" @submit.prevent="submitRoom" class="row">
-                            <label for="room-input" class="col-form-label col-sm-auto">Roomd name:</label>
-                            <div class="col">
+                            <label for="room-input" class="col-form-label col-sm-auto">Room name:</label>
+                            <div class="col" style="padding-left: 0.4rem">
                                 <input type="text"
                                        id="room-input"
                                        @input="onInput"
                                        class="form-control col-sm-auto"
                                        :class="{'is-invalid': errorBorder}">
+                                <p v-show="errorMsg" class="error-message">
+                                    <span class="inline-icon material-symbols-rounded">error</span>
+                                    {{ errorMsg }}
+                                </p>
                             </div>
-                            <p v-show="errorMsg" class="error-message">
-                                <span class="inline-icon material-symbols-rounded">error</span>
-                                {{ errorMsg }}
-                            </p>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -115,6 +115,5 @@ export default {
     color: var(--bs-red);
     font-size: 0.95rem;
     font-weight: 600;
-    text-align: center;
 }
 </style>
