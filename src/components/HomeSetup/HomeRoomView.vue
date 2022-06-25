@@ -1,8 +1,8 @@
 <template>
     <section class="room-view">
         <div class="room-grid">
-            <div class="room" v-for="room in exampleSetup.rooms">
-                <p class="room-title">{{ room }}</p>
+            <div class="room" v-for="room in exampleSetup.rooms2">
+                <p class="room-title">{{ room.name }}</p>
             </div>
         </div>
     </section>
@@ -15,9 +15,41 @@ export default {
     props: ["exampleSetup"],
 
     computed: {
+        gridWidth() {
+            let lowestX = 0;
+            let highestX = 0;
+            for (const room of this.exampleSetup.rooms2) {
+                if (room.location.x > highestX) {
+                    highestX = room.location.x;
+                }
+                if (room.location.x < lowestX) {
+                    lowestX = room.location.x;
+                }
+            }
+            return Math.abs(lowestX) + Math.abs(highestX) + 1;
+        },
+
+        gridHeight() {
+            let lowestY = 0;
+            let highestY = 0;
+            for (const room of this.exampleSetup.rooms2) {
+                if (room.location.y > highestY) {
+                    highestY = room.location.y;
+                }
+                if (room.location.y < lowestY) {
+                    lowestY = room.location.y;
+                }
+            }
+            return Math.abs(lowestY) + Math.abs(highestY) + 1;
+        },
+
         roomGridBorder() {
             return import.meta.env.PROD ? "none" : "1px solid darkgreen";
         }
+    },
+
+    mounted() {
+        console.log("grid dim:", this.gridWidth, this.gridHeight);
     }
 };
 </script>
@@ -27,33 +59,28 @@ export default {
     padding: 2rem;
 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
 .room-grid {
     border: v-bind(roomGridBorder);
-    /* margin: 1.5rem auto; */
-    flex-grow: 1;
-    max-width: 100rem;
+    max-width: 80rem;
+    max-height: 50rem;
+    min-height: 0;
 
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(v-bind(gridWidth), minmax(10rem, 40rem));
+    grid-template-rows: repeat(v-bind(gridHeight), minmax(5rem, 20rem));
+
+    column-gap: 1rem;
+    row-gap: 1rem;
 }
 
 .room {
     background-color: #E3F2FD;
     border: 1px solid #90CAF9;
-
-    flex-grow: 1;
-    width: 20rem;
-    max-width: 30rem;
-    height: 10rem;
 
     position: relative;
 }

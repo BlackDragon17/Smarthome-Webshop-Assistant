@@ -84,6 +84,7 @@ export default {
         // Set the height of the Main content to 100vh - headerHeight
         let headerHeight = this.$refs.header.$el.offsetHeight;
         this.$refs.app.style.height = `calc(100vh - ${headerHeight}px)`;
+        this.$refs.app.style.maxHeight = `calc(100vh - ${headerHeight}px)`;
     }
 };
 </script>
