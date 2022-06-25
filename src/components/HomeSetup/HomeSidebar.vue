@@ -3,10 +3,11 @@
         <AddDeviceModal/>
         <button class="add-device" @click="addNewDevice">Add new device</button>
 
-        <AddRoomModal/>
-        <button class="add-room" @click="addNewRoom">Add new room</button>
+        <AddRoomModal :setup-rooms="exampleSetup.rooms"/>
+        <button class="add-room" data-bs-toggle="modal" data-bs-target="#add-room-modal">Add new room</button>
 
         <button @click="printDebugInfo">Print debug info</button>
+
 
         <div class="sort-button-group">
             <button @click="sortByRoom = !sortByRoom">Switch sort</button>
@@ -80,7 +81,7 @@ export default {
         },
 
         addNewRoom() {
-            new Modal("#addRoomModal").show();
+
         }
     }
 };
@@ -113,3 +114,9 @@ export default {
     margin: 0;
 }
 </style>
+
+<!-- TODO:
+    - Eine statische Wohnung (absolute Raum positionierung)
+    - Geräte in Räumen anzeigen
+    - Modal forms anschließen
+-->
