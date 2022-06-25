@@ -78,10 +78,6 @@ export default {
 
         addNewDevice() {
             new Modal("#addDeviceModal").show();
-        },
-
-        addNewRoom() {
-
         }
     }
 };

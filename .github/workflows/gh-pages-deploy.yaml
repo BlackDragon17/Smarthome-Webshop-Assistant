@@ -7,7 +7,7 @@ jobs:
     name: Deploying to gh-pages
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Node.js (LTS)
+      - name: Setup Node.js (v16)
         uses: actions/setup-node@v3
         with:
           node-version: 16

@@ -8,9 +8,19 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="add-room-form" @submit.prevent="submitRoom">
-                            <label for="room-input">Room name:</label>
-                            <input type="text" id="room-input">
+                        <form id="add-room-form" @submit.prevent="submitRoom" class="row">
+                            <label for="room-input" class="col-form-label col-sm-auto">Roomd name:</label>
+                            <div class="col">
+                                <input type="text"
+                                       id="room-input"
+                                       @input="onInput"
+                                       class="form-control col-sm-auto"
+                                       :class="{'is-invalid': errorBorder}">
+                            </div>
+                            <p v-show="errorMsg" class="error-message">
+                                <span class="inline-icon material-symbols-rounded">error</span>
+                                {{ errorMsg }}
+                            </p>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -25,6 +35,7 @@
 
 <script>
 import { Modal } from "bootstrap";
+import { capitalize } from "vue";
 
 export default {
     name: "AddRoomModal",
@@ -32,7 +43,11 @@ export default {
     data() {
         return {
             roomModal: null,
-            roomForm: null
+            roomForm: null,
+            roomInput: null,
+
+            errorBorder: false,
+            errorMsg: ""
         };
     },
 
@@ -44,29 +59,62 @@ export default {
     },
 
     methods: {
-        submitRoom(event) {
-            const input = event.target[0].value;
+        onInput() {
+            if (this.errorBorder) {
+                this.errorBorder = false;
+            }
+        },
+
+        resetForm() {
+            this.errorBorder = false;
+            this.errorMsg = "";
+            this.roomForm.reset();
+        },
+
+        submitRoom() {
+            const input = this.roomInput.value;
+
+            // Check if input is empty
+            if (!input) {
+                this.errorBorder = true;
+                this.errorMsg = "Please enter a room name.";
+                this.roomInput.focus();
+                return;
+            }
+
+            // Check if room already exists
             const matches = this.setupRooms.filter(room => room.toLowerCase() === input.toLowerCase());
             if (matches.length > 0) {
-                console.log("exists:", matches[0]);
-            } else {
-                console.log("exists not");
-                this.roomModal.hide();
+                this.errorBorder = true;
+                this.errorMsg = `Your Home already has a "${matches[0]}".`;
+                this.roomInput.focus();
+                return;
             }
+
+            this.roomModal.hide();
+            this.setupRooms.push(capitalize(input));
         }
     },
 
     mounted() {
         this.roomModal = new Modal("#add-room-modal");
         this.roomForm = document.getElementById("add-room-form");
-        document.getElementById("add-room-modal")
-            .addEventListener("hidden.bs.modal", () => this.roomForm.reset());
+        this.roomInput = document.getElementById("room-input");
+
+        const domModal = document.getElementById("add-room-modal");
+        domModal.addEventListener("shown.bs.modal", () => this.roomInput.focus());
+        domModal.addEventListener("hidden.bs.modal", () => this.resetForm());
     }
 };
 </script>
 
 <style scoped>
-#room-input {
-    margin: 0.6rem 2rem;
+.error-message {
+    margin-top: 0.4rem;
+
+    color: var(--bs-red);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
 }
 </style>

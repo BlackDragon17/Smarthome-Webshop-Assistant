@@ -82,4 +82,9 @@ ul, ol {
 p {
     margin: 0;
 }
+
+.inline-icon {
+    vertical-align: bottom;
+    font-size: 1.4em;
+}
 </style>
