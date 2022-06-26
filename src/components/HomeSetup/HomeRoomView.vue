@@ -1,15 +1,17 @@
 <template>
     <section class="room-view">
+        <AddRoomModal :setup-rooms="currentSetup.rooms"/>
         <div class="room-grid">
             <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                 <p class="room-title">{{ room.name }}</p>
             </div>
-            <div class="add-room-area box"
-                 v-for="button in addRoomButtons"
-                 :key="'' + button.location.x + button.location.y"
-                 :style="positionButton(button)">
-                button {{ button.location.x }} {{ button.location.y }}
-            </div>
+            <button class="add-room-grid-button"
+                    v-for="button in addRoomButtons"
+                    :key="'' + button.location.x + button.location.y"
+                    :style="positionButton(button)"
+                    @click="addRoom(button)">
+                Click to add a<br>New Room here
+            </button>
         </div>
         <div>
             <button @click="printDebug">Debug</button>
@@ -171,14 +173,18 @@ export default {
             this.shiftRoomCoords();
         },
 
+
+        addRoom(button) {
+
+        },
+
+
         printDebug() {
             console.log("grid dim:", this.gridWidth, this.gridHeight);
             console.log("lowest coords:", this.lowestCoords);
             console.log("highest coords:", this.highestCoords);
             console.log("grid start:", this.gridStartCoord);
             console.log("css col:", this.cssGridColumns);
-            // this.createAddRoomButtons();
-            // this.removeAddRoomButtons();
         },
 
         toggleButtons() {
@@ -245,5 +251,20 @@ export default {
     margin-bottom: 0.1rem;
     color: #1565C0;
     font-size: 1.5rem;
+}
+
+.add-room-grid-button {
+    background-color: #f8faff;
+    border: 1px solid #cde6ff;
+}
+
+.add-room-grid-button:hover, .add-room-grid-button:focus {
+    background-color: #deeeff;
+    border: 1px solid #8dccff;
+}
+
+.add-room-grid-button:active {
+    background-color: #96c8ef;
+    border: 1px solid #4eaeef;
 }
 </style>
