@@ -4,8 +4,17 @@
             <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                 <p class="room-title">{{ room.name }}</p>
             </div>
+            <div class="add-room-area box"
+                 v-for="button in addRoomButtons"
+                 :key="'' + button.location.x + button.location.y"
+                 :style="positionButton(button)">
+                button {{ button.location.x }} {{ button.location.y }}
+            </div>
         </div>
-        <button @click="printDebug">Debug</button>
+        <div>
+            <button @click="printDebug">Debug</button>
+            <button @click="toggleButtons">Toggle Buttons</button>
+        </div>
     </section>
 </template>
 
@@ -16,7 +25,10 @@ export default {
     data() {
         return {
             gridStartCoord: 1,
-            currentSetupLocal: this.currentSetup
+            addRoomButtons: [],
+
+            // Temp
+            showAddButtons: false
         };
     },
 
@@ -59,6 +71,17 @@ export default {
             return Math.abs(this.lowestCoords.y - this.highestCoords.y) + 1;
         },
 
+
+        cssGridColumns() {
+            return this.gridStartCoord === 1 ? `repeat(${this.gridWidth}, minmax(10rem, 40rem))`
+                : `repeat(${this.gridWidth + 2}, minmax(10rem, 40rem))`;
+        },
+
+        cssGridRows() {
+            return this.gridStartCoord === 1 ? `repeat(${this.gridHeight}, minmax(5rem, 20rem))`
+                : `repeat(${this.gridHeight + 2}, minmax(5rem, 20rem))`;
+        },
+
         roomGridBorder() {
             return import.meta.env.PROD ? "none" : "1px solid darkgreen";
         }
@@ -68,6 +91,11 @@ export default {
         positionRoom(room) {
             return `grid-column: ${room.location.x} / span 1; grid-row: ${room.location.y} / span 1;`;
         },
+
+        positionButton(button) {
+            return `grid-column: ${button.location.x} / span 1; grid-row: ${button.location.y} / span 1;`;
+        },
+
 
         // Offset rooms' location to meet the grid's starting coordinate
         shiftRoomCoords() {
@@ -99,10 +127,67 @@ export default {
             }
         },
 
+        createAddRoomButtons() {
+            // Shift rooms by one to the bottom right to create room for add-buttons.
+            this.gridStartCoord = 2;
+            this.shiftRoomCoords();
+
+            // Create an array-based view of grid button placement computation
+            const roomGrid = [];
+            for (let i = 1; i <= this.gridWidth + 2; i++) {
+                const innerArr = [];
+                for (let j = 1; j <= this.gridHeight + 2; j++) {
+                    innerArr[j] = false;
+                }
+                roomGrid[i] = innerArr;
+            }
+            for (const room of this.currentSetup.rooms) {
+                roomGrid[room.location.x][room.location.y] = true;
+            }
+            console.log("roomGrid:", roomGrid);
+
+            // Add buttons around rooms
+            for (let i = 1; i <= this.gridWidth + 2; i++) {
+                for (let j = 1; j <= this.gridHeight + 2; j++) {
+                    // Check if current grid cell is a room (marked by true value)
+                    if (roomGrid[i][j]) {
+                        continue;
+                    }
+                    // Check if current cell is neighboring a room (CSS-style clockwise order)
+                    if (roomGrid[i][j - 1] || roomGrid[i + 1]?.[j] || roomGrid[i][j + 1] || roomGrid[i - 1]?.[j]) {
+                        if (!this.addRoomButtons.find(button => button.location.x === i && button.location.y === j)) {
+                            this.addRoomButtons.push({location: {x: i, y: j}});
+                        }
+                    }
+                }
+            }
+
+            console.log("buttonsArr:", this.addRoomButtons);
+        },
+
+        removeAddRoomButtons() {
+            this.addRoomButtons = [];
+            this.gridStartCoord = 1;
+            this.shiftRoomCoords();
+        },
+
         printDebug() {
             console.log("grid dim:", this.gridWidth, this.gridHeight);
             console.log("lowest coords:", this.lowestCoords);
             console.log("highest coords:", this.highestCoords);
+            console.log("grid start:", this.gridStartCoord);
+            console.log("css col:", this.cssGridColumns);
+            // this.createAddRoomButtons();
+            // this.removeAddRoomButtons();
+        },
+
+        toggleButtons() {
+            if (!this.showAddButtons) {
+                this.createAddRoomButtons();
+            } else {
+                this.removeAddRoomButtons();
+            }
+            this.showAddButtons = !this.showAddButtons;
         }
     },
 
@@ -135,8 +220,8 @@ export default {
     min-height: 0;
 
     display: grid;
-    grid-template-columns: repeat(v-bind(gridWidth), minmax(10rem, 40rem));
-    grid-template-rows: repeat(v-bind(gridHeight), minmax(5rem, 20rem));
+    grid-template-columns: v-bind(cssGridColumns);
+    grid-template-rows: v-bind(cssGridRows);
 
     column-gap: 1rem;
     row-gap: 1rem;
