@@ -83,7 +83,7 @@ export default {
             }
 
             // Check if room already exists
-            const matches = this.setupRooms.filter(room => room.toLowerCase() === input.toLowerCase());
+            const matches = this.setupRooms.filter(room => room.name.toLowerCase() === input.toLowerCase());
             if (matches.length > 0) {
                 this.errorBorder = true;
                 this.errorMsg = `Your Home already has a "${matches[0]}".`;
@@ -92,7 +92,7 @@ export default {
             }
 
             this.roomModal.hide();
-            this.setupRooms.push(capitalize(input));
+            this.setupRooms.push({name: capitalize(input)});
         }
     },
 

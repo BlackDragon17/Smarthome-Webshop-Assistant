@@ -3,7 +3,7 @@
         <AddDeviceModal/>
         <button class="add-device" @click="addNewDevice">Add new device</button>
 
-        <AddRoomModal :setup-rooms="exampleSetup.rooms"/>
+        <AddRoomModal :setup-rooms="currentSetup.rooms"/>
         <button class="add-room" data-bs-toggle="modal" data-bs-target="#add-room-modal">Add new room</button>
 
         <button @click="printDebugInfo">Print debug info</button>
@@ -57,7 +57,7 @@ export default {
         };
     },
 
-    props: ["allProducts", "exampleSetup", "sortByRoom", "productsByType", "productsByRoom"],
+    props: ["allProducts", "currentSetup", "sortByRoom", "productsByType", "productsByRoom"],
 
     computed: {
         productsListBorder() {

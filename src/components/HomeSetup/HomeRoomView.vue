@@ -1,7 +1,7 @@
 <template>
     <section class="room-view">
         <div class="room-grid">
-            <div class="room" v-for="room in exampleSetup.rooms2">
+            <div class="room" v-for="room in currentSetup.rooms">
                 <p class="room-title">{{ room.name }}</p>
             </div>
         </div>
@@ -12,13 +12,13 @@
 export default {
     name: "HomeRoomView",
 
-    props: ["exampleSetup"],
+    props: ["currentSetup"],
 
     computed: {
         gridWidth() {
             let lowestX = 0;
             let highestX = 0;
-            for (const room of this.exampleSetup.rooms2) {
+            for (const room of this.currentSetup.rooms) {
                 if (room.location.x > highestX) {
                     highestX = room.location.x;
                 }
@@ -32,7 +32,7 @@ export default {
         gridHeight() {
             let lowestY = 0;
             let highestY = 0;
-            for (const room of this.exampleSetup.rooms2) {
+            for (const room of this.currentSetup.rooms) {
                 if (room.location.y > highestY) {
                     highestY = room.location.y;
                 }

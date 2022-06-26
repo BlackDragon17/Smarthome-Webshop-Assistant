@@ -1,12 +1,12 @@
 <template>
     <div class="main">
         <HomeSidebar :all-products="allProducts"
-                     :example-setup="exampleSetup"
+                     :current-setup="currentSetup"
                      :sort-by-room="sortByRoom"
                      :products-by-type="productsByType"
                      :products-by-room="productsByRoom"/>
 
-        <HomeRoomView :example-setup="exampleSetup"/>
+        <HomeRoomView :current-setup="currentSetup"/>
     </div>
 </template>
 
@@ -22,12 +22,12 @@ export default {
         };
     },
 
-    props: ["allProducts", "exampleSetup"],
+    props: ["allProducts", "currentSetup"],
 
     computed: {
         productsByType() {
             const byType = {};
-            for (const product of this.exampleSetup.products) {
+            for (const product of this.currentSetup.products) {
                 const type = capitalize(this.allProducts.data[product.guid].type) + "s";
                 if (byType[type]) {
                     byType[type].push(this.allProducts.data[product.guid]);
@@ -39,12 +39,12 @@ export default {
         },
         productsByRoom() {
             const byRoom = {};
-            for (const i in this.exampleSetup.products) {
-                const room = this.exampleSetup.products[i].room;
+            for (const i in this.currentSetup.products) {
+                const room = this.currentSetup.products[i].room;
                 if (byRoom[room]) {
-                    byRoom[room].push(this.allProducts.data[this.exampleSetup.products[i].guid]);
+                    byRoom[room].push(this.allProducts.data[this.currentSetup.products[i].guid]);
                 } else {
-                    byRoom[room] = [this.allProducts.data[this.exampleSetup.products[i].guid]];
+                    byRoom[room] = [this.allProducts.data[this.currentSetup.products[i].guid]];
                 }
             }
             return byRoom;
