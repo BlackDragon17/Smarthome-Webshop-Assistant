@@ -76,12 +76,4 @@ export default {
 .room-view {
     flex-grow: 1;
 }
-
-/* Temp stuff */
-:deep(.box) {
-    height: 100px;
-    margin: 10px;
-    background-color: lightgray;
-    border: 1px solid darkgray;
-}
 </style>

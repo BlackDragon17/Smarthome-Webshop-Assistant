@@ -59,6 +59,13 @@ p {
     margin: 0;
 }
 
+.box {
+    height: 100px;
+    margin: 10px;
+    background-color: lightgray;
+    border: 1px solid darkgray;
+}
+
 .inline-icon {
     vertical-align: bottom;
     font-size: 1.4em;

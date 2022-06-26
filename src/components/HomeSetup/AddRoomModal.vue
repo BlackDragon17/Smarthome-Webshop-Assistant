@@ -24,8 +24,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" form="add-room-form">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -86,13 +86,16 @@ export default {
             const matches = this.setupRooms.filter(room => room.name.toLowerCase() === input.toLowerCase());
             if (matches.length > 0) {
                 this.errorBorder = true;
-                this.errorMsg = `Your Home already has a "${matches[0]}".`;
+                this.errorMsg = `Your Home already has a "${matches[0].name}".`;
                 this.roomInput.focus();
                 return;
             }
 
             this.roomModal.hide();
-            this.setupRooms.push({name: capitalize(input)});
+            this.setupRooms.push({
+                name: capitalize(input),
+                location: {x: 0, y: 1}
+            });
         }
     },
 
