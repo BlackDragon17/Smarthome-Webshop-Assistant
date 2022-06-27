@@ -3,10 +3,10 @@
         <AddDeviceModal/>
         <button class="add-device-button" @click="addNewDevice">Add new device</button>
 
-        <!-- TODO: Emit an event for HomeRoomView here -->
+        <!-- TODO: Change button to cancel onclick, display "choose room location" -->
         <button class="add-room-button" @click="addNewRoom">Add new room</button>
 
-        <button @click="printDebugInfo">Print debug info</button>
+        <button v-if="false" @click="printDebugInfo">Print debug info</button>
 
 
         <div class="sort-button-group">
