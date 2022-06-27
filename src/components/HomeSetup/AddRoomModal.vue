@@ -4,7 +4,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="add-room-modal-label">Add new Room</h5>
+                        <h5 class="modal-title" id="add-room-modal-label">Enter New Room Name</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -47,7 +47,9 @@ export default {
             roomInput: null,
 
             errorBorder: false,
-            errorMsg: ""
+            errorMsg: "",
+
+            newRoomLocation: null
         };
     },
 
@@ -57,6 +59,8 @@ export default {
             required: true
         }
     },
+
+    emits: ["room-added"],
 
     methods: {
         onInput() {
@@ -68,7 +72,13 @@ export default {
         resetForm() {
             this.errorBorder = false;
             this.errorMsg = "";
+            this.newRoomLocation = null;
             this.roomForm.reset();
+        },
+
+        openModal(addRoomButton) {
+            this.roomModal.show();
+            this.newRoomLocation = addRoomButton.location;
         },
 
         submitRoom() {
@@ -94,8 +104,9 @@ export default {
             this.roomModal.hide();
             this.setupRooms.push({
                 name: capitalize(input),
-                location: {x: 0, y: 1}
+                location: {...this.newRoomLocation}
             });
+            this.$emit("room-added");
         }
     },
 

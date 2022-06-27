@@ -1,6 +1,6 @@
 <template>
     <section class="room-view">
-        <AddRoomModal :setup-rooms="currentSetup.rooms"/>
+        <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" @room-added="removeAddRoomButtons"/>
         <div class="room-grid">
             <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                 <p class="room-title">{{ room.name }}</p>
@@ -10,7 +10,7 @@
                     :key="'' + button.location.x + button.location.y"
                     :style="positionButton(button)"
                     @click="addRoom(button)">
-                Click to add a<br>New Room here
+                Click to add a<br>New Room<br>here
             </button>
         </div>
         <div>
@@ -175,7 +175,7 @@ export default {
 
 
         addRoom(button) {
-
+            this.$refs.addRoomModal.openModal(button);
         },
 
 
