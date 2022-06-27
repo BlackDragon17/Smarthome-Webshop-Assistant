@@ -4,7 +4,7 @@
         <button class="add-device-button" @click="addNewDevice">Add new device</button>
 
         <!-- TODO: Emit an event for HomeRoomView here -->
-        <button class="add-room-button">Add new room</button>
+        <button class="add-room-button" @click="addNewRoom">Add new room</button>
 
         <button @click="printDebugInfo">Print debug info</button>
 
@@ -76,6 +76,10 @@ export default {
 
         addNewDevice() {
             new Modal("#addDeviceModal").show();
+        },
+
+        addNewRoom() {
+            this.$bus.$emit("add-new-room");
         }
     }
 };

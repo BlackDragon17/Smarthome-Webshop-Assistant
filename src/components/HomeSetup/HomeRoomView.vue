@@ -13,10 +13,7 @@
                 Click to add a<br>New Room<br>here
             </button>
         </div>
-        <div>
-            <button @click="printDebug">Debug</button>
-            <button @click="toggleAddRoomButtons">Toggle Buttons</button>
-        </div>
+        <button v-if="false" @click="printDebug">Debug</button>
     </section>
 </template>
 
@@ -204,6 +201,14 @@ export default {
             deep: true,
             immediate: true
         }
+    },
+
+    mounted() {
+        this.$bus.$on("add-new-room", this.toggleAddRoomButtons);
+    },
+
+    beforeDestroy() {
+        this.$bus.$off("add-new-room", this.toggleAddRoomButtons)
     }
 };
 </script>
