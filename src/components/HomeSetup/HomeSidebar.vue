@@ -3,7 +3,6 @@
         <AddDeviceModal/>
         <button class="add-device-button" @click="addNewDevice">Add new device</button>
 
-        <!--<button class="add-room-button" data-bs-toggle="modal" data-bs-target="#add-room-modal">Add new room</button>-->
         <!-- TODO: Emit an event for HomeRoomView here -->
         <button class="add-room-button">Add new room</button>
 

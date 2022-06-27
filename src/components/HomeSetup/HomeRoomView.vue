@@ -15,7 +15,7 @@
         </div>
         <div>
             <button @click="printDebug">Debug</button>
-            <button @click="toggleButtons">Toggle Buttons</button>
+            <button @click="toggleAddRoomButtons">Toggle Buttons</button>
         </div>
     </section>
 </template>
@@ -29,8 +29,7 @@ export default {
             gridStartCoord: 1,
             addRoomButtons: [],
 
-            // Temp
-            showAddButtons: false
+            addButtonsShown: false
         };
     },
 
@@ -130,7 +129,9 @@ export default {
         },
 
         createAddRoomButtons() {
-            // Shift rooms by one to the bottom right to create room for add-buttons.
+            this.addButtonsShown = true;
+
+            // Shift rooms by one to the bottom right to create room for add-buttons
             this.gridStartCoord = 2;
             this.shiftRoomCoords();
 
@@ -146,7 +147,6 @@ export default {
             for (const room of this.currentSetup.rooms) {
                 roomGrid[room.location.x][room.location.y] = true;
             }
-            console.log("roomGrid:", roomGrid);
 
             // Add buttons around rooms
             for (let i = 1; i <= this.gridWidth + 2; i++) {
@@ -163,11 +163,11 @@ export default {
                     }
                 }
             }
-
-            console.log("buttonsArr:", this.addRoomButtons);
         },
 
         removeAddRoomButtons() {
+            this.addButtonsShown = false;
+
             this.addRoomButtons = [];
             this.gridStartCoord = 1;
             this.shiftRoomCoords();
@@ -187,13 +187,12 @@ export default {
             console.log("css col:", this.cssGridColumns);
         },
 
-        toggleButtons() {
-            if (!this.showAddButtons) {
-                this.createAddRoomButtons();
-            } else {
+        toggleAddRoomButtons() {
+            if (this.addButtonsShown) {
                 this.removeAddRoomButtons();
+            } else {
+                this.createAddRoomButtons();
             }
-            this.showAddButtons = !this.showAddButtons;
         }
     },
 
