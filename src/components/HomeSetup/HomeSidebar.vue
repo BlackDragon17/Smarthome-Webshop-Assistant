@@ -1,10 +1,10 @@
 <template>
     <aside class="sidebar">
         <AddDeviceModal/>
-        <button class="add-device-button" @click="addNewDevice">Add new device</button>
+        <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
 
         <!-- TODO: Change button to cancel onclick, display "choose room location" -->
-        <button class="add-room-button" @click="addNewRoom">Add new room</button>
+        <button class="add-room-button btn btn-primary" @click="addNewRoom">Add new room</button>
 
         <button v-if="false" @click="printDebugInfo">Print debug info</button>
 
@@ -105,6 +105,29 @@ export default {
 .sidebar > .products-list {
     border: v-bind(productsListBorder);
     overflow: auto;
+}
+
+.add-room-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+
+    --bs-btn-bg: #42A5F5;
+    --bs-btn-hover-bg: #2195f3;
+    --bs-btn-active-bg: #0b7dda;
+}
+
+.add-device-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+
+    --bs-btn-bg: #4CAF50;
+    --bs-btn-hover-bg: #439846;
+    --bs-btn-active-bg: #3a833c;
+    /* --bs-btn-active-border-color: red; */
 }
 </style>
 

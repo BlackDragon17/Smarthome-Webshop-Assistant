@@ -264,11 +264,11 @@ export default {
 
 .add-room-grid-button:hover, .add-room-grid-button:focus {
     background-color: #deeeff;
-    border: 1px solid #8dccff;
+    border: 1px solid #42A5F5;
 }
 
 .add-room-grid-button:active {
     background-color: #96c8ef;
-    border: 1px solid #4eaeef;
+    border: 1px solid #0c88ed;
 }
 </style>
