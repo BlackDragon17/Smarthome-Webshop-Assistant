@@ -62,7 +62,7 @@ header {
 }
 
 .logo :first-child {
-    color: #1A73E8;
+    color: var(--blue-logo);
 }
 
 /* Inner flex box to align nav items */

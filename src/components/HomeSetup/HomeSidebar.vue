@@ -118,9 +118,9 @@ export default {
     border-radius: 0.5rem;
     font-weight: 600;
 
-    --bs-btn-bg: #42A5F5;
-    --bs-btn-hover-bg: #2195f3;
-    --bs-btn-active-bg: #0b7dda;
+    --bs-btn-bg: var(--blue-rooms-main);
+    --bs-btn-hover-bg: var(--blue-rooms-main-darker10);
+    --bs-btn-active-bg: var(--blue-rooms-main-darker20);
 }
 
 .add-device-button {
@@ -129,9 +129,9 @@ export default {
     border-radius: 0.5rem;
     font-weight: 600;
 
-    --bs-btn-bg: #4CAF50;
-    --bs-btn-hover-bg: #439846;
-    --bs-btn-active-bg: #3a833c;
+    --bs-btn-bg: var(--green-devices-main);
+    --bs-btn-hover-bg: var(--green-devices-main-darker6);
+    --bs-btn-active-bg: var(--green-devices-main-darker13);
     /* --bs-btn-active-border-color: red; */
 }
 </style>

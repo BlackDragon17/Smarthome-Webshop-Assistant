@@ -69,6 +69,26 @@ p {
     margin: 0;
 }
 
+
+/* Globally available styles */
+
+:root {
+    /* Darker values refer relative to lightness in HSL */
+    --blue-logo: #1A73E8;
+
+    --blue-rooms-main: #42A5F5;
+    --blue-rooms-main-darker10: #128DF3;
+    --blue-rooms-main-darker20: #0A72C7;
+
+    --blue-room-background: #E3F2FD;
+    --blue-room-border: #9ACFF9;
+    --blue-room-text: #1866BF;
+
+    --green-devices-main: #4CAF50;
+    --green-devices-main-darker6: #439846;
+    --green-devices-main-darker13: #38803A;
+}
+
 .box {
     height: 100px;
     margin: 10px;

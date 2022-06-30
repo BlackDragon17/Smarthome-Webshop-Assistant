@@ -244,8 +244,8 @@ export default {
 }
 
 .room {
-    background-color: #E3F2FD;
-    border: 1px solid #90CAF9;
+    background-color: var(--blue-room-background);
+    border: 1px solid var(--blue-room-border);
 
     position: relative;
 }
@@ -259,7 +259,7 @@ export default {
     transform: translate(-50%, 0);
 
     margin-bottom: 0.1rem;
-    color: #1565C0;
+    color: var(--blue-room-text);
     font-size: 1.5rem;
 }
 
