@@ -1,6 +1,7 @@
 <template>
     <section class="room-view">
         <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms"/>
+
         <div class="room-grid">
             <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                 <p class="room-title">{{ room.name }}</p>
@@ -9,11 +10,18 @@
                     v-for="button in addRoomButtons"
                     :key="'' + button.location.x + button.location.y"
                     :style="positionButton(button)"
-                    @click="addRoom(button)">
+                    @click="addSelectedRoom(button)">
                 Click to add a<br>New Room<br>here
             </button>
         </div>
         <button v-if="false" @click="printDebug">Debug</button>
+
+        <div class="spacer"></div>
+        <div v-if="!addButtonsShown" class="room-button-group">
+            <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
+            <button class="remove-room-button btn btn-secondary">Remove a room</button>
+        </div>
+        <button v-else class="cancel-button btn btn-danger">Cancel</button>
     </section>
 </template>
 
@@ -87,7 +95,7 @@ export default {
         },
 
         roomGridBorder() {
-            return import.meta.env.PROD ? "none" : "1px solid darkgreen";
+            return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgreen";
         }
     },
 
@@ -101,7 +109,7 @@ export default {
         },
 
 
-        // Offset rooms' location to meet the grid's starting coordinate
+        // Offset rooms' location to meet the grid's starting coordinate.
         shiftRoomCoords() {
             console.log("Shifting room coords");
             // On the x-axis
@@ -132,8 +140,6 @@ export default {
         },
 
         createAddRoomButtons() {
-            this.addButtonsShown = true;
-
             // Shift rooms by one to the bottom right to create room for add-buttons
             this.gridStartCoord = 2;
             this.shiftRoomCoords();
@@ -169,15 +175,27 @@ export default {
         },
 
         removeAddRoomButtons() {
-            this.addButtonsShown = false;
-
             this.addRoomButtons = [];
             this.gridStartCoord = 1;
             this.shiftRoomCoords();
         },
 
+        toggleAddRoomButtons() {
+            if (this.addButtonsShown) {
+                this.addButtonsShown = false;
+                this.removeAddRoomButtons();
+            } else {
+                this.addButtonsShown = true;
+                this.createAddRoomButtons();
+            }
+        },
 
-        addRoom(button) {
+
+        addNewRoom() {
+            this.$eventBus.$emit("add-room-toggle");
+        },
+
+        addSelectedRoom(button) {
             this.$refs.addRoomModal.openModal(button);
         },
 
@@ -188,14 +206,6 @@ export default {
             console.log("highest coords:", this.highestCoords);
             console.log("grid start:", this.gridStartCoord);
             console.log("css col:", this.cssGridColumns);
-        },
-
-        toggleAddRoomButtons() {
-            if (this.addButtonsShown) {
-                this.removeAddRoomButtons();
-            } else {
-                this.createAddRoomButtons();
-            }
         }
     },
 
@@ -219,7 +229,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .room-view {
     padding: 2rem;
 
@@ -228,6 +238,9 @@ export default {
     justify-content: center;
     align-items: center;
 }
+
+
+/* Basic grid styling */
 
 .room-grid {
     border: v-bind(roomGridBorder);
@@ -263,6 +276,9 @@ export default {
     font-size: 1.5rem;
 }
 
+
+/* Add room buttons styling */
+
 .add-room-grid-button {
     background-color: #f8faff;
     border: 1px solid #cde6ff;
@@ -276,5 +292,27 @@ export default {
 .add-room-grid-button:active {
     background-color: #96c8ef;
     border: 1px solid #0c88ed;
+}
+
+
+/* Control buttons styling */
+
+.spacer {
+    flex-grow: 1;
+    flex-shrink: 0.5;
+    height: 1.5rem;
+    max-height: 3rem;
+}
+
+.add-room-button {
+    margin-right: 0.4rem;
+
+    --bs-btn-bg: var(--blue-rooms-main);
+    --bs-btn-hover-bg: var(--blue-rooms-main-darker1);
+    --bs-btn-active-bg: var(--blue-rooms-main-darker2);
+}
+
+button.cancel-button {
+    width: 9rem;
 }
 </style>

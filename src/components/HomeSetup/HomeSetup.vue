@@ -34,7 +34,7 @@ export default {
 
     props: ["allProducts", "currentSetup"],
 
-    // Since it's responsible for cancelling in-progress actions, it emits all HomeSetup-related events
+    // Since HomeSetup is responsible for cancelling in-progress actions, it emits all local events
     emits: ["add-room-toggle", "delete-room-toggle"],
 
     computed: {
@@ -64,7 +64,7 @@ export default {
         },
 
         homeSetupBorder() {
-            return import.meta.env.PROD ? "none" : "1px solid darkred";
+            return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkred";
         }
     },
 
@@ -73,24 +73,20 @@ export default {
             this.$el.focus();
         },
 
+        // Cancels an in-progress action.
         cancelAction() {
-            // If another action is in progress, cancel it.
             // Since all actions=events are toggles, one can just emit it to cancel it.
             if(this.currentAction) {
                 this.$eventBus.$emit(this.currentAction);
             }
         },
 
-        actionAddRoomToggle() {
-            if (!this.currentAction) {
-                this.currentAction = "add-room-toggle";
-            } else if (this.currentAction === "add-room-toggle") {
-                this.currentAction = null
-            } else {
-                this.$eventBus.$emit(this.currentAction);
-            }
-        },
 
+        /**
+         * Sets or removes the given action as the currentAction.
+         * If another action is in progress, it will be cancelled first.
+         * @param action The action to start or stop.
+         */
         actionToggler(action) {
             if (!this.currentAction) {
                 this.currentAction = action;
@@ -135,5 +131,12 @@ export default {
 
 .room-view {
     flex-grow: 1;
+}
+
+:deep(.btn) {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
 }
 </style>

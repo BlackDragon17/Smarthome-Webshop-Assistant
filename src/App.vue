@@ -73,20 +73,20 @@ p {
 /* Globally available styles */
 
 :root {
-    /* "darker" values refer to relative lightness in HSL */
     --blue-logo: #1A73E8;
 
-    --blue-rooms-main: #42A5F5;
-    --blue-rooms-main-darker10: #128DF3;
-    --blue-rooms-main-darker20: #0A72C7;
+    --old-blue-rooms-main: #42A5F5;
+    --blue-rooms-main: #2A99F4;
+    --blue-rooms-main-darker1: #0C80DF;    /* lightness -10 */
+    --blue-rooms-main-darker2: #0964AE;    /* lightness -20 */
 
     --blue-room-background: #E3F2FD;
     --blue-room-border: #9ACFF9;
     --blue-room-text: #1866BF;
 
     --green-devices-main: #4CAF50;
-    --green-devices-main-darker6: #439846;
-    --green-devices-main-darker13: #38803A;
+    --green-devices-main-darker1: #439846;    /* lightness -6 */
+    --green-devices-main-darker2: #38803A;    /* lightness -13 */
 }
 
 .box {

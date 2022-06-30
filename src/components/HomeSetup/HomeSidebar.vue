@@ -3,9 +3,6 @@
         <AddDeviceModal/>
         <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
 
-        <!-- TODO: Change button to cancel onclick, display "choose room location" -->
-        <button class="add-room-button btn btn-primary" @click="addNewRoom">Add new room</button>
-
         <button v-if="false" @click="printDebugInfo">Print debug info</button>
 
 
@@ -66,7 +63,7 @@ export default {
 
     computed: {
         productsListBorder() {
-            return import.meta.env.PROD ? "none" : "1px solid darkgoldenrod";
+            return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgoldenrod";
         }
     },
 
@@ -85,10 +82,6 @@ export default {
             this.$eventBus.$emit("add-device-toggle");
             new Modal("#addDeviceModal").show();
             this.$eventBus.$emit("add-device-toggle");
-        },
-
-        addNewRoom() {
-            this.$eventBus.$emit("add-room-toggle");
         }
     }
 };
@@ -116,26 +109,10 @@ export default {
     overflow: auto;
 }
 
-.add-room-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 600;
-
-    --bs-btn-bg: var(--blue-rooms-main);
-    --bs-btn-hover-bg: var(--blue-rooms-main-darker10);
-    --bs-btn-active-bg: var(--blue-rooms-main-darker20);
-}
-
 .add-device-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 600;
-
     --bs-btn-bg: var(--green-devices-main);
-    --bs-btn-hover-bg: var(--green-devices-main-darker6);
-    --bs-btn-active-bg: var(--green-devices-main-darker13);
+    --bs-btn-hover-bg: var(--green-devices-main-darker1);
+    --bs-btn-active-bg: var(--green-devices-main-darker2);
     /* --bs-btn-active-border-color: red; */
 }
 </style>
