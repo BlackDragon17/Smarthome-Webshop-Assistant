@@ -73,7 +73,7 @@ p {
 /* Globally available styles */
 
 :root {
-    /* Darker values refer relative to lightness in HSL */
+    /* "darker" values refer to relative lightness in HSL */
     --blue-logo: #1A73E8;
 
     --blue-rooms-main: #42A5F5;

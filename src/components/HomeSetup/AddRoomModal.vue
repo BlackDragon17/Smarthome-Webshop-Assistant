@@ -1,10 +1,10 @@
 <template>
-    <div class="m-0">
+    <div class="m-0" @keydown.esc.stop>
         <div class="modal fade" id="add-room-modal" tabindex="-1" aria-labelledby="add-room-modal-label">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="add-room-modal-label">Enter New Room Name</h5>
+                        <h5 class="modal-title" id="add-room-modal-label">Enter New Room name</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -60,7 +60,7 @@ export default {
         }
     },
 
-    emits: ["room-added"],
+    emits: ["add-room-toggle"],
 
     methods: {
         onInput() {
@@ -74,6 +74,7 @@ export default {
             this.errorMsg = "";
             this.newRoomLocation = null;
             this.roomForm.reset();
+            this.$eventBus.$emit("focus-home-setup");
         },
 
         openModal(addRoomButton) {
@@ -106,7 +107,7 @@ export default {
                 name: capitalize(input),
                 location: {...this.newRoomLocation}
             });
-            this.$emit("room-added");
+            this.$eventBus.$emit("add-room-toggle");
         }
     },
 

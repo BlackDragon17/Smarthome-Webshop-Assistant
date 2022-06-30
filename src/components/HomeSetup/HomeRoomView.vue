@@ -1,6 +1,6 @@
 <template>
     <section class="room-view">
-        <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" @room-added="removeAddRoomButtons"/>
+        <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms"/>
         <div class="room-grid">
             <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                 <p class="room-title">{{ room.name }}</p>
@@ -210,11 +210,11 @@ export default {
     },
 
     mounted() {
-        this.$bus.$on("add-new-room", this.toggleAddRoomButtons);
+        this.$eventBus.$on("add-room-toggle", this.toggleAddRoomButtons);
     },
 
     beforeDestroy() {
-        this.$bus.$off("add-new-room", this.toggleAddRoomButtons)
+        this.$eventBus.$off("add-room-toggle", this.toggleAddRoomButtons)
     }
 };
 </script>

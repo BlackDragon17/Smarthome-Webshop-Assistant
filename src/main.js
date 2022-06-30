@@ -1,10 +1,10 @@
 import { createApp } from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import $bus from "./EventBus";
+import $eventBus from "./EventBus";
 import App from "./App.vue";
 
 const app = createApp(App);
-app.config.globalProperties.$bus = $bus;
+app.config.globalProperties.$eventBus = $eventBus;
 
 app.mount("#app");

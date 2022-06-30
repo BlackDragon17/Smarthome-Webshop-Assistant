@@ -1,5 +1,5 @@
 <template>
-    <div class="m-0">
+    <div class="m-0" @keydown.esc.stop>
         <div class="modal fade" id="addDeviceModal" tabindex="-1" aria-labelledby="addDeviceModalLabel">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">

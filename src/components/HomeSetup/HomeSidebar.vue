@@ -62,6 +62,8 @@ export default {
 
     props: ["allProducts", "currentSetup", "sortByRoom", "productsByType", "productsByRoom"],
 
+    emits: ["add-room-toggle", "delete-room-toggle", "add-device-toggle"],
+
     computed: {
         productsListBorder() {
             return import.meta.env.PROD ? "none" : "1px solid darkgoldenrod";
@@ -80,11 +82,13 @@ export default {
         },
 
         addNewDevice() {
+            this.$eventBus.$emit("add-device-toggle");
             new Modal("#addDeviceModal").show();
+            this.$eventBus.$emit("add-device-toggle");
         },
 
         addNewRoom() {
-            this.$bus.$emit("add-new-room");
+            this.$eventBus.$emit("add-room-toggle");
         }
     }
 };
