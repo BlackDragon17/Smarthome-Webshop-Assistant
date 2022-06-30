@@ -60,7 +60,7 @@ export default {
         }
     },
 
-    emits: ["add-room-toggle"],
+    emits: ["room-added"],
 
     methods: {
         onInput() {
@@ -107,7 +107,7 @@ export default {
                 name: capitalize(input),
                 location: {...this.newRoomLocation}
             });
-            this.$eventBus.$emit("add-room-toggle");
+            this.$emit("room-added");
         }
     },
 

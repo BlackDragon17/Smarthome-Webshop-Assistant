@@ -32,6 +32,7 @@ export default {
         headerAction(target) {
             //TODO: Switch page
             console.log("Header target:", target);
+            this.$eventBus.$emit("focus-home-setup");
         }
     },
 

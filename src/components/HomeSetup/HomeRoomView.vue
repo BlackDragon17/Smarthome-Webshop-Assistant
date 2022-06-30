@@ -1,6 +1,6 @@
 <template>
     <section class="room-view">
-        <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms"/>
+        <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" @room-added="endAction"/>
 
         <div class="room-grid">
             <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
@@ -17,11 +17,11 @@
         <button v-if="false" @click="printDebug">Debug</button>
 
         <div class="spacer"></div>
-        <div v-if="!addButtonsShown" class="room-button-group">
+        <div v-if="roomViewState === 'normal'" class="room-button-group">
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
             <button class="remove-room-button btn btn-secondary">Remove a room</button>
         </div>
-        <button v-else class="cancel-button btn btn-danger">Cancel</button>
+        <button v-else-if="roomViewState !== 'adding-device'" class="cancel-button btn btn-danger" @click="cancel">Cancel</button>
     </section>
 </template>
 
@@ -37,6 +37,8 @@ export default {
 
     data() {
         return {
+            roomViewState: "normal",
+
             gridStartCoord: 1,
             addRoomButtons: [],
 
@@ -180,23 +182,32 @@ export default {
             this.shiftRoomCoords();
         },
 
-        toggleAddRoomButtons() {
-            if (this.addButtonsShown) {
-                this.addButtonsShown = false;
-                this.removeAddRoomButtons();
-            } else {
-                this.addButtonsShown = true;
-                this.createAddRoomButtons();
-            }
+        addSelectedRoom(button) {
+            this.$refs.addRoomModal.openModal(button);
         },
 
 
         addNewRoom() {
-            this.$eventBus.$emit("add-room-toggle");
+            this.createAddRoomButtons();
+            this.roomViewState = "adding-room";
+            this.$eventBus.$emit("room-view-busy");
+            this.$eventBus.$emit("focus-home-setup");
         },
 
-        addSelectedRoom(button) {
-            this.$refs.addRoomModal.openModal(button);
+        cancel() {
+            this.$eventBus.$emit("room-view-cancel");
+        },
+
+
+        endAction() {
+            switch (this.roomViewState) {
+                case "adding-room":
+                    this.removeAddRoomButtons();
+                    break;
+            }
+
+            this.roomViewState = "normal";
+            this.$eventBus.$emit("room-view-free");
         },
 
 
@@ -220,11 +231,11 @@ export default {
     },
 
     mounted() {
-        this.$eventBus.$on("add-room-toggle", this.toggleAddRoomButtons);
+        this.$eventBus.$on("room-view-cancel", this.endAction);
     },
 
     beforeDestroy() {
-        this.$eventBus.$off("add-room-toggle", this.toggleAddRoomButtons)
+        this.$eventBus.$off("room-view-cancel", this.endAction);
     }
 };
 </script>

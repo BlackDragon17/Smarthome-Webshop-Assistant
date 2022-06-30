@@ -26,16 +26,13 @@ export default {
 
     data() {
         return {
-            currentAction: null,
+            roomViewBusy: false,
 
             sortByRoom: false
         };
     },
 
     props: ["allProducts", "currentSetup"],
-
-    // Since HomeSetup is responsible for cancelling in-progress actions, it emits all local events
-    emits: ["add-room-toggle", "delete-room-toggle"],
 
     computed: {
         productsByType() {
@@ -73,42 +70,27 @@ export default {
             this.$el.focus();
         },
 
-        // Cancels an in-progress action.
         cancelAction() {
-            // Since all actions=events are toggles, one can just emit it to cancel it.
-            if(this.currentAction) {
-                this.$eventBus.$emit(this.currentAction);
+            if(this.roomViewBusy) {
+                this.$eventBus.$emit("room-view-cancel");
             }
         },
 
-
-        /**
-         * Sets or removes the given action as the currentAction.
-         * If another action is in progress, it will be cancelled first.
-         * @param action The action to start or stop.
-         */
-        actionToggler(action) {
-            if (!this.currentAction) {
-                this.currentAction = action;
-            } else if (this.currentAction === action) {
-                this.currentAction = null
-            } else {
-                this.$eventBus.$emit(this.currentAction);
-                this.currentAction = action;
-            }
+        setRoomViewBusy(value) {
+            this.roomViewBusy = value
         }
     },
 
     mounted() {
         this.$eventBus.$on("focus-home-setup", this.focusThis);
-        this.$eventBus.$on("add-room-toggle", this.actionToggler.bind(this, "add-room-toggle"));
-        this.$eventBus.$on("add-device-toggle", this.actionToggler.bind(this, "add-device-toggle"));
+        this.$eventBus.$on("room-view-busy", this.setRoomViewBusy.bind(this, true));
+        this.$eventBus.$on("room-view-free", this.setRoomViewBusy.bind(this, false));
     },
 
     beforeDestroy() {
         this.$eventBus.$off("focus-home-setup", this.focusThis);
-        this.$eventBus.$off("add-room-toggle", this.actionToggler.bind(this, "add-room-toggle"));
-        this.$eventBus.$off("add-device-toggle", this.actionToggler.bind(this, "add-device-toggle"));
+        this.$eventBus.$off("room-view-busy", this.setRoomViewBusy.bind(this, true));
+        this.$eventBus.$off("room-view-free", this.setRoomViewBusy.bind(this, false));
     }
 };
 </script>
