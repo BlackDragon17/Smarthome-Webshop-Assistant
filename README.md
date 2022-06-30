@@ -12,21 +12,21 @@ This repository follows the standard Vite or Vue CLI pattern.
 
 ```
 root
-  ├─.github/workflows          GitHub Actions workflow configuration
-  ├─.vscode                    Recommended extensions for VS Code
-  ├─public                     Files to be copied to the webserver root unchanged
+  ├─.github/workflows         GitHub Actions workflow configuration
+  ├─.vscode                   Recommended extensions for VS Code
+  ├─public                    Files to be copied to the webserver root unchanged
   ├─resources
-  │  ├─scripts                 For dealing with product JSONs and GitHub Pages deployment
-  │  └─products                Product JSONs, human-readable
-  │    └─packed                Product JSONs, compressed
+  │  ├─scripts                For dealing with product JSONs and GitHub Pages deployment
+  │  └─products               Product JSONs, human-readable
+  │    └─packed               Product JSONs, compressed
   ├─src
-  │  ├─assets                  Various assets to be shipped with the webapp
-  │  ├─components              Vue components
-  │  ├─App.vue                 Webapp root
-  │  ├─EventBus.js             Global event bus
-  │  └─main.js                 Webapp entry point
-  ├─index.html                 The main HTML file hosting the Vue webapp
-  ├─package-lock.json          Auto-generated list of all project dependencies (ensures same package versions)
-  ├─package.json               Direct project dependencies
-  └─vite.config.js             Vite build configuration
+  │  ├─assets                 Various assets to be shipped with the webapp
+  │  ├─components             Vue components
+  │  ├─App.vue                Webapp root
+  │  ├─EventBus.js            Global event bus
+  │  └─main.js                Webapp entry point
+  ├─index.html                The main HTML file hosting the Vue webapp
+  ├─package-lock.json         Auto-generated list of all dependencies (ensures same package versions)
+  ├─package.json              Direct project dependencies
+  └─vite.config.js            Vite build configuration
 ```
