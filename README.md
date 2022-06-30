@@ -21,9 +21,9 @@ root
   │    └─packed               Product JSONs, compressed
   ├─src
   │  ├─assets                 Various assets to be shipped with the webapp
+  │  │  └─javascript          JavaScript modules
   │  ├─components             Vue components
   │  ├─App.vue                Webapp root
-  │  ├─EventBus.js            Global event bus
   │  └─main.js                Webapp entry point
   ├─index.html                The main HTML file hosting the Vue webapp
   ├─package-lock.json         Auto-generated list of all dependencies (ensures same package versions)
