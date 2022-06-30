@@ -13,8 +13,16 @@
 <script>
 import { capitalize } from "vue";
 
+import HomeSidebar from "./HomeSidebar.vue";
+import HomeRoomView from "./HomeRoomView.vue";
+
 export default {
     name: "HomeSetup",
+
+    components: {
+        HomeSidebar,
+        HomeRoomView
+    },
 
     data() {
         return {

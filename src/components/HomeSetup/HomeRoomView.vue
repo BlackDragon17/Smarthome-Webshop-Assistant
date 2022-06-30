@@ -18,8 +18,14 @@
 </template>
 
 <script>
+import AddRoomModal from "./AddRoomModal.vue";
+
 export default {
     name: "HomeRoomView",
+
+    components: {
+        AddRoomModal
+    },
 
     data() {
         return {

@@ -47,9 +47,14 @@
 
 <script>
 import { Modal } from "bootstrap";
+import AddDeviceModal from "./AddDeviceModal.vue";
 
 export default {
     name: "HomeSidebar",
+
+    components: {
+        AddDeviceModal
+    },
 
     data() {
         return {};
@@ -130,9 +135,3 @@ export default {
     /* --bs-btn-active-border-color: red; */
 }
 </style>
-
-<!-- TODO:
-    - Eine statische Wohnung (absolute Raum positionierung)
-    - Geräte in Räumen anzeigen
-    - Modal forms anschließen
--->

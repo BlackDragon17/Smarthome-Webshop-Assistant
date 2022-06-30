@@ -7,10 +7,20 @@
 </template>
 
 <script>
+import NavHeader from "./components/NavHeader.vue";
+import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
+
 import allProducts from "/resources/products/packed/PackedJSONs.json";
 import currentSetup from "/src/assets/default_setups/example1.json";
 
 export default {
+    name: "App",
+
+    components: {
+        NavHeader,
+        HomeSetup
+    },
+
     data() {
         return {
             allProducts,
