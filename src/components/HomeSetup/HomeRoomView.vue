@@ -1,5 +1,5 @@
 <template>
-    <section class="room-view" :class="{'room-view-padding-override': roomViewState !== 'normal'}">
+    <section class="room-view" :class="{'room-view-padding-override': false}">
         <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-added="endAction"/>
 
         <h3 class="action-heading" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
@@ -280,13 +280,18 @@ export default {
     overflow: auto;
 }
 
+@media screen and (max-width: 1000px) {
+    .room-view {
+        padding: 0;
+    }
+}
+
 .room-view-padding-override {
     padding: v-bind(actionHeadingHeight) 2rem 2rem;
 }
 
 .room-grid-container {
     display: flex;
-
 }
 
 
@@ -362,6 +367,8 @@ button.btn {
 
 .room-button-group {
     z-index: 1;
+    position: sticky;
+    bottom: 1rem;
 }
 
 .add-room-button {
@@ -374,15 +381,17 @@ button.btn {
 
 button.cancel-button {
     width: 9rem;
+
     z-index: 1;
+    position: sticky;
+    bottom: 1rem;
 }
 
 
 /* Action heading */
 .action-heading {
+    margin: 0 1rem 2rem;
     padding: 0.8rem 1.5rem 1rem;
-    margin: 1rem 0;
-    /* margin-bottom: auto; */
 
     background-color: #FCFCFC;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -391,7 +400,8 @@ button.cancel-button {
 
     font-size: 1.55rem;
 
-    position: absolute;
-    top: 0;
+    z-index: 1;
+    position: sticky;
+    top: 1rem;
 }
 </style>
