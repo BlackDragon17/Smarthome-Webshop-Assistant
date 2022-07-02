@@ -1,11 +1,17 @@
 <template>
-    <section class="room-view">
+    <section class="room-view" :class="roomViewState !== 'normal' ? 'pt-0' : ''">
         <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" @room-added="endAction"/>
+
+        <h3 class="action-heading" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
         <div class="room-grid">
             <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                 <p class="room-title">{{ room.name }}</p>
+                <div v-if="roomViewState === 'removing-room'" class="remove-overlay">
+                    <button class="remove-room-grid-button">Remove room</button>
+                </div>
             </div>
+
             <button class="add-room-grid-button"
                     v-for="button in addRoomButtons"
                     :key="'' + button.location.x + button.location.y"
@@ -16,12 +22,12 @@
         </div>
         <button v-if="false" @click="printDebug">Debug</button>
 
-        <div class="spacer"></div>
+        <div class="buttons-spacer"></div>
         <div v-if="roomViewState === 'normal'" class="room-button-group">
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
-            <button class="remove-room-button btn btn-secondary">Remove a room</button>
+            <button class="remove-room-button btn btn-secondary" @click="removeRoom">Remove a room</button>
         </div>
-        <button v-else-if="roomViewState !== 'adding-device'" class="cancel-button btn btn-danger" @click="cancel">Cancel</button>
+        <button v-else-if="roomViewState !== 'adding-device'" class="cancel-button btn btn-danger" @click="endAction">Cancel</button>
     </section>
 </template>
 
@@ -38,11 +44,10 @@ export default {
     data() {
         return {
             roomViewState: "normal",
+            actionHeadingText: "",
 
             gridStartCoord: 1,
             addRoomButtons: [],
-
-            addButtonsShown: false
         };
     },
 
@@ -189,24 +194,30 @@ export default {
 
         addNewRoom() {
             this.createAddRoomButtons();
+            this.actionHeadingText = "Select a spot to add the new room:";
             this.roomViewState = "adding-room";
             this.$eventBus.$emit("room-view-busy");
             this.$eventBus.$emit("focus-home-setup");
         },
 
-        cancel() {
-            this.$eventBus.$emit("room-view-cancel");
+        removeRoom() {
+            this.actionHeadingText = "Select a room to be removed:"
+            this.roomViewState = "removing-room";
+            this.$eventBus.$emit("room-view-busy");
+            this.$eventBus.$emit("focus-home-setup");
         },
-
 
         endAction() {
             switch (this.roomViewState) {
                 case "adding-room":
                     this.removeAddRoomButtons();
                     break;
+                case "removing-room":
+                    break;
             }
 
             this.roomViewState = "normal";
+            this.actionHeadingText = "";
             this.$eventBus.$emit("room-view-free");
         },
 
@@ -288,7 +299,7 @@ export default {
 }
 
 
-/* Add room buttons styling */
+/* Grid buttons styling */
 
 .add-room-grid-button {
     background-color: #f8faff;
@@ -308,7 +319,11 @@ export default {
 
 /* Control buttons styling */
 
-.spacer {
+button.btn {
+    padding: 0.6rem 1rem;
+}
+
+.buttons-spacer {
     flex-grow: 1;
     flex-shrink: 0.5;
     height: 1.5rem;
@@ -325,5 +340,20 @@ export default {
 
 button.cancel-button {
     width: 9rem;
+}
+
+
+/* Action heading */
+.action-heading {
+    padding: 0.8rem 1.5rem 1rem;
+    margin: 0.5rem 0 1rem;
+    /* margin-bottom: auto; */
+
+    background-color: #FCFCFC;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.8rem;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+
+    font-size: 1.55rem;
 }
 </style>
