@@ -4,21 +4,23 @@
 
         <h3 class="action-heading" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
-        <div class="room-grid">
-            <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
-                <p class="room-title">{{ room.name }}</p>
-                <div v-if="roomViewState === 'removing-room'" class="remove-overlay">
-                    <button class="remove-room-grid-button">Remove room</button>
+        <div class="room-grid-container">
+            <div class="room-grid">
+                <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
+                    <p class="room-title">{{ room.name }}</p>
+                    <div v-if="roomViewState === 'removing-room'" class="remove-overlay">
+                        <button class="remove-room-grid-button">Remove room</button>
+                    </div>
                 </div>
-            </div>
 
-            <button class="add-room-grid-button"
-                    v-for="button in addRoomButtons"
-                    :key="'' + button.location.x + button.location.y"
-                    :style="positionButton(button)"
-                    @click="addSelectedRoom(button)">
-                Click to add a<br>New Room<br>here
-            </button>
+                <button class="add-room-grid-button"
+                        v-for="button in addRoomButtons"
+                        :key="'' + button.location.x + button.location.y"
+                        :style="positionButton(button)"
+                        @click="addSelectedRoom(button)">
+                    Click to add a<br>New Room<br>here
+                </button>
+            </div>
         </div>
         <button v-if="false" @click="printDebug">Debug</button>
 
@@ -262,8 +264,12 @@ export default {
 </script>
 
 <style scoped>
+/* Good info on how Flexbox centering makes overflowing items inaccessible via scrolling: */
+/* https://stackoverflow.com/questions/33454533/cant-scroll-to-top-of-flex-item-that-is-overflowing-container */
+
 .room-view {
     padding: 2rem;
+    min-width: 0;
 
     display: flex;
     flex-direction: column;
@@ -271,10 +277,16 @@ export default {
     align-items: center;
 
     position: relative;
+    overflow: auto;
 }
 
 .room-view-padding-override {
     padding: v-bind(actionHeadingHeight) 2rem 2rem;
+}
+
+.room-grid-container {
+    display: flex;
+
 }
 
 
@@ -292,6 +304,8 @@ export default {
 
     column-gap: 1rem;
     row-gap: 1rem;
+
+    /* overflow: auto; */
 }
 
 .room {
