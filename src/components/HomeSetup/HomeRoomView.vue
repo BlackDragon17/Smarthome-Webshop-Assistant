@@ -1,5 +1,5 @@
 <template>
-    <section class="room-view" :class="roomViewState !== 'normal' ? 'pt-0' : ''">
+    <section class="room-view" :class="{'room-view-padding-override': roomViewState !== 'normal'}">
         <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" @room-added="endAction"/>
 
         <h3 class="action-heading" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
@@ -43,11 +43,13 @@ export default {
 
     data() {
         return {
-            roomViewState: "normal",
-            actionHeadingText: "",
+            roomViewState: "init",
+            actionHeadingText: "Sample Text",
 
             gridStartCoord: 1,
             addRoomButtons: [],
+
+            actionHeadingHeight: 0
         };
     },
 
@@ -201,7 +203,7 @@ export default {
         },
 
         removeRoom() {
-            this.actionHeadingText = "Select a room to be removed:"
+            this.actionHeadingText = "Select a room to be removed:";
             this.roomViewState = "removing-room";
             this.$eventBus.$emit("room-view-busy");
             this.$eventBus.$emit("focus-home-setup");
@@ -243,6 +245,14 @@ export default {
 
     mounted() {
         this.$eventBus.$on("room-view-cancel", this.endAction);
+
+        const heading = document.querySelector(".action-heading");
+        let headingHeight = heading.offsetHeight;
+        this.roomViewState = "normal";
+        this.actionHeadingText = "";
+        headingHeight += parseInt(window.getComputedStyle(heading).getPropertyValue("margin-top"), 10);
+        headingHeight += parseInt(window.getComputedStyle(heading).getPropertyValue("margin-bottom"), 10);
+        this.actionHeadingHeight = headingHeight + "px";
     },
 
     beforeDestroy() {
@@ -259,6 +269,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    position: relative;
+}
+
+.room-view-padding-override {
+    padding: v-bind(actionHeadingHeight) 2rem;
 }
 
 
@@ -346,7 +362,7 @@ button.cancel-button {
 /* Action heading */
 .action-heading {
     padding: 0.8rem 1.5rem 1rem;
-    margin: 0.5rem 0 1rem;
+    margin: 1rem 0;
     /* margin-bottom: auto; */
 
     background-color: #FCFCFC;
@@ -355,5 +371,8 @@ button.cancel-button {
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
 
     font-size: 1.55rem;
+
+    position: absolute;
+    top: 0;
 }
 </style>
