@@ -30,6 +30,7 @@ header {
     border-bottom: 1px solid #777;
     position: sticky;
     top: 0;
+    z-index: 1;
 }
 
 /* Outer flex box to align navbar with logo */

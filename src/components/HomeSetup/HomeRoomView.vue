@@ -344,7 +344,6 @@ export default {
 
 button.btn {
     padding: 0.6rem 1rem;
-    z-index: 1;
 }
 
 .room-button-group {
@@ -361,6 +360,7 @@ button.btn {
 
 button.cancel-button {
     width: 9rem;
+    z-index: 1;
 }
 
 
