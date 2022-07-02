@@ -57,6 +57,10 @@ export default {
         setupRooms: {
             type: Array,
             required: true
+        },
+        roomViewState: {
+            type: String,
+            required: true
         }
     },
 
@@ -67,6 +71,14 @@ export default {
             if (this.errorBorder) {
                 this.errorBorder = false;
             }
+        },
+
+        focusForm() {
+            if(this.roomViewState === "normal") {
+                this.roomModal.hide();
+                return;
+            }
+            this.roomInput.focus()
         },
 
         resetForm() {
@@ -117,7 +129,7 @@ export default {
         this.roomInput = document.getElementById("room-input");
 
         const domModal = document.getElementById("add-room-modal");
-        domModal.addEventListener("shown.bs.modal", () => this.roomInput.focus());
+        domModal.addEventListener("shown.bs.modal", () => this.focusForm());
         domModal.addEventListener("hidden.bs.modal", () => this.resetForm());
     }
 };

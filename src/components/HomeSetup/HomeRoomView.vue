@@ -1,6 +1,6 @@
 <template>
     <section class="room-view" :class="{'room-view-padding-override': roomViewState !== 'normal'}">
-        <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" @room-added="endAction"/>
+        <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-added="endAction"/>
 
         <h3 class="action-heading" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
@@ -99,8 +99,8 @@ export default {
         },
 
         cssGridRows() {
-            return this.gridStartCoord === 1 ? `repeat(${this.gridHeight}, minmax(5rem, 20rem))`
-                : `repeat(${this.gridHeight + 2}, minmax(5rem, 20rem))`;
+            return this.gridStartCoord === 1 ? `repeat(${this.gridHeight}, minmax(10rem, 20rem))`
+                : `repeat(${this.gridHeight + 2}, minmax(10rem, 20rem))`;
         },
 
         roomGridBorder() {
@@ -274,7 +274,7 @@ export default {
 }
 
 .room-view-padding-override {
-    padding: v-bind(actionHeadingHeight) 2rem;
+    padding: v-bind(actionHeadingHeight) 2rem 2rem;
 }
 
 
@@ -335,15 +335,20 @@ export default {
 
 /* Control buttons styling */
 
-button.btn {
-    padding: 0.6rem 1rem;
-}
-
 .buttons-spacer {
     flex-grow: 1;
     flex-shrink: 0.5;
     height: 1.5rem;
     max-height: 3rem;
+}
+
+button.btn {
+    padding: 0.6rem 1rem;
+    z-index: 1;
+}
+
+.room-button-group {
+    z-index: 1;
 }
 
 .add-room-button {
