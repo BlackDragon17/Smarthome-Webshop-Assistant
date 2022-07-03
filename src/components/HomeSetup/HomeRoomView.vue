@@ -1,6 +1,7 @@
 <template>
-    <section class="room-view" ref="roomView">
+    <section ref="roomView" class="room-view">
         <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-added="endAction"/>
+        <RemoveRoomModal ref="removeRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-removed="endAction"/>
 
         <h3 class="action-heading relative-centering" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
@@ -8,8 +9,10 @@
             <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && allowMarginOverride}">
                 <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                     <p class="room-title relative-centering">{{ room.name }}</p>
-                    <div v-if="roomViewState === 'removing-room'" class="remove-overlay">
-                        <button class="remove-room-grid-button">Remove room</button>
+
+                    <div class="remove-overlay" v-if="roomViewState === 'removing-room'">
+                        <button class="remove-room-grid-button" @click="removeSelectedRoom(this)">Remove room</button>
+                        <!-- TODO: Check whether this reference works -->
                     </div>
                 </div>
 
@@ -34,13 +37,15 @@
 
 <script>
 import { nextTick } from "vue";
-import AddRoomModal from "./AddRoomModal.vue";
+import AddRoomModal from "./modals/AddRoomModal.vue";
+import RemoveRoomModal from "./modals/RemoveRoomModal.vue";
 
 export default {
     name: "HomeRoomView",
 
     components: {
-        AddRoomModal
+        AddRoomModal,
+        RemoveRoomModal
     },
 
     data() {
@@ -196,6 +201,12 @@ export default {
             this.$refs.addRoomModal.openModal(button);
         },
 
+        removeSelectedRoom(button) {
+            this.$refs.removeRoomModal.openModal(button);
+        },
+
+
+        // Control button callbacks
 
         addNewRoom() {
             this.createAddRoomButtons();

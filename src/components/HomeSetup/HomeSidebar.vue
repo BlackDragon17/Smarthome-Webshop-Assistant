@@ -44,7 +44,7 @@
 
 <script>
 import { Modal } from "bootstrap";
-import AddDeviceModal from "./AddDeviceModal.vue";
+import AddDeviceModal from "./modals/AddDeviceModal.vue";
 
 export default {
     name: "HomeSidebar",
