@@ -1,11 +1,11 @@
 <template>
-    <section class="room-view" :class="{'room-view-padding-override': false}">
+    <section class="room-view" ref="roomView">
         <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-added="endAction"/>
 
         <h3 class="action-heading" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
         <div class="room-grid-container">
-            <div class="room-grid">
+            <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && !cancelMarginOverride}">
                 <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                     <p class="room-title">{{ room.name }}</p>
                     <div v-if="roomViewState === 'removing-room'" class="remove-overlay">
@@ -24,7 +24,6 @@
         </div>
         <button v-if="false" @click="printDebug">Debug</button>
 
-        <div class="buttons-spacer"></div>
         <div v-if="roomViewState === 'normal'" class="room-button-group">
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
             <button class="remove-room-button btn btn-secondary" @click="removeRoom">Remove a room</button>
@@ -34,6 +33,7 @@
 </template>
 
 <script>
+import { nextTick } from "vue";
 import AddRoomModal from "./AddRoomModal.vue";
 
 export default {
@@ -46,12 +46,13 @@ export default {
     data() {
         return {
             roomViewState: "init",
-            actionHeadingText: "Sample Text",
 
             gridStartCoord: 1,
             addRoomButtons: [],
 
-            actionHeadingHeight: 0
+            actionHeadingText: "Sample Text",
+            actionHeadingHeight: 0,
+            cancelMarginOverride: false
         };
     },
 
@@ -198,10 +199,11 @@ export default {
 
         addNewRoom() {
             this.createAddRoomButtons();
-            this.actionHeadingText = "Select a spot to add the new room:";
+            this.actionHeadingText = "Select a spot to add the new room at:";
             this.roomViewState = "adding-room";
             this.$eventBus.$emit("room-view-busy");
             this.$eventBus.$emit("focus-home-setup");
+            this.checkOverflow();
         },
 
         removeRoom() {
@@ -209,6 +211,14 @@ export default {
             this.roomViewState = "removing-room";
             this.$eventBus.$emit("room-view-busy");
             this.$eventBus.$emit("focus-home-setup");
+            this.checkOverflow();
+        },
+
+        async checkOverflow() {
+            await nextTick();
+            if (this.$refs.roomView.scrollHeight > this.$refs.roomView.offsetHeight) {
+                this.cancelMarginOverride = true;
+            }
         },
 
         endAction() {
@@ -222,6 +232,7 @@ export default {
 
             this.roomViewState = "normal";
             this.actionHeadingText = "";
+            this.cancelMarginOverride = false;
             this.$eventBus.$emit("room-view-free");
         },
 
@@ -247,6 +258,7 @@ export default {
 
     mounted() {
         this.$eventBus.$on("room-view-cancel", this.endAction);
+        //this.$eventBus.$on("room-view-busy", this.testCallback);
 
         const heading = document.querySelector(".action-heading");
         let headingHeight = heading.offsetHeight;
@@ -270,35 +282,33 @@ export default {
 /* Page layout */
 
 .room-view {
-    padding: 2rem;
-
     display: flex;
     flex-direction: column;
     overflow: auto;
 }
 
-.room-view-padding-override {
-    padding: v-bind(actionHeadingHeight) 2rem 2rem;
+/* Prevents the grid from overflowing its div + allows it to have own margins */
+.room-grid-container {
+    margin: auto;
+    display: flex;
 }
 
-.room-grid-container {
-    display: flex;
-    margin: auto;
+.top-margin-override {
+    margin-top: calc(2rem - v-bind(actionHeadingHeight)) !important;
 }
 
 
 /* Grid styling */
 
 .room-grid {
+    margin: 2rem;
     border: v-bind(roomGridBorder);
-    max-width: 80rem;
-    max-height: 50rem;
-    min-height: 0;
+    max-width: 90rem;
+    max-height: 60rem;
 
     display: grid;
     grid-template-columns: v-bind(cssGridColumns);
     grid-template-rows: v-bind(cssGridRows);
-
     column-gap: 1rem;
     row-gap: 1rem;
 }
@@ -344,27 +354,22 @@ export default {
 
 /* Control buttons */
 
-.buttons-spacer {
-    flex-grow: 1;
-    flex-shrink: 0.5;
-    height: 1.5rem;
-    max-height: 3rem;
-}
-
 button.btn {
     padding: 0.6rem 1rem;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
 }
 
 .room-button-group {
+    margin: 1rem auto 0;
+
     z-index: 1;
     position: sticky;
-    bottom: 1rem;
-    max-width: max-content;
-    margin: auto;
+    left: 0;
+    bottom: 2rem;
 }
 
 .add-room-button {
-    margin-right: 0.4rem;
+    margin-right: 0.5rem;
 
     --bs-btn-bg: var(--blue-rooms-main);
     --bs-btn-hover-bg: var(--blue-rooms-main-darker1);
@@ -372,17 +377,19 @@ button.btn {
 }
 
 button.cancel-button {
+    margin: 1rem auto 0;
     width: 9rem;
 
     z-index: 1;
     position: sticky;
-    bottom: 1rem;
+    left: 0;
+    bottom: 2rem;
 }
 
 
 /* Action heading */
 .action-heading {
-    margin: 0 auto 2rem;
+    margin: 0 auto;
     padding: 0.8rem 1.5rem 1rem;
     max-width: max-content;
 
