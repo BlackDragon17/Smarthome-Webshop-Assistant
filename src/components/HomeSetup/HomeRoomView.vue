@@ -5,7 +5,7 @@
         <h3 class="action-heading" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
         <div class="room-grid-container">
-            <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && !cancelMarginOverride}">
+            <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && allowMarginOverride}">
                 <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                     <p class="room-title">{{ room.name }}</p>
                     <div v-if="roomViewState === 'removing-room'" class="remove-overlay">
@@ -28,7 +28,7 @@
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
             <button class="remove-room-button btn btn-secondary" @click="removeRoom">Remove a room</button>
         </div>
-        <button v-else-if="roomViewState !== 'adding-device'" class="cancel-button btn btn-danger" @click="endAction">Cancel</button>
+        <button v-else-if="roomViewState !== 'adding-device' && roomViewState !== 'init'" class="cancel-button btn btn-danger" @click="endAction">Cancel</button>
     </section>
 </template>
 
@@ -52,7 +52,7 @@ export default {
 
             actionHeadingText: "Sample Text",
             actionHeadingHeight: 0,
-            cancelMarginOverride: false
+            allowMarginOverride: false
         };
     },
 
@@ -216,8 +216,9 @@ export default {
 
         async checkOverflow() {
             await nextTick();
-            if (this.$refs.roomView.scrollHeight > this.$refs.roomView.offsetHeight) {
-                this.cancelMarginOverride = true;
+            // Allow margin override only when there's no overflow
+            if (!(this.$refs.roomView.scrollHeight > this.$refs.roomView.offsetHeight)) {
+                this.allowMarginOverride = true;
             }
         },
 
@@ -232,7 +233,7 @@ export default {
 
             this.roomViewState = "normal";
             this.actionHeadingText = "";
-            this.cancelMarginOverride = false;
+            this.allowMarginOverride = false;
             this.$eventBus.$emit("room-view-free");
         },
 
@@ -258,7 +259,6 @@ export default {
 
     mounted() {
         this.$eventBus.$on("room-view-cancel", this.endAction);
-        //this.$eventBus.$on("room-view-busy", this.testCallback);
 
         const heading = document.querySelector(".action-heading");
         let headingHeight = heading.offsetHeight;
@@ -278,6 +278,7 @@ export default {
 <style scoped>
 /* Good info on how Flexbox centering makes overflowing items inaccessible via scrolling: */
 /* https://stackoverflow.com/questions/33454533/cant-scroll-to-top-of-flex-item-that-is-overflowing-container */
+/* Basically the trick is to have a flex container but to center via margins instead of justify's within it. */
 
 /* Page layout */
 
@@ -287,12 +288,13 @@ export default {
     overflow: auto;
 }
 
-/* Prevents the grid from overflowing its div + allows it to have own margins */
+/* Prevents the grid from overflowing .room-grid + allows it to have its own margins */
 .room-grid-container {
     margin: auto;
     display: flex;
 }
 
+/* Pushes the grid up to counter the offsetHeight of the actionHeading (while preserving a 2rem margin) */
 .top-margin-override {
     margin-top: calc(2rem - v-bind(actionHeadingHeight)) !important;
 }
