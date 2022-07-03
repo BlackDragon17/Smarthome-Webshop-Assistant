@@ -101,4 +101,11 @@ p {
     vertical-align: bottom;
     font-size: 1.4em;
 }
+
+.relative-centering {
+    /* https://www.w3.org/Style/Examples/007/center.en.html#hv3 */
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, 0);
+}
 </style>

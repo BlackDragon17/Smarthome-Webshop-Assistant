@@ -2,12 +2,12 @@
     <section class="room-view" ref="roomView">
         <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-added="endAction"/>
 
-        <h3 class="action-heading" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
+        <h3 class="action-heading relative-centering" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
         <div class="room-grid-container">
             <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && allowMarginOverride}">
                 <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
-                    <p class="room-title">{{ room.name }}</p>
+                    <p class="room-title relative-centering">{{ room.name }}</p>
                     <div v-if="roomViewState === 'removing-room'" class="remove-overlay">
                         <button class="remove-room-grid-button">Remove room</button>
                     </div>
@@ -24,11 +24,11 @@
         </div>
         <button v-if="false" @click="printDebug">Debug</button>
 
-        <div v-if="roomViewState === 'normal'" class="room-button-group">
+        <div v-if="roomViewState === 'normal'" class="room-button-group relative-centering">
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
             <button class="remove-room-button btn btn-secondary" @click="removeRoom">Remove a room</button>
         </div>
-        <button v-else-if="roomViewState !== 'adding-device' && roomViewState !== 'init'" class="cancel-button btn btn-danger" @click="endAction">Cancel</button>
+        <button v-else-if="roomViewState !== 'adding-device' && roomViewState !== 'init'" class="cancel-button btn btn-danger relative-centering" @click="endAction">Cancel</button>
     </section>
 </template>
 
@@ -229,6 +229,8 @@ export default {
                     break;
                 case "removing-room":
                     break;
+                case "normal":
+                    return;
             }
 
             this.roomViewState = "normal";
@@ -325,10 +327,6 @@ export default {
 .room > .room-title {
     position: absolute;
     bottom: 0;
-    left: 50%;
-    /* https://www.w3.org/Style/Examples/007/center.en.html#hv3 */
-    margin-right: -50%;
-    transform: translate(-50%, 0);
 
     margin-bottom: 0.1rem;
     color: var(--blue-room-text);
@@ -362,11 +360,11 @@ button.btn {
 }
 
 .room-button-group {
-    margin: 1rem auto 0;
+    margin-top: 1rem;
+    max-width: max-content;
 
     z-index: 1;
     position: sticky;
-    left: 0;
     bottom: 2rem;
 }
 
@@ -379,19 +377,16 @@ button.btn {
 }
 
 button.cancel-button {
-    margin: 1rem auto 0;
+    margin-top: 1rem;
     width: 9rem;
 
     z-index: 1;
     position: sticky;
-    left: 0;
     bottom: 2rem;
 }
 
-
 /* Action heading */
 .action-heading {
-    margin: 0 auto;
     padding: 0.8rem 1.5rem 1rem;
     max-width: max-content;
 
@@ -406,6 +401,5 @@ button.cancel-button {
     z-index: 1;
     position: sticky;
     top: 1rem;
-    left: 0;
 }
 </style>
