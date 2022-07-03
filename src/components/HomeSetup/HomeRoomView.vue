@@ -267,23 +267,14 @@ export default {
 /* Good info on how Flexbox centering makes overflowing items inaccessible via scrolling: */
 /* https://stackoverflow.com/questions/33454533/cant-scroll-to-top-of-flex-item-that-is-overflowing-container */
 
+/* Page layout */
+
 .room-view {
     padding: 2rem;
-    min-width: 0;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    position: relative;
     overflow: auto;
-}
-
-@media screen and (max-width: 1000px) {
-    .room-view {
-        padding: 0;
-    }
 }
 
 .room-view-padding-override {
@@ -292,10 +283,11 @@ export default {
 
 .room-grid-container {
     display: flex;
+    margin: auto;
 }
 
 
-/* Basic grid styling */
+/* Grid styling */
 
 .room-grid {
     border: v-bind(roomGridBorder);
@@ -309,8 +301,6 @@ export default {
 
     column-gap: 1rem;
     row-gap: 1rem;
-
-    /* overflow: auto; */
 }
 
 .room {
@@ -334,7 +324,7 @@ export default {
 }
 
 
-/* Grid buttons styling */
+/* Grid buttons */
 
 .add-room-grid-button {
     background-color: #f8faff;
@@ -352,7 +342,7 @@ export default {
 }
 
 
-/* Control buttons styling */
+/* Control buttons */
 
 .buttons-spacer {
     flex-grow: 1;
@@ -369,6 +359,8 @@ button.btn {
     z-index: 1;
     position: sticky;
     bottom: 1rem;
+    max-width: max-content;
+    margin: auto;
 }
 
 .add-room-button {
@@ -390,8 +382,9 @@ button.cancel-button {
 
 /* Action heading */
 .action-heading {
-    margin: 0 1rem 2rem;
+    margin: 0 auto 2rem;
     padding: 0.8rem 1.5rem 1rem;
+    max-width: max-content;
 
     background-color: #FCFCFC;
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -399,9 +392,11 @@ button.cancel-button {
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
 
     font-size: 1.55rem;
+    text-align: center;
 
     z-index: 1;
     position: sticky;
     top: 1rem;
+    left: 0;
 }
 </style>

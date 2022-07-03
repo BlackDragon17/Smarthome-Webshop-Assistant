@@ -6,6 +6,6 @@ import App from "./App.vue";
 
 const app = createApp(App);
 app.config.globalProperties.$eventBus = $eventBus;
-app.config.globalProperties.hideBorders = true;
+app.config.globalProperties.hideBorders = false;
 
 app.mount("#app");
