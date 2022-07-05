@@ -8,10 +8,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Content
+                        Are you sure you want to remove the "<strong>{{ removingRoom?.name }}</strong>" from your home?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary" @click="removeRoom">Remove</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
@@ -28,13 +28,15 @@ export default {
 
     data() {
         return {
-            roomModal: null
+            roomModal: null,
+
+            removingRoom: null
         };
     },
 
     props: {
-        setupRooms: {
-            type: Array,
+        currentSetup: {
+            type: Object,
             required: true
         },
         roomViewState: {
@@ -43,18 +45,39 @@ export default {
         }
     },
 
-    emits: ["room-removed"],
+    emits: ["room-removed", "focus-home-setup"],
 
     methods: {
-        openModal(removeRoomButton) {
+        openModal(removingRoom) {
+            this.removingRoom = removingRoom;
             this.roomModal.show();
         },
+
+        resetModal() {
+            this.removingRoom = null;
+            this.$eventBus.$emit("focus-home-setup");
+        },
+
+        removeRoom() {
+            const roomIndex = this.currentSetup.rooms.findIndex(room => room.name.toLowerCase() === this.removingRoom.name.toLowerCase());
+
+            this.roomModal.hide();
+            this.currentSetup.rooms.splice(roomIndex, 1);
+            this.$emit("room-removed");
+        }
     },
 
     mounted() {
         this.roomModal = new Modal("#remove-room-modal");
+
+        const domModal = document.getElementById("add-room-modal");
+        domModal.addEventListener("hidden.bs.modal", () => this.resetModal());
     }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+strong {
+    font-weight: 600;
+}
+</style>

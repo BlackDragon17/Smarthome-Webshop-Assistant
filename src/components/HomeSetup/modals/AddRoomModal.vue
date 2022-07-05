@@ -64,7 +64,7 @@ export default {
         }
     },
 
-    emits: ["room-added"],
+    emits: ["room-added", "focus-home-setup"],
 
     methods: {
         onInput() {
@@ -81,17 +81,17 @@ export default {
             this.roomInput.focus()
         },
 
-        resetForm() {
+        openModal(addRoomButton) {
+            this.roomModal.show();
+            this.newRoomLocation = addRoomButton.location;
+        },
+
+        resetModal() {
             this.errorBorder = false;
             this.errorMsg = "";
             this.newRoomLocation = null;
             this.roomForm.reset();
             this.$eventBus.$emit("focus-home-setup");
-        },
-
-        openModal(addRoomButton) {
-            this.roomModal.show();
-            this.newRoomLocation = addRoomButton.location;
         },
 
         submitRoom() {
@@ -130,7 +130,7 @@ export default {
 
         const domModal = document.getElementById("add-room-modal");
         domModal.addEventListener("shown.bs.modal", () => this.focusForm());
-        domModal.addEventListener("hidden.bs.modal", () => this.resetForm());
+        domModal.addEventListener("hidden.bs.modal", () => this.resetModal());
     }
 };
 </script>

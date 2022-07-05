@@ -1,7 +1,7 @@
 <template>
     <section ref="roomView" class="room-view">
         <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-added="endAction"/>
-        <RemoveRoomModal ref="removeRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-removed="endAction"/>
+        <RemoveRoomModal ref="removeRoomModal" :current-setup="currentSetup" :room-view-state="roomViewState" @room-removed="endAction"/>
 
         <h3 class="action-heading relative-centering" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
@@ -11,7 +11,7 @@
                     <p class="room-title relative-centering">{{ room.name }}</p>
 
                     <div class="remove-overlay" v-if="roomViewState === 'removing-room'">
-                        <button class="remove-room-grid-button" @click="removeSelectedRoom(this)">Remove room</button>
+                        <button class="remove-room-grid-button" @click="removeSelectedRoom(room)">Remove room</button>
                         <!-- TODO: Check whether this reference works -->
                     </div>
                 </div>
