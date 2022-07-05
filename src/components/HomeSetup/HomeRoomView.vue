@@ -11,11 +11,11 @@
                     <p class="room-title relative-centering">{{ room.name }}</p>
 
                     <div class="device-grid">
-
-                    </div>
-
-                    <div class="device" v-for="product in productsByRoom[room.name]">
-                        {{ product.brand }}
+                        <!--<div class="device-container">-->
+                        <div class="device" v-for="product in productsByRoom[room.name]" :key="product.guid" :style="positionDevice(product)">
+                            {{ product.brand }}
+                        </div>
+                        <!--</div>-->
                     </div>
 
                     <button class="remove-room-overlay" v-if="roomViewState === 'removing-room'" @click="removeSelectedRoom(room)">
@@ -138,9 +138,12 @@ export default {
         positionRoom(room) {
             return `grid-column: ${room.location.x} / span 1; grid-row: ${room.location.y} / span 1;`;
         },
-
         positionButton(button) {
             return `grid-column: ${button.location.x} / span 1; grid-row: ${button.location.y} / span 1;`;
+        },
+        positionDevice(product) {
+            const location = this.currentSetup.products.find(prod => prod.guid === product.guid).location;
+            return `grid-column: ${location.x} / span 1; grid-row: ${location.y} / span 1;`;
         },
 
 
@@ -433,7 +436,17 @@ export default {
 
 
 
-/* Devices */
+/* Device grid styling */
+
+.device-grid {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(219, 21, 238, 0.2);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+
+    display: grid;
+}
 
 .device {
     width: 3rem;
