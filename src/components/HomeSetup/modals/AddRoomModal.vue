@@ -129,8 +129,8 @@ export default {
         this.roomInput = document.getElementById("room-input");
 
         const domModal = document.getElementById("add-room-modal");
-        domModal.addEventListener("shown.bs.modal", () => this.focusForm());
-        domModal.addEventListener("hidden.bs.modal", () => this.resetModal());
+        domModal.addEventListener("shown.bs.modal", this.focusForm);
+        domModal.addEventListener("hidden.bs.modal", this.resetModal);
     }
 };
 </script>

@@ -70,8 +70,8 @@ export default {
     mounted() {
         this.roomModal = new Modal("#remove-room-modal");
 
-        const domModal = document.getElementById("add-room-modal");
-        domModal.addEventListener("hidden.bs.modal", () => this.resetModal());
+        const domModal = document.getElementById("remove-room-modal");
+        domModal.addEventListener("hidden.bs.modal", this.resetModal);
     }
 };
 </script>

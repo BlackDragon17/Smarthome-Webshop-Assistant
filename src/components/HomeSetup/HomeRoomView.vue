@@ -273,6 +273,7 @@ export default {
     mounted() {
         this.$eventBus.$on("room-view-cancel", this.endAction);
 
+        // Compute actionHeadingHeight and hide it
         const heading = document.querySelector(".action-heading");
         let headingHeight = heading.offsetHeight;
         this.roomViewState = "normal";
