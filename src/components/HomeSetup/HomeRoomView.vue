@@ -10,9 +10,11 @@
                 <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                     <p class="room-title relative-centering">{{ room.name }}</p>
 
-                    <div class="remove-room-overlay" v-if="roomViewState === 'removing-room'">
-                        <button class="remove-room-grid-button" @click="removeSelectedRoom(room)">Remove room</button>
-                    </div>
+                    <button class="remove-room-overlay" v-if="roomViewState === 'removing-room'" @click="removeSelectedRoom(room)">
+                        <span class="remove-room-icon-bg">
+                            <span class="remove-room-icon material-symbols-rounded">delete</span>
+                        </span>
+                    </button>
                 </div>
 
                 <button class="add-room-grid-button"
@@ -239,7 +241,7 @@ export default {
             this.checkOverflow();
         },
 
-        // Cancel margin override if actionHeader covers room-grid
+        // Cancel margin override if actionHeader would cover room-grid with it enabled
         async checkOverflow() {
             await nextTick();
             if (this.actionHeadingHeight.borderBox - 8 >= parseInt(this.gridContainerCss.getPropertyValue("margin-top"), 10)) {
@@ -328,6 +330,7 @@ export default {
 }
 
 /* Pushes the grid up to counter the offsetHeight of the actionHeading (while preserving a 2rem margin) */
+/* Thus allowing the grid position to remain static given enough top margin */
 .top-margin-override {
     margin-top: calc(2rem - v-bind("actionHeadingHeight.total")) !important;
 }
@@ -389,6 +392,8 @@ export default {
 .remove-room-overlay {
     width: 100%;
     height: 100%;
+    border: none;
+    background-color: transparent;
 
     display: flex;
     justify-content: center;
@@ -397,7 +402,28 @@ export default {
 
 .remove-room-overlay:hover, .remove-room-overlay:focus {
     border: 1px solid var(--bs-red);
-    background-color: rgba(255, 0, 0, 0.2);
+    background-color: rgba(255, 0, 0, 0.3);
+}
+
+.remove-room-overlay:active {
+    background-color: rgba(255, 0, 0, 0.5);
+}
+
+.remove-room-icon-bg {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.3rem;
+    background-color: var(--bs-red);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.remove-room-icon {
+    color: white;
+    font-size: 3rem;
+    font-weight: 600;
 }
 
 
