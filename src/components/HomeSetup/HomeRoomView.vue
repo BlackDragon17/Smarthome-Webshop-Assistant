@@ -30,7 +30,11 @@
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
             <button class="remove-room-button btn btn-secondary" @click="removeRoom">Remove a room</button>
         </div>
-        <button v-else-if="roomViewState !== 'adding-device' && roomViewState !== 'init'" class="cancel-button btn btn-danger relative-centering" @click="endAction">Cancel</button>
+        <button v-else-if="roomViewState !== 'adding-device' && roomViewState !== 'init'"
+                class="cancel-button btn btn-danger relative-centering"
+                @click="endAction">
+            Cancel
+        </button>
     </section>
 </template>
 
@@ -52,11 +56,12 @@ export default {
             roomViewState: "init",
 
             gridStartCoord: 1,
+            gridContainerCss: null,
             addRoomButtons: [],
 
             actionHeadingText: "Sample Text",
-            actionHeadingHeight: 0,
-            allowMarginOverride: false
+            actionHeadingHeight: {borderBox: 0, total: "0"},
+            allowMarginOverride: true
         };
     },
 
@@ -234,11 +239,11 @@ export default {
             this.checkOverflow();
         },
 
+        // Cancel margin override if actionHeader covers room-grid
         async checkOverflow() {
             await nextTick();
-            // Allow margin override only when there's no overflow
-            if (!(this.$refs.roomView.scrollHeight > this.$refs.roomView.offsetHeight)) {
-                this.allowMarginOverride = true;
+            if (this.actionHeadingHeight.borderBox - 8 >= parseInt(this.gridContainerCss.getPropertyValue("margin-top"), 10)) {
+                this.allowMarginOverride = false;
             }
         },
 
@@ -255,7 +260,7 @@ export default {
 
             this.roomViewState = "normal";
             this.actionHeadingText = "";
-            this.allowMarginOverride = false;
+            this.allowMarginOverride = true;
             this.$eventBus.$emit("room-view-free");
         },
 
@@ -284,12 +289,15 @@ export default {
 
         // Compute actionHeadingHeight and hide it
         const heading = document.querySelector(".action-heading");
-        let headingHeight = heading.offsetHeight;
+        this.actionHeadingHeight.borderBox = heading.offsetHeight;
         this.roomViewState = "normal";
         this.actionHeadingText = "";
-        headingHeight += parseInt(window.getComputedStyle(heading).getPropertyValue("margin-top"), 10);
-        headingHeight += parseInt(window.getComputedStyle(heading).getPropertyValue("margin-bottom"), 10);
-        this.actionHeadingHeight = headingHeight + "px";
+        this.actionHeadingHeight.total = this.actionHeadingHeight.borderBox + parseInt(window.getComputedStyle(heading).getPropertyValue("margin-top"), 10);
+        this.actionHeadingHeight.total += parseInt(window.getComputedStyle(heading).getPropertyValue("margin-bottom"), 10);
+        this.actionHeadingHeight.total += "px";
+
+        const gridContainer = document.querySelector(".room-grid-container");
+        this.gridContainerCss = window.getComputedStyle(gridContainer);
     },
 
     beforeDestroy() {
@@ -321,7 +329,7 @@ export default {
 
 /* Pushes the grid up to counter the offsetHeight of the actionHeading (while preserving a 2rem margin) */
 .top-margin-override {
-    margin-top: calc(2rem - v-bind(actionHeadingHeight)) !important;
+    margin-top: calc(2rem - v-bind("actionHeadingHeight.total")) !important;
 }
 
 
