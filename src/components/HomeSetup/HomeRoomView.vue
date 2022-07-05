@@ -10,9 +10,8 @@
                 <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                     <p class="room-title relative-centering">{{ room.name }}</p>
 
-                    <div class="remove-overlay" v-if="roomViewState === 'removing-room'">
+                    <div class="remove-room-overlay" v-if="roomViewState === 'removing-room'">
                         <button class="remove-room-grid-button" @click="removeSelectedRoom(room)">Remove room</button>
-                        <!-- TODO: Check whether this reference works -->
                     </div>
                 </div>
 
@@ -346,7 +345,7 @@ export default {
 }
 
 
-/* Grid buttons */
+/* Grid buttons -- add room */
 
 .add-room-grid-button {
     background-color: #f8faff;
@@ -361,6 +360,23 @@ export default {
 .add-room-grid-button:active {
     background-color: #96c8ef;
     border: 1px solid #0c88ed;
+}
+
+
+/* Grid buttons -- remove room */
+
+.remove-room-overlay {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.remove-room-overlay:hover, .remove-room-overlay:focus {
+    border: 1px solid var(--bs-red);
+    background-color: rgba(255, 0, 0, 0.2);
 }
 
 

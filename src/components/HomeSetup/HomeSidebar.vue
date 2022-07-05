@@ -113,6 +113,7 @@ export default {
     --bs-btn-bg: var(--green-devices-main);
     --bs-btn-hover-bg: var(--green-devices-main-darker1);
     --bs-btn-active-bg: var(--green-devices-main-darker2);
+    /* TODO: customize outline */
     /* --bs-btn-active-border-color: red; */
 }
 </style>
