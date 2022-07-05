@@ -10,6 +10,14 @@
                 <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
                     <p class="room-title relative-centering">{{ room.name }}</p>
 
+                    <div class="device-grid">
+
+                    </div>
+
+                    <div class="device" v-for="product in productsByRoom[room.name]">
+                        {{ product.brand }}
+                    </div>
+
                     <button class="remove-room-overlay" v-if="roomViewState === 'removing-room'" @click="removeSelectedRoom(room)">
                         <span class="remove-room-icon-bg">
                             <span class="remove-room-icon material-symbols-rounded">delete</span>
@@ -67,7 +75,7 @@ export default {
         };
     },
 
-    props: ["currentSetup"],
+    props: ["currentSetup", "productsByRoom"],
 
     computed: {
         lowestCoords() {
@@ -83,7 +91,6 @@ export default {
             }
             return {x: lowestX, y: lowestY};
         },
-
         highestCoords() {
             let highestX = -Infinity;
             let highestY = -Infinity;
@@ -101,7 +108,6 @@ export default {
         gridWidth() {
             return Math.abs(this.lowestCoords.x - this.highestCoords.x) + 1;
         },
-
         gridHeight() {
             return Math.abs(this.lowestCoords.y - this.highestCoords.y) + 1;
         },
@@ -111,22 +117,18 @@ export default {
             return this.gridStartCoord === 1 ? `repeat(${this.gridWidth}, minmax(15rem, 40rem))`
                 : `repeat(${this.gridWidth + 2}, minmax(15rem, 40rem))`;
         },
-
         cssGridRows() {
             return this.gridStartCoord === 1 ? `repeat(${this.gridHeight}, minmax(10rem, 20rem))`
                 : `repeat(${this.gridHeight + 2}, minmax(10rem, 20rem))`;
         },
-
         cssGridMinHeight() {
             let height = this.roomViewState === "adding-room" ? this.gridHeight + 2 : this.gridHeight;
             // rows + row gaps + margins
             return height * 10 + (height - 1) + 4 + "rem";
         },
-
         roomGridBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgreen";
         },
-
         roomGridContainerBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkorchid";
         }
@@ -336,7 +338,8 @@ export default {
 }
 
 
-/* Grid styling */
+
+/* Room grid styling */
 
 .room-grid {
     margin: 2rem;
@@ -368,7 +371,8 @@ export default {
 }
 
 
-/* Grid buttons -- add room */
+
+/* Room grid buttons -- add room */
 
 .add-room-grid-button {
     padding: 0;
@@ -387,7 +391,8 @@ export default {
 }
 
 
-/* Grid buttons -- remove room */
+
+/* Room grid buttons -- remove room */
 
 .remove-room-overlay {
     width: 100%;
@@ -427,6 +432,20 @@ export default {
 }
 
 
+
+/* Devices */
+
+.device {
+    width: 3rem;
+    height: 3rem;
+
+    background-color: bisque;
+    border: 1px solid darkgreen;
+    overflow: clip;
+}
+
+
+
 /* Control buttons */
 
 button.btn {
@@ -459,6 +478,8 @@ button.cancel-button {
     position: sticky;
     bottom: 2rem;
 }
+
+
 
 /* Action heading */
 .action-heading {

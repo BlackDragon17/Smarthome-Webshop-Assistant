@@ -32,23 +32,43 @@
   "products": [
     {
       "guid": "d0650af1-1786-4c93-8078-32ee23d1683b",
-      "room": "Living Room"
+      "room": "Living Room",
+      "location": {
+        "x": 0,
+        "y": 0
+      }
     },
     {
       "guid": "c4d7a53b-e7cc-4d0e-852a-c99e03025941",
-      "room": "Living Room"
+      "room": "Living Room",
+      "location": {
+        "x": 1,
+        "y": 1
+      }
     },
     {
       "guid": "1721ac8c-747c-4201-bf89-3752c5506168",
-      "room": "Bedroom"
+      "room": "Bedroom",
+      "location": {
+        "x": 0,
+        "y": 0
+      }
     },
     {
       "guid": "93d3b750-8a1a-4b85-8d32-11f35b03815a",
-      "room": "Kitchen"
+      "room": "Kitchen",
+      "location": {
+        "x": 2,
+        "y": 2
+      }
     },
     {
       "guid": "e07e5331-e468-4ef9-bf58-17fd315f1c99",
-      "room": "Bedroom"
+      "room": "Bedroom",
+      "location": {
+        "x": 0,
+        "y": 0
+      }
     }
   ]
 }

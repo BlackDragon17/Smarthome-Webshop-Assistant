@@ -6,7 +6,8 @@
                      :products-by-type="productsByType"
                      :products-by-room="productsByRoom"/>
 
-        <HomeRoomView :current-setup="currentSetup"/>
+        <HomeRoomView :current-setup="currentSetup"
+                      :products-by-room="productsByRoom"/>
     </div>
 </template>
 
@@ -71,13 +72,13 @@ export default {
         },
 
         cancelAction() {
-            if(this.roomViewBusy) {
+            if (this.roomViewBusy) {
                 this.$eventBus.$emit("room-view-cancel");
             }
         },
 
         setRoomViewBusy(value) {
-            this.roomViewBusy = value
+            this.roomViewBusy = value;
         }
     },
 
