@@ -101,8 +101,8 @@ export default {
 
 
         cssGridColumns() {
-            return this.gridStartCoord === 1 ? `repeat(${this.gridWidth}, minmax(10rem, 40rem))`
-                : `repeat(${this.gridWidth + 2}, minmax(10rem, 40rem))`;
+            return this.gridStartCoord === 1 ? `repeat(${this.gridWidth}, minmax(15rem, 40rem))`
+                : `repeat(${this.gridWidth + 2}, minmax(15rem, 40rem))`;
         },
 
         cssGridRows() {
@@ -110,8 +110,18 @@ export default {
                 : `repeat(${this.gridHeight + 2}, minmax(10rem, 20rem))`;
         },
 
+        cssGridMinHeight() {
+            let height = this.roomViewState === "adding-room" ? this.gridHeight + 2 : this.gridHeight;
+            // rows + row gaps + margins
+            return height * 10 + (height - 1) + 4 + "rem";
+        },
+
         roomGridBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgreen";
+        },
+
+        roomGridContainerBorder() {
+            return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkorchid";
         }
     },
 
@@ -304,6 +314,8 @@ export default {
 /* Prevents the grid from overflowing .room-grid + allows it to have its own margins */
 .room-grid-container {
     margin: auto;
+    border: v-bind(roomGridContainerBorder);
+    min-height: v-bind(cssGridMinHeight);
     display: flex;
 }
 
@@ -348,6 +360,7 @@ export default {
 /* Grid buttons -- add room */
 
 .add-room-grid-button {
+    padding: 0;
     background-color: #f8faff;
     border: 1px solid #cde6ff;
 }

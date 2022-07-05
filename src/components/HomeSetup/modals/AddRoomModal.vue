@@ -106,10 +106,10 @@ export default {
             }
 
             // Check if room already exists
-            const matches = this.setupRooms.filter(room => room.name.toLowerCase() === input.toLowerCase());
-            if (matches.length > 0) {
+            const matches = this.setupRooms.find(room => room.name.toLowerCase() === input.toLowerCase());
+            if (matches) {
                 this.errorBorder = true;
-                this.errorMsg = `Your Home already has a "${matches[0].name}".`;
+                this.errorMsg = `Your Home already has a "${matches.name}".`;
                 this.roomInput.focus();
                 return;
             }
