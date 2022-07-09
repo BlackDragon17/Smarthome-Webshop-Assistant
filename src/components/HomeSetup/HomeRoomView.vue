@@ -11,11 +11,9 @@
                     <p class="room-title relative-centering">{{ room.name }}</p>
 
                     <div class="device-grid">
-                        <!--<div class="device-container">-->
                         <div class="device" v-for="product in productsByRoom[room.name]" :key="product.guid" :style="positionDevice(product)">
                             {{ product.brand }}
                         </div>
-                        <!--</div>-->
                     </div>
 
                     <button class="remove-room-overlay" v-if="roomViewState === 'removing-room'" @click="removeSelectedRoom(room)">
@@ -406,6 +404,9 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    position: absolute;
+    top: 0;
 }
 
 .remove-room-overlay:hover, .remove-room-overlay:focus {
