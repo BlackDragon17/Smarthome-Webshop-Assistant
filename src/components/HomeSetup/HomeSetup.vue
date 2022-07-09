@@ -77,6 +77,12 @@ export default {
             }
         },
 
+        printDebug(event) {
+            if (event.keyCode === 68) {
+                this.$eventBus.$emit("print-debug");
+            }
+        },
+
         setRoomViewBusy(value) {
             this.roomViewBusy = value;
         }
@@ -86,12 +92,16 @@ export default {
         this.$eventBus.$on("focus-home-setup", this.focusThis);
         this.$eventBus.$on("room-view-busy", this.setRoomViewBusy.bind(this, true));
         this.$eventBus.$on("room-view-free", this.setRoomViewBusy.bind(this, false));
+
+        window.addEventListener("keydown", this.printDebug);
     },
 
-    beforeDestroy() {
+    beforeUnmount() {
         this.$eventBus.$off("focus-home-setup", this.focusThis);
         this.$eventBus.$off("room-view-busy", this.setRoomViewBusy.bind(this, true));
         this.$eventBus.$off("room-view-free", this.setRoomViewBusy.bind(this, false));
+
+        window.removeEventListener("keydown", this.printDebug);
     }
 };
 </script>

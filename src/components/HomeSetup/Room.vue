@@ -3,8 +3,11 @@
         <p class="room-title relative-centering">{{ room.name }}</p>
 
         <div class="device-grid">
-            <div class="device" v-for="product in productsInRoom" :key="product.guid" :style="positionDevice(product)">
-                {{ product.brand }}
+            <!--<div class="device" v-for="product in productsInRoom" :key="product.guid" :style="positionDevice(product)">-->
+            <!--    {{ product.brand }}-->
+            <!--</div>-->
+            <div class="grid-cell" v-for="n in 9">
+                <div class="device"></div>
             </div>
         </div>
 
@@ -21,20 +24,70 @@ export default {
     name: "Room",
 
     data() {
-        return {};
+        return {
+            devicesArray: []
+        };
     },
 
     props: ["roomViewState", "room", "currentSetup", "productsInRoom"],
 
     emits: ["remove-room"],
 
-    computed: {},
+    computed: {
+        deviceGrid() {
+            const devicesInRoom = this.currentSetup.products.filter(product => product.room === this.room.name);
+            if (devicesInRoom.length <= 0) {
+                return null;
+            }
+
+            // Create an array-based view of room for device placement
+            const deviceGrid = [];
+            for (let i = 1; i <= 3; i++) {
+                const innerArr = [];
+                for (let j = 1; j <= 3; j++) {
+                    innerArr[j] = null;
+                }
+                deviceGrid[i] = innerArr;
+            }
+
+            for (const device of devicesInRoom) {
+                // if (deviceGrid[device.location.x][device.location.y]) {
+                //
+                // }
+                deviceGrid[device.location.x][device.location.y] = device;
+            }
+        }
+    },
 
     methods: {
         positionDevice(product) {
             const location = this.currentSetup.products.find(prod => prod.guid === product.guid).location;
             return `grid-column: ${location.x} / span 1; grid-row: ${location.y} / span 1;`;
+        },
+
+        fillDevicesArray() {
+            for (let i = 1; i <= 9; i++) {
+                this.devicesArray[i] = {devices: [], overflow: false};
+            }
+
+            const devicesInRoom = this.currentSetup.products.filter(product => product.room === this.room.name);
+            for (const device of devicesInRoom) {
+                this.devicesArray[device.location].devices.push(device);
+            }
+        },
+
+        printDebug() {
+            if (this.room.name === "Living Room") {
+            }
         }
+    },
+
+    mounted() {
+        this.$eventBus.$on("print-debug", this.printDebug);
+    },
+
+    beforeUnmount() {
+        this.$eventBus.$off("print-debug", this.printDebug);
     }
 };
 </script>

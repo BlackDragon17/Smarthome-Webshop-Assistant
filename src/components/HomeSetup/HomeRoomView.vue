@@ -174,7 +174,7 @@ export default {
             this.gridStartCoord = 2;
             this.shiftRoomCoords();
 
-            // Create an array-based view of grid button placement computation
+            // Create an array-based view of grid for button placement computation
             const roomGrid = [];
             for (let i = 1; i <= this.gridWidth + 2; i++) {
                 const innerArr = [];
@@ -299,7 +299,7 @@ export default {
         this.gridContainerCss = window.getComputedStyle(gridContainer);
     },
 
-    beforeDestroy() {
+    beforeUnmount() {
         this.$eventBus.$off("room-view-cancel", this.endAction);
     }
 };
