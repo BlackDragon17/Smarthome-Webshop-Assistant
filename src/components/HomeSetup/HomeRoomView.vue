@@ -7,21 +7,16 @@
 
         <div class="room-grid-container">
             <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && allowMarginOverride}">
-                <div class="room" v-for="room in currentSetup.rooms" :key="room.name" :style="positionRoom(room)">
-                    <p class="room-title relative-centering">{{ room.name }}</p>
 
-                    <div class="device-grid">
-                        <div class="device" v-for="product in productsByRoom[room.name]" :key="product.guid" :style="positionDevice(product)">
-                            {{ product.brand }}
-                        </div>
-                    </div>
-
-                    <button class="remove-room-overlay" v-if="roomViewState === 'removing-room'" @click="removeSelectedRoom(room)">
-                        <span class="remove-room-icon-bg">
-                            <span class="remove-room-icon material-symbols-rounded">delete</span>
-                        </span>
-                    </button>
-                </div>
+                <Room v-for="room in currentSetup.rooms"
+                      :key="room.name"
+                      :style="positionRoom(room)"
+                      :room-view-state="roomViewState"
+                      :room="room"
+                      :current-setup="currentSetup"
+                      :products-in-room="productsByRoom[room.name]"
+                      @remove-room="removeSelectedRoom(room)"
+                />
 
                 <button class="add-room-grid-button"
                         v-for="button in addRoomButtons"
@@ -48,15 +43,18 @@
 
 <script>
 import { nextTick } from "vue";
+
 import AddRoomModal from "./modals/AddRoomModal.vue";
 import RemoveRoomModal from "./modals/RemoveRoomModal.vue";
+import Room from "./Room.vue";
 
 export default {
     name: "HomeRoomView",
 
     components: {
         AddRoomModal,
-        RemoveRoomModal
+        RemoveRoomModal,
+        Room
     },
 
     data() {
@@ -139,10 +137,6 @@ export default {
         positionButton(button) {
             return `grid-column: ${button.location.x} / span 1; grid-row: ${button.location.y} / span 1;`;
         },
-        positionDevice(product) {
-            const location = this.currentSetup.products.find(prod => prod.guid === product.guid).location;
-            return `grid-column: ${location.x} / span 1; grid-row: ${location.y} / span 1;`;
-        },
 
 
         // Offset rooms' location to meet the grid's starting coordinate.
@@ -220,8 +214,8 @@ export default {
             this.$refs.addRoomModal.openModal(button);
         },
 
-        removeSelectedRoom(button) {
-            this.$refs.removeRoomModal.openModal(button);
+        removeSelectedRoom(room) {
+            this.$refs.removeRoomModal.openModal(room);
         },
 
 
@@ -341,7 +335,6 @@ export default {
 
 
 /* Room grid styling */
-
 .room-grid {
     margin: 2rem;
     border: v-bind(roomGridBorder);
@@ -353,22 +346,6 @@ export default {
     grid-template-rows: v-bind(cssGridRows);
     column-gap: 1rem;
     row-gap: 1rem;
-}
-
-.room {
-    background-color: var(--blue-room-background);
-    border: 1px solid var(--blue-room-border);
-
-    position: relative;
-}
-
-.room > .room-title {
-    position: absolute;
-    bottom: 0;
-
-    margin-bottom: 0.1rem;
-    color: var(--blue-room-text);
-    font-size: 1.5rem;
 }
 
 
@@ -389,73 +366,6 @@ export default {
 .add-room-grid-button:active {
     background-color: #96c8ef;
     border: 1px solid #0c88ed;
-}
-
-
-
-/* Room grid buttons -- remove room */
-
-.remove-room-overlay {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background-color: transparent;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    position: absolute;
-    top: 0;
-}
-
-.remove-room-overlay:hover, .remove-room-overlay:focus {
-    border: 1px solid var(--bs-red);
-    background-color: rgba(255, 0, 0, 0.3);
-}
-
-.remove-room-overlay:active {
-    background-color: rgba(255, 0, 0, 0.5);
-}
-
-.remove-room-icon-bg {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 0.3rem;
-    background-color: var(--bs-red);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.remove-room-icon {
-    color: white;
-    font-size: 3rem;
-    font-weight: 600;
-}
-
-
-
-/* Device grid styling */
-
-.device-grid {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(219, 21, 238, 0.2);
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-
-    display: grid;
-}
-
-.device {
-    width: 3rem;
-    height: 3rem;
-
-    background-color: bisque;
-    border: 1px solid darkgreen;
-    overflow: clip;
 }
 
 
