@@ -3,11 +3,15 @@
         <p class="room-title relative-centering">{{ room.name }}</p>
 
         <div class="device-grid">
-            <!--<div class="device" v-for="product in productsInRoom" :key="product.guid" :style="positionDevice(product)">-->
-            <!--    {{ product.brand }}-->
-            <!--</div>-->
-            <div class="grid-cell" v-for="n in 9">
-                <div class="device"></div>
+            <div class="grid-cell" v-for="i in 9" :key="i" :style="alignGridCell(i)">
+                <div class="device-flex" v-if="devicesArray[i].devices.length > 0 && !devicesArray[i].overflow">
+                    <div class="device" v-for="device in devicesArray[i].devices" :key="device.localId">
+                        {{ productsInRoom.find(product => product.productId === device.productId).brand }}
+                    </div>
+                </div>
+                <div class="overflow-folder" v-else-if="devicesArray[i].devices.length > 0 && devicesArray[i].overflow">
+                    Oh no an overflow :(
+                </div>
             </div>
         </div>
 
@@ -33,36 +37,22 @@ export default {
 
     emits: ["remove-room"],
 
-    computed: {
-        deviceGrid() {
-            const devicesInRoom = this.currentSetup.products.filter(product => product.room === this.room.name);
-            if (devicesInRoom.length <= 0) {
-                return null;
-            }
-
-            // Create an array-based view of room for device placement
-            const deviceGrid = [];
-            for (let i = 1; i <= 3; i++) {
-                const innerArr = [];
-                for (let j = 1; j <= 3; j++) {
-                    innerArr[j] = null;
-                }
-                deviceGrid[i] = innerArr;
-            }
-
-            for (const device of devicesInRoom) {
-                // if (deviceGrid[device.location.x][device.location.y]) {
-                //
-                // }
-                deviceGrid[device.location.x][device.location.y] = device;
-            }
-        }
-    },
+    computed: {},
 
     methods: {
-        positionDevice(product) {
-            const location = this.currentSetup.products.find(prod => prod.guid === product.guid).location;
-            return `grid-column: ${location.x} / span 1; grid-row: ${location.y} / span 1;`;
+        alignGridCell(i) {
+            switch (i) {
+                case 1:
+                    return "justify-self: start; align-self: start;";
+                case 4:
+                    return "justify-self: start; align-self: center;";
+                case 5:
+                    return "justify-self: center; align-self: center;";
+                case 7:
+                    return "justify-self: start; align-self: end;";
+                case 9:
+                    return "justify-self: end; align-self: end;";
+            }
         },
 
         fillDevicesArray() {
@@ -80,6 +70,10 @@ export default {
             if (this.room.name === "Living Room") {
             }
         }
+    },
+
+    beforeMount() {
+        this.fillDevicesArray();
     },
 
     mounted() {
@@ -163,10 +157,14 @@ export default {
     width: 100%;
     height: 100%;
     background-color: rgba(219, 21, 238, 0.2);
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
 
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.grid-cell {
+
 }
 
 .device {

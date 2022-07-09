@@ -59,6 +59,30 @@
       "localId": "9f47d16a-da5d-4ab7-9c9e-418b20989b18",
       "room": "Bedroom",
       "location": 1
+    },
+    {
+      "productId": "75e6f686-f057-4d84-86a5-95635f43a8be",
+      "localId": "83dca768-f710-40f8-9264-d4ce6dceae7c",
+      "room": "Bedroom",
+      "location": 4
+    },
+    {
+      "productId": "e0626e96-0b93-44df-841c-7200a25a82fc",
+      "localId": "5458c2a9-1ec8-4a4a-8893-306d9c3b9f5f",
+      "room": "Bedroom",
+      "location": 4
+    },
+    {
+      "productId": "03137251-6156-45f9-b32e-fc6482cbba32",
+      "localId": "9e0ddc73-db1f-4c12-900f-6739c5d3bc9f",
+      "room": "Bedroom",
+      "location": 7
+    },
+    {
+      "productId": "9ee4cade-fccd-4d2a-bc23-6e41d1eb21b9",
+      "localId": "93226c8b-0c32-4060-917f-872f67a66791",
+      "room": "Bedroom",
+      "location": 7
     }
   ]
 }
