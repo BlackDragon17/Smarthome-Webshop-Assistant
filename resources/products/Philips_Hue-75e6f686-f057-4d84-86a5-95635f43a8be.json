@@ -1,5 +1,4 @@
 {
-  "guid": "d0650af1-1786-4c93-8078-32ee23d1683b",
   "brand": "Philips Hue",
   "model": "Bridge",
   "generation": 2,
@@ -22,5 +21,6 @@
     "homeKit",
     "cortana"
   ],
-  "expandable": false
+  "expandable": false,
+  "productId": "75e6f686-f057-4d84-86a5-95635f43a8be"
 }

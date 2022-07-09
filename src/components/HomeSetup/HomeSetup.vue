@@ -39,11 +39,11 @@ export default {
         productsByType() {
             const byType = {};
             for (const product of this.currentSetup.products) {
-                const type = capitalize(this.allProducts.data[product.guid].type) + "s";
+                const type = capitalize(this.allProducts.data[product.productId].type) + "s";
                 if (byType[type]) {
-                    byType[type].push(this.allProducts.data[product.guid]);
+                    byType[type].push(this.allProducts.data[product.productId]);
                 } else {
-                    byType[type] = [this.allProducts.data[product.guid]];
+                    byType[type] = [this.allProducts.data[product.productId]];
                 }
             }
             return byType;
@@ -53,9 +53,9 @@ export default {
             for (const i in this.currentSetup.products) {
                 const room = this.currentSetup.products[i].room;
                 if (byRoom[room]) {
-                    byRoom[room].push(this.allProducts.data[this.currentSetup.products[i].guid]);
+                    byRoom[room].push(this.allProducts.data[this.currentSetup.products[i].productId]);
                 } else {
-                    byRoom[room] = [this.allProducts.data[this.currentSetup.products[i].guid]];
+                    byRoom[room] = [this.allProducts.data[this.currentSetup.products[i].productId]];
                 }
             }
             return byRoom;

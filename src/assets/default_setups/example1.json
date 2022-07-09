@@ -31,27 +31,32 @@
   ],
   "products": [
     {
-      "guid": "d0650af1-1786-4c93-8078-32ee23d1683b",
+      "productId": "75e6f686-f057-4d84-86a5-95635f43a8be",
+      "localId": "c0bad215-c7d5-41f7-8ef5-3ab127350694",
       "room": "Living Room",
       "location": 1
     },
     {
-      "guid": "c4d7a53b-e7cc-4d0e-852a-c99e03025941",
+      "productId": "e0626e96-0b93-44df-841c-7200a25a82fc",
+      "localId": "abf33fec-1753-41f3-bec6-12a7de40a918",
       "room": "Living Room",
       "location": 5
     },
     {
-      "guid": "1721ac8c-747c-4201-bf89-3752c5506168",
+      "productId": "f9455816-348d-4936-97fc-cbf6085ae45e",
+      "localId": "3f441e7f-ea1f-4ade-bdc4-bce75f01ae24",
       "room": "Bedroom",
       "location": 1
     },
     {
-      "guid": "93d3b750-8a1a-4b85-8d32-11f35b03815a",
+      "productId": "c846940e-f68c-4b14-808b-5c35dee691de",
+      "localId": "6bcf724d-a7e1-4111-819e-ad3bf29fc577",
       "room": "Kitchen",
       "location": 9
     },
     {
-      "guid": "e07e5331-e468-4ef9-bf58-17fd315f1c99",
+      "productId": "9ee4cade-fccd-4d2a-bc23-6e41d1eb21b9",
+      "localId": "9f47d16a-da5d-4ab7-9c9e-418b20989b18",
       "room": "Bedroom",
       "location": 1
     }

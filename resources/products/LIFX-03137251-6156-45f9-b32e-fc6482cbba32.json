@@ -1,5 +1,4 @@
 {
-  "guid": "0b0e7e2c-b19b-4b86-8c4f-be240762d6e1",
   "brand": "LIFX",
   "model": "Colour A60 E27",
   "generation": "N/A",
@@ -21,5 +20,6 @@
   "varLumen": true,
   "varKelvin": true,
   "multicolor": true,
-  "socket": "E27"
+  "socket": "E27",
+  "productId": "03137251-6156-45f9-b32e-fc6482cbba32"
 }

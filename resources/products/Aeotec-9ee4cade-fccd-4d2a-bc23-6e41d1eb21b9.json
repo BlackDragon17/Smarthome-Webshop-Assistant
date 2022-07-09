@@ -1,19 +1,18 @@
 {
-  "guid": "93d3b750-8a1a-4b85-8d32-11f35b03815a",
   "brand": "Aeotec",
-  "model": "MultiSensor 7",
-  "generation": 7,
+  "model": "MultiSensor 6",
+  "generation": 6,
   "revision": "N/A",
   "type": "sensor",
   "subtype": "multi",
   "network": {
     "z-wave": [
       "plus",
-      "S2",
-      "gen7"
+      "gen5"
     ]
   },
   "control": [
     "smartThings"
-  ]
+  ],
+  "productId": "9ee4cade-fccd-4d2a-bc23-6e41d1eb21b9"
 }

@@ -1,5 +1,4 @@
 {
-  "guid": "c4d7a53b-e7cc-4d0e-852a-c99e03025941",
   "brand": "Philips Hue",
   "model": "White and Color Ambience",
   "generation": "N/A",
@@ -21,5 +20,6 @@
   "varLumen": true,
   "varKelvin": true,
   "multicolor": true,
-  "socket": "E27"
+  "socket": "E27",
+  "productId": "e0626e96-0b93-44df-841c-7200a25a82fc"
 }

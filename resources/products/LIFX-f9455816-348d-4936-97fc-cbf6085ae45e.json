@@ -1,5 +1,4 @@
 {
-  "guid": "1721ac8c-747c-4201-bf89-3752c5506168",
   "brand": "LIFX",
   "model": "Candle White to Warm E14",
   "generation": "N/A",
@@ -21,5 +20,6 @@
   "varLumen": true,
   "varKelvin": true,
   "multicolor": false,
-  "socket": "E27"
+  "socket": "E27",
+  "productId": "f9455816-348d-4936-97fc-cbf6085ae45e"
 }

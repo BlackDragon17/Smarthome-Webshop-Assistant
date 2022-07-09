@@ -41,34 +41,34 @@ foreach ($File in $Files)
     $JSON = Get-Content $File | ConvertFrom-Json
 
 
-    # Make sure each JSON has a (valid) GUID
+    # Make sure each JSON has a valid GUID
 
-    # Check if property 'guid' exists on object
-    if (!$JSON.PSObject.Properties.Name -contains 'guid') 
+    # Check if property 'productId' exists on object
+    if (!($JSON.PSObject.Properties.Name -contains 'productId'))
     {
-        $JSON | Add-Member -NotePropertyName 'guid' -NotePropertyValue (New-Guid).Guid
+        $JSON | Add-Member -NotePropertyName 'productId' -NotePropertyValue (New-Guid).Guid
         ConvertTo-Json $JSON | Out-File $File
         $GeneratedGUIDs++
     }
-    # Check if property 'guid' is empty or an invalid GUID
-    elseif (![System.Guid]::TryParse($JSON.guid, [ref][System.Guid]::empty))
+    # Check if property 'productId' is empty or an invalid GUID
+    elseif (!([System.Guid]::TryParse($JSON.productId, [ref][System.Guid]::empty)))
     {
-        $JSON.guid = (New-Guid).Guid
+        $JSON.productId = (New-Guid).Guid
         ConvertTo-Json $JSON | Out-File $File
         $GeneratedGUIDs++
     }
 
 
-    # Format the filenames as 'brand-guid.json'
+    # Format the filenames as 'brand-productId.json'
 
     # Check if property brand exists and is not empty
-    if (!$JSON.PSObject.Properties.Name -contains 'brand' -or !$JSON.brand)
+    if (!($JSON.PSObject.Properties.Name -contains 'brand' -or !$JSON.brand))
     {
-        $Filename = 'Unknown-' + $JSON.guid + '.json'
+        $Filename = 'Unknown-' + $JSON.productId + '.json'
     }
     else
     {
-        $Filename = $JSON.brand.Replace(' ', '_') + '-' + $JSON.guid + '.json'
+        $Filename = $JSON.brand.Replace(' ', '_') + '-' + $JSON.productId + '.json'
     }
 
     # Rename if filename not equal to computed one (case-sensitive)
@@ -81,7 +81,7 @@ foreach ($File in $Files)
 
 
     # Pack JSONs
-    $Packed.data | Add-Member -NotePropertyName $JSON.guid -NotePropertyValue $JSON
+    $Packed.data | Add-Member -NotePropertyName $JSON.productId -NotePropertyValue $JSON
 }
 
 
