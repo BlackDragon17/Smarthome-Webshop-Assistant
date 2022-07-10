@@ -3,14 +3,14 @@
         <p class="room-title relative-centering">{{ room.name }}</p>
 
         <div class="device-grid">
-            <div class="grid-cell" v-for="i in 9" :key="i" :style="alignGridCell(i)">
-                <div class="device-flex" v-if="devicesArray[i].devices.length > 0 && !devicesArray[i].overflow">
-                    <div class="device" v-for="device in devicesArray[i].devices" :key="device.localId">
+            <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el">
+                <div class="device-flex" v-if="cellArray[i].devices.length > 0 && !cellArray[i].overflow">
+                    <div class="device" v-for="device in cellArray[i].devices" :key="device.localId">
                         {{ productsInRoom.find(product => product.productId === device.productId).brand }}
                     </div>
                 </div>
-                <div class="overflow-folder" v-else-if="devicesArray[i].devices.length > 0 && devicesArray[i].overflow">
-                    Oh no an overflow :(
+                <div class="overflow-folder" v-else-if="cellArray[i].devices.length > 0 && cellArray[i].overflow">
+                    :(
                 </div>
             </div>
         </div>
@@ -29,7 +29,8 @@ export default {
 
     data() {
         return {
-            devicesArray: []
+            cellArray: [],
+            resizeObserver: null
         };
     },
 
@@ -55,29 +56,52 @@ export default {
             }
         },
 
-        fillDevicesArray() {
+        // If, in the outermost v-for, we accessed the array via `cell in cellArray`, we'd need each cell to carry an ID prop for element assignment in :ref.
+        // Thus, we instead use "implicit identification" via array position, even if that means that it has to start with 1 due to v-for-range syntax.
+        initCellArray() {
             for (let i = 1; i <= 9; i++) {
-                this.devicesArray[i] = {devices: [], overflow: false};
+                this.cellArray[i] = {devices: [], overflow: false, element: null};
             }
 
             const devicesInRoom = this.currentSetup.products.filter(product => product.room === this.room.name);
             for (const device of devicesInRoom) {
-                this.devicesArray[device.location].devices.push(device);
+                this.cellArray[device.location].devices.push(device);
+            }
+        },
+
+        checkCellOverflow() {
+            const buffer = 3;
+
+            for (let i = 1; i <= 9; i++) {
+                if (this.cellArray[i].element.offsetHeight + buffer < this.cellArray[i].element.scrollHeight) {
+                    console.log("overflow on cell", i);
+                    console.log("height:", this.cellArray[i].element.offsetHeight, ";", "scr height:", this.cellArray[i].element.scrollHeight)
+                    // this.cellArray[i].overflow = true;
+                } else {
+                    // this.cellArray[i].overflow = false;
+                }
             }
         },
 
         printDebug() {
-            if (this.room.name === "Living Room") {
+            if (this.room.name === "Bedroom") {
+                console.log("cell0", this.cellArray[1].element);
+                console.log("cell height", this.cellArray[1].element.offsetHeight);
+                console.log("cell scr height", this.cellArray[1].element.scrollHeight);
+                //this.checkCellOverflow();
             }
         }
     },
 
     beforeMount() {
-        this.fillDevicesArray();
+        this.initCellArray();
     },
 
     mounted() {
         this.$eventBus.$on("print-debug", this.printDebug);
+
+        this.resizeObserver = new ResizeObserver(() => this.checkCellOverflow());
+        this.resizeObserver.observe(this.$el);
     },
 
     beforeUnmount() {
@@ -107,7 +131,7 @@ export default {
 
 
 
-/* Room room overlay */
+/* Remove room overlay */
 
 .remove-room-overlay {
     width: 100%;
@@ -159,12 +183,17 @@ export default {
     background-color: rgba(219, 21, 238, 0.2);
 
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, calc(100% / 3));
+    grid-template-rows: repeat(3, calc(100% / 3));
 }
 
 .grid-cell {
+    overflow: hidden;
+}
 
+.device-flex {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .device {

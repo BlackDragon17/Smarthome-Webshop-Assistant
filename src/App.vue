@@ -109,4 +109,8 @@ p {
     margin-right: -50%;
     transform: translate(-50%, 0);
 }
+
+.hidden {
+    visibility: hidden;
+}
 </style>
