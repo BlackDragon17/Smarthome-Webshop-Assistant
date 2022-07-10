@@ -1,6 +1,6 @@
 <template>
     <div class="room">
-        <p class="room-title relative-centering">{{ room.name }}</p>
+        <p class="room-title relative-centering" :style="cssAlignTitle">{{ room.name }}</p>
 
         <div class="device-grid">
             <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el">
@@ -38,7 +38,20 @@ export default {
 
     emits: ["remove-room"],
 
-    computed: {},
+    computed: {
+        cssAlignTitle() {
+            if (this.cellArray[8].devices.length <= 0) {
+                return "bottom: 0; margin-bottom: 0.1rem;";
+            }
+            if (this.cellArray[2].devices.length <= 0) {
+                return "top: 0;";
+            }
+            if (this.cellArray[5].devices.length <= 0) {
+                return "top: 50%; transform: translate(-50%, -50%);";
+            }
+            return "bottom: 3rem; margin-bottom: 0.1rem;";
+        }
+    },
 
     methods: {
         // Margin-based positioning between grid-cell & device-flex (makes overflows work properly)
@@ -153,9 +166,7 @@ export default {
 
 .room > .room-title {
     position: absolute;
-    bottom: 0;
 
-    margin-bottom: 0.1rem;
     color: var(--blue-room-text);
     font-size: 1.5rem;
 }
