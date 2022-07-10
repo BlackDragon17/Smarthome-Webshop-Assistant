@@ -4,13 +4,13 @@
 
         <div class="device-grid">
             <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el">
-                <div class="device-flex" v-if="cellArray[i].devices.length > 0 && !cellArray[i].overflow">
+                <div class="device-flex" v-if="cellArray[i].devices.length > 0" :class="{hidden: cellArray[i].overflow}">
                     <div class="device" v-for="device in cellArray[i].devices" :key="device.localId">
                         {{ productsInRoom.find(product => product.productId === device.productId).brand }}
                     </div>
                 </div>
-                <div class="overflow-folder" v-else-if="cellArray[i].devices.length > 0 && cellArray[i].overflow">
-                    :(
+                <div class="overflow-flex" v-if="cellArray[i].devices.length > 1" v-show="cellArray[i].overflow">
+                    <div class="device">:(</div>
                 </div>
             </div>
         </div>
@@ -56,7 +56,7 @@ export default {
             }
         },
 
-        // If, in the outermost v-for, we accessed the array via `cell in cellArray`, we'd need each cell to carry an ID prop for element assignment in :ref.
+        // If, in template and script, we accessed cellArray via `cell of cellArray`, we'd need each cell to carry an ID prop (for devices and refs).
         // Thus, we instead use "implicit identification" via array position, even if that means that it has to start with 1 due to v-for-range syntax.
         initCellArray() {
             for (let i = 1; i <= 9; i++) {
@@ -70,25 +70,23 @@ export default {
         },
 
         checkCellOverflow() {
-            const buffer = 3;
-
             for (let i = 1; i <= 9; i++) {
-                if (this.cellArray[i].element.offsetHeight + buffer < this.cellArray[i].element.scrollHeight) {
-                    console.log("overflow on cell", i);
-                    console.log("height:", this.cellArray[i].element.offsetHeight, ";", "scr height:", this.cellArray[i].element.scrollHeight)
-                    // this.cellArray[i].overflow = true;
-                } else {
-                    // this.cellArray[i].overflow = false;
+                if (this.cellArray[i].devices.length > 1
+                    && this.cellArray[i].element.scrollHeight - this.cellArray[i].element.offsetHeight > 2) {
+                    this.cellArray[i].overflow = true;
+                } else if (this.cellArray[i].devices.length <= 1
+                    // Not a simple `else` to prevent flickering
+                    || this.cellArray[i].element.scrollHeight - this.cellArray[i].element.offsetHeight < 1) {
+                    this.cellArray[i].overflow = false;
                 }
             }
         },
 
         printDebug() {
             if (this.room.name === "Bedroom") {
-                console.log("cell0", this.cellArray[1].element);
-                console.log("cell height", this.cellArray[1].element.offsetHeight);
-                console.log("cell scr height", this.cellArray[1].element.scrollHeight);
-                //this.checkCellOverflow();
+                console.log("cell", this.cellArray[4].element);
+                console.log("cell height", this.cellArray[4].element.offsetHeight);
+                console.log("cell scr height", this.cellArray[4].element.scrollHeight);
             }
         }
     },
@@ -189,6 +187,13 @@ export default {
 
 .grid-cell {
     overflow: hidden;
+    position: relative;
+}
+
+.overflow-flex {
+    display: flex;
+    position: absolute;
+    top: 0;
 }
 
 .device-flex {
