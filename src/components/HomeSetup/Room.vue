@@ -3,13 +3,13 @@
         <p class="room-title relative-centering">{{ room.name }}</p>
 
         <div class="device-grid">
-            <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el">
-                <div class="device-flex" v-if="cellArray[i].devices.length > 0" :class="{hidden: cellArray[i].overflow}">
+            <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el" :style="alignGridFlex(i)">
+                <div class="device-flex" v-if="cellArray[i].devices.length > 0" :class="{hidden: cellArray[i].overflow}" :style="alignGridFlex(i)">
                     <div class="device" v-for="device in cellArray[i].devices" :key="device.localId">
                         {{ productsInRoom.find(product => product.productId === device.productId).brand }}
                     </div>
                 </div>
-                <div class="overflow-flex" v-if="cellArray[i].devices.length > 1" v-show="cellArray[i].overflow">
+                <div class="overflow-flex" v-if="cellArray[i].devices.length > 1" v-show="cellArray[i].overflow" :style="alignGridAbsolute(i)">
                     <div class="device">:(</div>
                 </div>
             </div>
@@ -41,18 +41,48 @@ export default {
     computed: {},
 
     methods: {
-        alignGridCell(i) {
+        alignGridFlex(i) {
             switch (i) {
                 case 1:
-                    return "justify-self: start; align-self: start;";
+                    return "justify-content: start; align-items: start;";
+                case 2:
+                    return "justify-content: center; align-items: start;";
+                case 3:
+                    return "justify-content: end; align-items: start;";
                 case 4:
-                    return "justify-self: start; align-self: center;";
+                    return "justify-content: start; align-items: center;";
                 case 5:
-                    return "justify-self: center; align-self: center;";
+                    return "justify-content: center; align-items: center;";
+                case 6:
+                    return "justify-content: end; align-items: center;";
                 case 7:
-                    return "justify-self: start; align-self: end;";
+                    return "justify-content: start; align-items: end;";
+                case 8:
+                    return "justify-content: center; align-items: end;";
                 case 9:
-                    return "justify-self: end; align-self: end;";
+                    return "justify-content: end; align-items: end;";
+            }
+        },
+        alignGridAbsolute(i) {
+            switch (i) {
+                case 1:
+                    return "top: 0;";
+                case 2:
+                    return "top: 0;";
+                case 3:
+                    return "top: 0;";
+                case 4:
+                    return "top: 50%; transform: translate(0, -50%);";
+                case 5:
+                    return "top: 0;";
+                case 6:
+                    return "top: 0;";
+                case 7:
+                    return "top: 0;";
+                case 8:
+                    return "top: 0;";
+                case 9:
+                    return "top: 0;";
             }
         },
 
@@ -84,9 +114,10 @@ export default {
 
         printDebug() {
             if (this.room.name === "Bedroom") {
-                console.log("cell", this.cellArray[4].element);
-                console.log("cell height", this.cellArray[4].element.offsetHeight);
-                console.log("cell scr height", this.cellArray[4].element.scrollHeight);
+                const cellNr = 7;
+                console.log("cell", this.cellArray[cellNr].element);
+                console.log("cell height", this.cellArray[cellNr].element.offsetHeight);
+                console.log("cell scr height", this.cellArray[cellNr].element.scrollHeight);
             }
         }
     },
@@ -187,11 +218,14 @@ export default {
 
 .grid-cell {
     overflow: hidden;
+    display: flex;
+
     position: relative;
 }
 
 .overflow-flex {
     display: flex;
+
     position: absolute;
     top: 0;
 }
