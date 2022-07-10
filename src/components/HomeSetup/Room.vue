@@ -3,7 +3,7 @@
         <p class="room-title relative-centering">{{ room.name }}</p>
 
         <div class="device-grid">
-            <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el" :style="alignGridFlex(i)">
+            <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el">
                 <div class="device-flex" v-if="cellArray[i].devices.length > 0" :class="{hidden: cellArray[i].overflow}" :style="alignGridFlex(i)">
                     <div class="device" v-for="device in cellArray[i].devices" :key="device.localId">
                         {{ productsInRoom.find(product => product.productId === device.productId).brand }}
@@ -41,48 +41,50 @@ export default {
     computed: {},
 
     methods: {
+        // Margin-based positioning between grid-cell & device-flex (makes overflows work properly)
+        // Flexbox-based positioning between device-flex & device (centers items in case of wrap)
         alignGridFlex(i) {
             switch (i) {
                 case 1:
-                    return "justify-content: start; align-items: start;";
+                    return "margin: 0 auto auto 0; justify-content: flex-start;";
                 case 2:
-                    return "justify-content: center; align-items: start;";
+                    return "margin: 0 auto auto auto; justify-content: center;";
                 case 3:
-                    return "justify-content: end; align-items: start;";
+                    return "margin: 0 0 auto auto; justify-content: flex-end;";
                 case 4:
-                    return "justify-content: start; align-items: center;";
+                    return "margin: auto auto auto 0; justify-content: flex-start;";
                 case 5:
-                    return "justify-content: center; align-items: center;";
+                    return "margin: auto; justify-content: center;";
                 case 6:
-                    return "justify-content: end; align-items: center;";
+                    return "margin: auto 0 auto auto; justify-content: flex-end;";
                 case 7:
-                    return "justify-content: start; align-items: end;";
+                    return "margin: auto auto 0 0; justify-content: flex-start; flex-wrap: wrap-reverse;";
                 case 8:
-                    return "justify-content: center; align-items: end;";
+                    return "margin: auto auto 0 auto; justify-content: center; flex-wrap: wrap-reverse;";
                 case 9:
-                    return "justify-content: end; align-items: end;";
+                    return "margin: auto 0 0 auto; justify-content: end; flex-wrap: wrap-reverse;";
             }
         },
         alignGridAbsolute(i) {
             switch (i) {
                 case 1:
-                    return "top: 0;";
+                    return "top: 0; left: 0;";
                 case 2:
-                    return "top: 0;";
+                    return "top: 0; left: 50%; transform: translateX(-50%);";
                 case 3:
-                    return "top: 0;";
+                    return "top: 0; right: 0;";
                 case 4:
-                    return "top: 50%; transform: translate(0, -50%);";
+                    return "top: 50%; transform: translateY(-50%); left: 0;";
                 case 5:
-                    return "top: 0;";
+                    return "top: 50%; left: 50%; transform: translate(-50%, -50%);";
                 case 6:
-                    return "top: 0;";
+                    return "top: 50%; transform: translateY(-50%); right: 0;";
                 case 7:
-                    return "top: 0;";
+                    return "bottom: 0; left: 0;";
                 case 8:
-                    return "top: 0;";
+                    return "bottom: 0; left: 50%; transform: translateX(-50%);";
                 case 9:
-                    return "top: 0;";
+                    return "bottom: 0; right: 0;";
             }
         },
 
@@ -209,7 +211,7 @@ export default {
 .device-grid {
     width: 100%;
     height: 100%;
-    background-color: rgba(219, 21, 238, 0.2);
+    /* background-color: rgba(219, 21, 238, 0.2); */
 
     display: grid;
     grid-template-columns: repeat(3, calc(100% / 3));
@@ -227,7 +229,6 @@ export default {
     display: flex;
 
     position: absolute;
-    top: 0;
 }
 
 .device-flex {
@@ -236,6 +237,7 @@ export default {
 }
 
 .device {
+    margin: 2px;
     width: 3rem;
     height: 3rem;
 

@@ -48,10 +48,6 @@ export default {
 <style>
 /* Override and set default styles */
 
-*, ::after, ::before {
-    box-sizing: border-box;
-}
-
 body {
     height: 100vh;
     margin: 0;
@@ -107,7 +103,7 @@ p {
     /* https://www.w3.org/Style/Examples/007/center.en.html#hv3 */
     left: 50%;
     margin-right: -50%;
-    transform: translate(-50%, 0);
+    transform: translateX(-50%);
 }
 
 .hidden {
