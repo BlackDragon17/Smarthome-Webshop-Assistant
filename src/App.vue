@@ -73,10 +73,10 @@ p {
 :root {
     --blue-logo: #1A73E8;
 
-    --old-blue-rooms-main: #42A5F5;
-    --blue-rooms-main: #2A99F4;
-    --blue-rooms-main-darker1: #0C80DF;    /* lightness -10 */
-    --blue-rooms-main-darker2: #0964AE;    /* lightness -20 */
+    --blue-rooms-devices: #42A5F5;
+    --blue-rooms-buttons: #2A99F4;
+    --blue-rooms-buttons-darker1: #0C80DF;    /* lightness -10 */
+    --blue-rooms-buttons-darker2: #0964AE;    /* lightness -20 */
 
     --blue-room-background: #E3F2FD;
     --blue-room-border: #9ACFF9;

@@ -5,13 +5,17 @@
         <div class="device-grid">
             <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el">
                 <div class="device-flex" v-if="cellArray[i].devices.length > 0" :class="{hidden: cellArray[i].overflow}" :style="alignGridFlex(i)">
-                    <div class="device" v-for="device in cellArray[i].devices" :key="device.localId">
-                        {{ productsInRoom.find(product => product.productId === device.productId).brand }}
-                    </div>
+                    <button class="device" v-for="device in cellArray[i].devices" :key="device.localId">
+                        <!--{{ productsInRoom.find(product => product.productId === device.productId).brand }}-->
+                        <span class="material-symbols-rounded">
+                            {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
+                        </span>
+                    </button>
                 </div>
-                <div class="overflow-flex" v-if="cellArray[i].devices.length > 1" v-show="cellArray[i].overflow" :style="alignGridAbsolute(i)">
-                    <div class="device">:(</div>
-                </div>
+                <button class="overflow-folder device" v-if="cellArray[i].devices.length > 1" v-show="cellArray[i].overflow" :style="alignGridAbsolute(i)">
+                    +{{ cellArray[i].devices.length }}
+                    <!--<span class="overflow-folder-stack"></span>-->
+                </button>
             </div>
         </div>
 
@@ -54,6 +58,17 @@ export default {
     },
 
     methods: {
+        getDeviceIcon(deviceType) {
+            switch (deviceType) {
+                case "light":
+                    return "lightbulb";
+                case "hub":
+                    return "hub";
+                case "sensor":
+                    return "sensors";
+            }
+        },
+
         // Margin-based positioning between grid-cell & device-flex (makes overflows work properly)
         // Flexbox-based positioning between device-flex & device (centers items in case of wrap)
         alignGridFlex(i) {
@@ -236,11 +251,30 @@ export default {
     position: relative;
 }
 
-.overflow-flex {
-    display: flex;
-
+.overflow-folder {
     position: absolute;
 }
+
+/* .overflow-folder-stack { */
+/*     width: 3rem; */
+/*     height: 3rem; */
+/*     display: inline-block; */
+/*     background-color: red; */
+/* } */
+
+/* .overflow-folder::after { */
+/*     content: ""; */
+/*     width: 100%; */
+/*     height: 100%; */
+
+/*     !* background-color: var(--blue-rooms-devices); *! */
+/*     background-color: red; */
+
+/*     z-index: -1; */
+/*     position: absolute; */
+/*     left: 10%; */
+/*     top: 10%; */
+/* } */
 
 .device-flex {
     display: flex;
@@ -252,8 +286,15 @@ export default {
     width: 3rem;
     height: 3rem;
 
-    background-color: bisque;
-    border: 1px solid darkgreen;
-    overflow: clip;
+    border: none;
+    border-radius: 0.2rem;
+    background-color: var(--blue-rooms-devices);
+    color: white;
+
+    /* text-align: center; */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* overflow: clip; */
 }
 </style>

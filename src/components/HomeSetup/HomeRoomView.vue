@@ -389,9 +389,9 @@ button.btn {
 .add-room-button {
     margin-right: 0.5rem;
 
-    --bs-btn-bg: var(--blue-rooms-main);
-    --bs-btn-hover-bg: var(--blue-rooms-main-darker1);
-    --bs-btn-active-bg: var(--blue-rooms-main-darker2);
+    --bs-btn-bg: var(--blue-rooms-buttons);
+    --bs-btn-hover-bg: var(--blue-rooms-buttons-darker1);
+    --bs-btn-active-bg: var(--blue-rooms-buttons-darker2);
 }
 
 button.cancel-button {
