@@ -99,6 +99,10 @@ p {
     font-size: 1.4em;
 }
 
+.align-text {
+    margin-bottom: 0.1em;
+}
+
 .relative-centering {
     /* https://www.w3.org/Style/Examples/007/center.en.html#hv3 */
     left: 50%;

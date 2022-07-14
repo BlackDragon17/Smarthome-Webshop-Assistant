@@ -7,14 +7,18 @@
                 <div class="device-flex" v-if="cellArray[i].devices.length > 0" :class="{hidden: cellArray[i].overflow}" :style="alignGridFlex(i)">
                     <button class="device" v-for="device in cellArray[i].devices" :key="device.localId">
                         <!--{{ productsInRoom.find(product => product.productId === device.productId).brand }}-->
-                        <span class="material-symbols-rounded">
+                        <span class="device-icon material-symbols-rounded">
                             {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
                         </span>
                     </button>
                 </div>
-                <button class="overflow-folder device" v-if="cellArray[i].devices.length > 1" v-show="cellArray[i].overflow" :style="alignGridAbsolute(i)">
-                    +{{ cellArray[i].devices.length }}
-                    <!--<span class="overflow-folder-stack"></span>-->
+                <button class="overflow-button device"
+                        v-if="cellArray[i].devices.length > 1"
+                        v-show="cellArray[i].overflow"
+                        :style="alignGridAbsolute(i)">
+                    <span class="align-text">
+                        +{{ cellArray[i].devices.length }}
+                    </span>
                 </button>
             </div>
         </div>
@@ -140,6 +144,9 @@ export default {
                     this.cellArray[i].overflow = false;
                 }
             }
+            if (this.room.name === "Living Room") {
+                console.log("overflow:", this.cellArray[8].overflow);
+            }
         },
 
         printDebug() {
@@ -194,7 +201,7 @@ export default {
     width: 100%;
     height: 100%;
     border: none;
-    background-color: transparent;
+    background: none;
 
     display: flex;
     justify-content: center;
@@ -251,30 +258,9 @@ export default {
     position: relative;
 }
 
-.overflow-folder {
-    position: absolute;
-}
 
-/* .overflow-folder-stack { */
-/*     width: 3rem; */
-/*     height: 3rem; */
-/*     display: inline-block; */
-/*     background-color: red; */
-/* } */
 
-/* .overflow-folder::after { */
-/*     content: ""; */
-/*     width: 100%; */
-/*     height: 100%; */
-
-/*     !* background-color: var(--blue-rooms-devices); *! */
-/*     background-color: red; */
-
-/*     z-index: -1; */
-/*     position: absolute; */
-/*     left: 10%; */
-/*     top: 10%; */
-/* } */
+/* Device styling */
 
 .device-flex {
     display: flex;
@@ -291,10 +277,23 @@ export default {
     background-color: var(--blue-rooms-devices);
     color: white;
 
-    /* text-align: center; */
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* overflow: clip; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: clip;
+}
+
+.device-icon {
+    font-size: 1.7rem;
+    font-variation-settings: "GRAD" 100;
+}
+
+.overflow-button {
+    margin: 3px 5px 5px 3px;
+    box-shadow: 0.2rem 0.2rem var(--blue-rooms-buttons-darker1);
+    font-size: 1.1em;
+    font-weight: 600;
+
+    position: absolute;
 }
 </style>
