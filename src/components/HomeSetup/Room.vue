@@ -42,7 +42,12 @@ export default {
         };
     },
 
-    props: ["roomViewState", "room", "currentSetup", "productsInRoom"],
+    props: {
+        roomViewState: String,
+        room: Object,
+        currentSetup: Object,
+        productsInRoom: Array
+    },
 
     emits: ["remove-room"],
 
@@ -143,9 +148,6 @@ export default {
                     || this.cellArray[i].element.scrollHeight - this.cellArray[i].element.offsetHeight < 1) {
                     this.cellArray[i].overflow = false;
                 }
-            }
-            if (this.room.name === "Living Room") {
-                console.log("overflow:", this.cellArray[8].overflow);
             }
         },
 
@@ -281,6 +283,14 @@ export default {
     justify-content: center;
     align-items: center;
     overflow: clip;
+}
+
+.device:hover, .device:focus {
+    background-color: var(--blue-rooms-buttons-darker1);
+}
+
+.device:active {
+    background-color: var(--blue-rooms-buttons-darker2);
 }
 
 .device-icon {

@@ -33,7 +33,10 @@ export default {
         };
     },
 
-    props: ["allProducts", "currentSetup"],
+    props: {
+        allProducts: Object,
+        currentSetup: Object
+    },
 
     computed: {
         productsByType() {

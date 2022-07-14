@@ -71,7 +71,10 @@ export default {
         };
     },
 
-    props: ["currentSetup", "productsByRoom"],
+    props: {
+        currentSetup: Object,
+        productsByRoom: Object
+    },
 
     computed: {
         lowestCoords() {
@@ -141,7 +144,6 @@ export default {
 
         // Offset rooms' location to meet the grid's starting coordinate.
         shiftRoomCoords() {
-            console.log("Shifting room coords");
             // On the x-axis
             if (this.lowestCoords.x < this.gridStartCoord) {
                 const offset = Math.abs(this.lowestCoords.x - this.gridStartCoord);

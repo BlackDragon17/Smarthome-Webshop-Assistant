@@ -95,12 +95,13 @@ export default {
         },
 
         submitRoom() {
-            const input = this.roomInput.value;
+            const input = this.roomInput.value.trim();
 
             // Check if input is empty
             if (!input) {
                 this.errorBorder = true;
                 this.errorMsg = "Please enter a room name.";
+                this.roomInput.value = "";
                 this.roomInput.focus();
                 return;
             }

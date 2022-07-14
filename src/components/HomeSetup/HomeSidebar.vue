@@ -53,11 +53,13 @@ export default {
         AddDeviceModal
     },
 
-    data() {
-        return {};
+    props: {
+        allProducts: Object,
+        currentSetup: Object,
+        sortByRoom: Boolean,
+        productsByType: Object,
+        productsByRoom: Object
     },
-
-    props: ["allProducts", "currentSetup", "sortByRoom", "productsByType", "productsByRoom"],
 
     emits: ["add-room-toggle", "delete-room-toggle", "add-device-toggle"],
 
