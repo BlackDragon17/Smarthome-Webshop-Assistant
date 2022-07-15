@@ -276,7 +276,7 @@ export default {
     },
 
     watch: {
-        currentSetup: {
+        "currentSetup.rooms": {
             handler() {
                 this.shiftRoomCoords();
             },
