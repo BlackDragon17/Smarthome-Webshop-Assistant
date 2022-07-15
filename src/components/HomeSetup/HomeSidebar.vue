@@ -16,7 +16,7 @@
                        v-model="sortByRoom"
                        autocomplete="off"
                        checked>
-                <label class="sort-button btn btn-outline-secondary" for="sort-radio-1" id="sort-button-1">Type</label>
+                <label class="sort-button radio-btn btn btn-outline-secondary" for="sort-radio-1">Type</label>
 
                 <input type="radio"
                        class="btn-check"
@@ -25,7 +25,7 @@
                        :value="true"
                        v-model="sortByRoom"
                        autocomplete="off">
-                <label class="sort-button btn btn-outline-secondary" for="sort-radio-2" id="sort-button-2">Room</label>
+                <label class="sort-button radio-btn btn btn-outline-secondary" for="sort-radio-2">Room</label>
             </div>
         </div>
 
@@ -135,7 +135,6 @@ export default {
 }
 
 .sort-group {
-    /* border: 1px solid red; */
     padding: 0 0.2rem;
     display: flex;
     align-items: center;
@@ -151,9 +150,9 @@ export default {
 }
 
 .sort-button {
-    box-shadow: none !important;
-    border: 1px solid var(--bs-btn-border-color);
-    --bs-btn-hover-bg: #9299A0;
+    --bs-btn-color: var(--bs-gray);
+    --bs-btn-hover-color: var(--bs-gray);
+    --bs-btn-hover-bg: var(--gray-button-hover);
 }
 
 .sidebar > .products-list {

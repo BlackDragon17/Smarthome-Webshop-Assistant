@@ -46,6 +46,7 @@ export default {
             }
             return byType;
         },
+
         productsByRoom() {
             const byRoom = {};
             for (const i in this.currentSetup.products) {
@@ -148,6 +149,8 @@ p {
     --green-devices-main: #4CAF50;
     --green-devices-main-darker1: #439846; /* lightness -6 */
     --green-devices-main-darker2: #38803A; /* lightness -13 */
+
+    --gray-button-hover: #DFDFDF;
 }
 
 .box {
@@ -155,6 +158,11 @@ p {
     margin: 10px;
     background-color: lightgray;
     border: 1px solid darkgray;
+}
+
+.radio-btn {
+    box-shadow: none !important;
+    border: 1px solid var(--bs-btn-border-color);
 }
 
 .inline-icon {

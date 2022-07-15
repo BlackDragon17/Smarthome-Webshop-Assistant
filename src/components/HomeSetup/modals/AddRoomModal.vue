@@ -24,7 +24,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" form="add-room-form">Save</button>
+                        <button type="submit" class="btn btn-primary" form="add-room-form">Add room</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
@@ -54,14 +54,8 @@ export default {
     },
 
     props: {
-        setupRooms: {
-            type: Array,
-            required: true
-        },
-        roomViewState: {
-            type: String,
-            required: true
-        }
+        roomViewState: String,
+        setupRooms: Array
     },
 
     emits: ["room-added", "focus-home-setup"],
@@ -115,12 +109,12 @@ export default {
                 return;
             }
 
-            this.roomModal.hide();
             this.setupRooms.push({
                 name: capitalize(input),
                 location: {...this.newRoomLocation}
             });
             this.$emit("room-added");
+            this.roomModal.hide();
         }
     },
 

@@ -1,7 +1,7 @@
 <template>
     <section ref="roomView" class="room-view">
-        <AddRoomModal ref="addRoomModal" :setup-rooms="currentSetup.rooms" :room-view-state="roomViewState" @room-added="endAction"/>
-        <RemoveRoomModal ref="removeRoomModal" :current-setup="currentSetup" :room-view-state="roomViewState" @room-removed="endAction"/>
+        <AddRoomModal ref="addRoomModal" :room-view-state="roomViewState" :setup-rooms="currentSetup.rooms" @room-added="endAction"/>
+        <RemoveRoomModal ref="removeRoomModal" :room-view-state="roomViewState" :current-setup="currentSetup" @room-removed="endAction"/>
 
         <h3 class="action-heading relative-centering" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
