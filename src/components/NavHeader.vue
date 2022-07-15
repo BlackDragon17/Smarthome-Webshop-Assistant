@@ -7,6 +7,10 @@
                 <li><a href="#" @click="headerAction('database')">Product Database</a></li>
             </ul>
         </nav>
+
+        <teleport to="head">
+            <meta name="theme-color" :content="headerColor" media="(prefers-color-scheme: light)">
+        </teleport>
     </header>
 </template>
 
@@ -15,6 +19,12 @@ export default {
     name: "NavHeader",
 
     emits: ["header-click"],
+
+    computed: {
+        headerColor() {
+            return getComputedStyle(document.documentElement).getPropertyValue("--nav-header-bg");
+        }
+    },
 
     methods: {
         headerAction(target) {
@@ -26,7 +36,7 @@ export default {
 
 <style scoped>
 header {
-    background-color: #FAFAFA;
+    background-color: var(--nav-header-bg);
     border-bottom: 1px solid #777;
     position: sticky;
     top: 0;

@@ -77,6 +77,7 @@ p {
 /* Globally available styles */
 
 :root {
+    --nav-header-bg: #FAFAFA;
     --blue-logo: #1A73E8;
 
     --blue-rooms-devices: #42A5F5;
