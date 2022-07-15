@@ -1,24 +1,32 @@
 <template>
     <aside class="sidebar">
         <AddDeviceModal/>
-        <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
+        <button class="add-device-button btn btn-success">Add new device</button>
 
         <button v-if="false" @click="printDebugInfo">Print debug info</button>
 
+        <div class="sort-group">
+            <span class="sort-label">Sort devices by</span>
+            <div class="sort-button-group btn-group" role="group" aria-label="Toggle for switching product sort order">
+                <input type="radio"
+                       class="btn-check"
+                       id="sort-radio-1"
+                       name="sort-radio"
+                       :value="false"
+                       v-model="sortByRoom"
+                       autocomplete="off"
+                       checked>
+                <label class="sort-button btn btn-outline-secondary" for="sort-radio-1" id="sort-button-1">Type</label>
 
-        <div class="sort-button-group">
-            <button @click="sortByRoom = !sortByRoom">Switch sort</button>
-        </div>
-
-        <div class="sort-button-group btn-group"
-             role="group"
-             aria-label="Radio toggle button group for switching product sort order"
-             v-if="false">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="btnradio1">Radio 1</label>
-
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-            <label class="btn btn-outline-primary" for="btnradio2">Radio 2</label>
+                <input type="radio"
+                       class="btn-check"
+                       id="sort-radio-2"
+                       name="sort-radio"
+                       :value="true"
+                       v-model="sortByRoom"
+                       autocomplete="off">
+                <label class="sort-button btn btn-outline-secondary" for="sort-radio-2" id="sort-button-2">Room</label>
+            </div>
         </div>
 
 
@@ -70,6 +78,15 @@ export default {
     },
 
     methods: {
+        addNewDevice() {
+            this.$eventBus.$emit("add-device-toggle");
+            new Modal("#addDeviceModal").show();
+            this.$eventBus.$emit("add-device-toggle");
+        },
+
+        test() {
+
+        },
         printDebugInfo() {
             const first = this.allProducts.data;
             console.log("read:", first);
@@ -78,18 +95,18 @@ export default {
             console.log("byTypeKeys:", Object.keys(this.productsByType));
             console.log("byRoomKeys:", Object.keys(this.productsByRoom));
             console.log("sortByRoom:", this.sortByRoom);
-        },
-
-        addNewDevice() {
-            this.$eventBus.$emit("add-device-toggle");
-            new Modal("#addDeviceModal").show();
-            this.$eventBus.$emit("add-device-toggle");
         }
+    },
+
+    mounted() {
+        this.$eventBus.$on("print-debug", this.test);
     }
 };
 </script>
 
 <style scoped>
+/* Sidebar styles */
+
 .sidebar {
     width: 340px;
     height: 100%;
@@ -106,16 +123,41 @@ export default {
     margin: 0.7rem 0;
 }
 
-.sidebar > .products-list {
-    border: v-bind(productsListBorder);
-    overflow: auto;
-}
+
+
+/* Sidebar content styles */
 
 .add-device-button {
+    padding: 0.5rem;
     --bs-btn-bg: var(--green-devices-main);
     --bs-btn-hover-bg: var(--green-devices-main-darker1);
     --bs-btn-active-bg: var(--green-devices-main-darker2);
-    /* TODO: customize outline */
-    /* --bs-btn-active-border-color: red; */
+}
+
+.sort-group {
+    /* border: 1px solid red; */
+    padding: 0 0.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.sort-label {
+    font-size: 1.05rem;
+}
+
+.sort-button-group {
+    margin-left: auto;
+    margin-right: 0.5rem;
+}
+
+.sort-button {
+    box-shadow: none !important;
+    border: 1px solid var(--bs-btn-border-color);
+    --bs-btn-hover-bg: #9299A0;
+}
+
+.sidebar > .products-list {
+    border: v-bind(productsListBorder);
+    overflow: auto;
 }
 </style>

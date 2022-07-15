@@ -28,7 +28,6 @@ export default {
     data() {
         return {
             roomViewBusy: false,
-
             sortByRoom: false
         };
     },
@@ -128,12 +127,5 @@ export default {
 
 .room-view {
     flex-grow: 1;
-}
-
-:deep(.btn) {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 600;
 }
 </style>

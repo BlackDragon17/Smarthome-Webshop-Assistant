@@ -66,6 +66,12 @@ p {
     margin: 0;
 }
 
+.btn {
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+}
+
 
 
 /* Globally available styles */
