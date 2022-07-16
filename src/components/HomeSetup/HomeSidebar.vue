@@ -29,22 +29,23 @@
             </div>
         </div>
 
+        <hr>
 
         <div class="products-list" v-if="!sortByRoom">
-            <div v-for="type in Object.keys(productsByType).sort()">
-                {{ type }}
-                <div class="box" v-for="product in productsByType[type]">
+            <div class="devices-group" v-for="type in Object.keys(productsByType).sort()">
+                <p>{{ type }}</p>
+                <button class="device-card" v-for="product in productsByType[type]">
                     {{ product.brand }} {{ product.model }}
-                </div>
+                </button>
             </div>
         </div>
 
         <div class="products-list" v-else>
-            <div v-for="room in Object.keys(productsByRoom).sort()">
-                {{ room }}
-                <div class="box" v-for="product in productsByRoom[room]">
+            <div class="devices-group" v-for="room in Object.keys(productsByRoom).sort()">
+                <p>{{ room }}</p>
+                <button class="device-card" v-for="product in productsByRoom[room]">
                     {{ product.brand }} {{ product.model }}
-                </div>
+                </button>
             </div>
         </div>
     </aside>
@@ -85,7 +86,6 @@ export default {
         },
 
         test() {
-
         },
         printDebugInfo() {
             const first = this.allProducts.data;
@@ -100,6 +100,10 @@ export default {
 
     mounted() {
         this.$eventBus.$on("print-debug", this.test);
+    },
+
+    beforeUnmount() {
+        this.$eventBus.$off("print-debug", this.test);
     }
 };
 </script>
@@ -118,6 +122,7 @@ export default {
 }
 
 .sidebar > * {
+    /* border: 1px solid darkcyan; */
     display: block;
     width: 100%;
     margin: 0.7rem 0;
@@ -135,7 +140,7 @@ export default {
 }
 
 .sort-group {
-    padding: 0 0.2rem;
+    margin-bottom: 0;
     display: flex;
     align-items: center;
 }
@@ -146,7 +151,7 @@ export default {
 
 .sort-button-group {
     margin-left: auto;
-    margin-right: 0.5rem;
+    margin-right: 0.2rem;
 }
 
 .sort-button {
@@ -155,8 +160,48 @@ export default {
     --bs-btn-hover-bg: var(--gray-button-hover);
 }
 
-.sidebar > .products-list {
+
+
+/* Products list */
+
+.products-list {
+    /* Override horizontal sidebar padding to fix device shadow clipping */
+    margin: 0 -0.3rem 0.7rem -0.5rem;
+    padding-left: 0.5rem;
+    width: calc(100% + 0.8rem);
+
     border: v-bind(productsListBorder);
-    overflow: auto;
+    overflow-y: auto;
+}
+
+.devices-group {
+    margin-bottom: 1.5rem;
+    padding: 0 0.6rem 0 0.1rem;
+}
+
+.devices-group > :first-child {
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+.device-card {
+    display: block;
+    margin: 0.6rem 0;
+    padding: 0.5rem;
+    width: 100%;
+    min-height: 5.5rem;
+
+    border: 1px solid lightgray;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    background-color: white;
+}
+
+.device-card:hover, .device-card:focus {
+    background-color: #EEE;
+}
+
+.device-card:active {
+    background-color: #DDD;
 }
 </style>

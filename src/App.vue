@@ -153,6 +153,10 @@ p {
     --gray-button-hover: #DFDFDF;
 }
 
+/* *:focus { */
+/*     outline: 3px solid red !important; */
+/* } */
+
 .box {
     height: 100px;
     margin: 10px;

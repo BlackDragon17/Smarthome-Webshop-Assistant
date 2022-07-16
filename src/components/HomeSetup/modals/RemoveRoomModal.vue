@@ -146,7 +146,7 @@ strong {
 .radio-label-body {
     display: block;
     margin-bottom: 0.2rem;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 0.95rem;
     line-height: 1.3;
 }
