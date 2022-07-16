@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import $eventBus from "./assets/javascript/EventBus";
+import $eventBus from "./assets/javascript/eventbus";
 import App from "./App.vue";
 
 const app = createApp(App);
