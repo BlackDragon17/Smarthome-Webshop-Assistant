@@ -9,6 +9,7 @@
         </nav>
 
         <teleport to="head">
+            <!-- TODO: Figure out why light colors aren't getting applied -->
             <meta name="theme-color" :content="headerColor" media="(prefers-color-scheme: light)">
         </teleport>
     </header>
