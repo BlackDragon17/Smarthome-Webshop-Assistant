@@ -3,7 +3,14 @@
         <AddDeviceModal/>
         <button class="add-device-button btn btn-success">Add new device</button>
 
-        <button v-if="false" @click="printDebugInfo">Print debug info</button>
+        <div class="dropdown">
+            <button class="btn btn-primary" data-bs-toggle="dropdown" data-bs-auto-close="outside" style="margin-left: 9rem">Test</button>
+
+            <div id="my-pop" class="my-pop dropdown-menu" style="box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);">
+                <p style="font-weight: bold">Heading</p>
+                <p>Body</p>
+            </div>
+        </div>
 
         <div class="sort-group">
             <span class="sort-label">Sort devices by</span>
@@ -52,7 +59,7 @@
 </template>
 
 <script>
-import { Modal } from "bootstrap";
+import Modal from "bootstrap/js/dist/modal";
 import AddDeviceModal from "./modals/AddDeviceModal.vue";
 
 export default {
@@ -203,5 +210,9 @@ export default {
 
 .device-card:active {
     background-color: #DDD;
+}
+
+.my-pop {
+    transform: none !important;
 }
 </style>

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { Modal } from "bootstrap";
+import Modal from "bootstrap/js/dist/modal";
 import { capitalize } from "vue";
 
 export default {
