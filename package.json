@@ -8,6 +8,7 @@
     "deploy": "node resources/scripts/gh-pages-deploy.js"
   },
   "dependencies": {
+    "@floating-ui/dom": "^0.5.4",
     "bootstrap": "^5.2.0-beta1",
     "vue": "latest"
   },

@@ -3,7 +3,13 @@
         <AddDeviceModal/>
         <button class="add-device-button btn btn-success">Add new device</button>
 
-        <div class="dropdown">
+        <div id="tooltip-body">
+            <p style="font-weight: bold">Heading</p>
+            <p>Body with some text in it</p>
+            <div id="tooltip-arrow"></div>
+        </div>
+
+        <div class="dropdown" v-if="false">
             <button class="btn btn-primary" data-bs-toggle="dropdown" data-bs-auto-close="outside" style="margin-left: 9rem">Test</button>
 
             <div id="my-pop" class="my-pop dropdown-menu" style="box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);">
@@ -40,6 +46,7 @@
 
         <div class="products-list" v-if="!sortByRoom">
             <div class="devices-group" v-for="type in Object.keys(productsByType).sort()">
+                <button v-show="true" v-if="type === 'Lights'" id="tooltip-button" class="btn btn-primary" @click="showTooltip">Test</button>
                 <p>{{ type }}</p>
                 <button class="device-card" v-for="product in productsByType[type]">
                     {{ product.brand }} {{ product.model }}
@@ -59,7 +66,7 @@
 </template>
 
 <script>
-import Modal from "bootstrap/js/dist/modal";
+import { autoUpdate, computePosition, offset, shift, arrow, autoPlacement } from "@floating-ui/dom";
 import AddDeviceModal from "./modals/AddDeviceModal.vue";
 
 export default {
@@ -67,6 +74,12 @@ export default {
 
     components: {
         AddDeviceModal
+    },
+
+    data() {
+        return {
+            tooltipCleanup: null
+        };
     },
 
     props: {
@@ -90,6 +103,54 @@ export default {
             this.$eventBus.$emit("add-device-toggle");
             new Modal("#addDeviceModal").show();
             this.$eventBus.$emit("add-device-toggle");
+        },
+
+        showTooltip() {
+            const buttonEl = document.querySelector("#tooltip-button");
+            const tooltipEl = document.querySelector("#tooltip-body");
+            const arrowEl = document.querySelector("#tooltip-arrow");
+
+            if (tooltipEl.style.display === "block") {
+                tooltipEl.style.display = "";
+                this.tooltipCleanup();
+                return;
+            }
+            tooltipEl.style.display = "block";
+
+            this.tooltipCleanup = autoUpdate(buttonEl, tooltipEl, () => {
+                computePosition(buttonEl, tooltipEl, {
+                    placement: "top",
+                    middleware: [
+                        offset(arrowEl.offsetHeight),
+                        shift({padding: 5}),
+                        arrow({element: arrowEl}),
+                        autoPlacement({allowedPlacements: ["top", "bottom"]})
+                    ]
+                }).then(({x, y, placement, middlewareData}) => {
+                    Object.assign(tooltipEl.style, {
+                        left: `${x}px`,
+                        top: `${y}px`
+                    });
+
+                    const {x: arrowX, y: arrowY} = middlewareData.arrow;
+
+                    const oppositeSide = {
+                        top: "bottom",
+                        right: "left",
+                        bottom: "top",
+                        left: "right"
+                    }[placement.split("-")[0]];
+
+                    Object.assign(arrowEl.style, {
+                        left: arrowX != null ? `${arrowX}px` : "",
+                        top: arrowY != null ? `${arrowY}px` : "",
+                        [oppositeSide]: `-${arrowEl.offsetHeight / 2}px`
+                    });
+                });
+            },
+            {
+                elementResize: false
+            });
         },
 
         test() {
@@ -212,7 +273,38 @@ export default {
     background-color: #DDD;
 }
 
-.my-pop {
-    transform: none !important;
+
+#tooltip-button {
+    margin-left: 8rem;
+    width: max-content;
+}
+
+#tooltip-body {
+    margin: 0;
+    padding: 0.5rem;
+    width: max-content;
+
+    border: 1px solid lightgray;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    background-color: white;
+    color: #222;
+
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#tooltip-arrow {
+    width: 10px;
+    height: 10px;
+
+    border-right: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    background-color: inherit;
+
+    position: absolute;
+    transform: rotate(45deg);
 }
 </style>

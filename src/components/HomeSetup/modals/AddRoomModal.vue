@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import Modal from "bootstrap/js/dist/modal";
 import { capitalize } from "vue";
+import Modal from "bootstrap/js/dist/modal";
 
 export default {
     name: "AddRoomModal",
