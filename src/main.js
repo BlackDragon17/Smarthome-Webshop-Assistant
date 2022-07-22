@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "floating-vue/dist/style.css";
 
 import $eventBus from "./assets/javascript/eventbus";
 import App from "./App.vue";

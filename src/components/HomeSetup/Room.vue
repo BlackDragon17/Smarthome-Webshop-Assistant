@@ -1,5 +1,5 @@
 <template>
-    <div class="room">
+    <div class="room" ref="roomEl">
         <p class="room-title relative-centering" :style="cssAlignTitle">{{ room.name }}</p>
 
         <div class="device-grid">
@@ -11,13 +11,22 @@
                         </span>
                     </button>
                 </div>
-                <Popover v-if="cellArray[i].devices.length > 1">
-                    <button @click="console.log('p', $parent)" class="overflow-button device" v-show="cellArray[i].overflow" :style="alignGridAbsolute(i)">
+                <Dropdown v-if="cellArray[i].overflow" class="overflow-dropdown" :style="alignGridAbsolute(i)">
+                    <button class="device overflow-button">
                         <span class="align-text">
                             +{{ cellArray[i].devices.length }}
                         </span>
                     </button>
-                </Popover>
+                    <template #popper>
+                        <div class="overflow-device-flex" :style="{maxWidth: cssPopoverMaxWidth}">
+                            <button class="device" v-for="device in cellArray[i].devices" :key="device.localId + 'overflow'">
+                                <span class="device-icon material-symbols-rounded">
+                                    {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
+                                </span>
+                            </button>
+                        </div>
+                    </template>
+                </Dropdown>
             </div>
         </div>
 
@@ -30,13 +39,13 @@
 </template>
 
 <script>
-import Popover from "../Popover.vue";
+import { Dropdown } from "floating-vue";
 
 export default {
     name: "Room",
 
     components: {
-        Popover
+        Dropdown
     },
 
     data() {
@@ -67,6 +76,9 @@ export default {
                 return "top: 50%; transform: translate(-50%, -50%);";
             }
             return "bottom: 3rem; margin-bottom: 0.1rem;";
+        },
+        cssPopoverMaxWidth() {
+            return `calc(${this.$refs.roomEl.offsetWidth}px / 1.3)`;
         }
     },
 
@@ -173,9 +185,7 @@ export default {
         this.$eventBus.$on("print-debug", this.printDebug);
 
         this.resizeObserver = new ResizeObserver(() => this.checkCellOverflow());
-        this.resizeObserver.observe(this.$el);
-
-        console.log("pp", this.$parent);
+        this.resizeObserver.observe(this.$refs.roomEl);
     },
 
     beforeUnmount() {
@@ -304,12 +314,25 @@ export default {
     font-variation-settings: "GRAD" 100;
 }
 
-.overflow-button {
+
+
+/* Overflow styling */
+
+.overflow-dropdown {
     margin: 3px 5px 5px 3px;
+    position: absolute;
+}
+
+.overflow-button {
+    margin: 0;
     box-shadow: 0.2rem 0.2rem var(--blue-rooms-buttons-darker1);
     font-size: 1.1em;
     font-weight: 600;
+}
 
-    position: absolute;
+.overflow-device-flex {
+    margin: 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
 }
 </style>
