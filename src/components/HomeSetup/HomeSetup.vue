@@ -66,6 +66,8 @@ export default {
     },
 
     mounted() {
+        this.$root.activeRootView = this.$el;
+
         this.$eventBus.$on("focus-home-setup", this.focusThis);
         this.$eventBus.$on("room-view-busy", this.setRoomViewBusy.bind(this, true));
         this.$eventBus.$on("room-view-free", this.setRoomViewBusy.bind(this, false));

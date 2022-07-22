@@ -28,6 +28,8 @@ export default {
 
     data() {
         return {
+            activeRootView: null,
+
             allProducts,
             currentSetup: null
         };

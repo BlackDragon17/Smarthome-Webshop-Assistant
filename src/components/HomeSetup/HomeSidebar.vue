@@ -3,12 +3,6 @@
         <AddDeviceModal/>
         <button class="add-device-button btn btn-success">Add new device</button>
 
-        <div id="tooltip-body">
-            <p style="font-weight: bold">Heading</p>
-            <p>Body with some text in it</p>
-            <div id="tooltip-arrow"></div>
-        </div>
-
         <div class="dropdown" v-if="false">
             <button class="btn btn-primary" data-bs-toggle="dropdown" data-bs-auto-close="outside" style="margin-left: 9rem">Test</button>
 
@@ -205,40 +199,5 @@ export default {
 
 .device-card:active {
     background-color: #DDD;
-}
-
-
-#tooltip-button {
-    margin-left: 8rem;
-    width: max-content;
-}
-
-#tooltip-body {
-    margin: 0;
-    padding: 0.5rem;
-    width: max-content;
-
-    border: 1px solid lightgray;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
-    background-color: white;
-    color: #222;
-
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-#tooltip-arrow {
-    width: 10px;
-    height: 10px;
-
-    border-right: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-    background-color: inherit;
-
-    position: absolute;
-    transform: rotate(45deg);
 }
 </style>
