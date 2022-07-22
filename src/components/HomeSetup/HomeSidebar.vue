@@ -46,7 +46,6 @@
 
         <div class="products-list" v-if="!sortByRoom">
             <div class="devices-group" v-for="type in Object.keys(productsByType).sort()">
-                <button v-show="true" v-if="type === 'Lights'" id="tooltip-button" class="btn btn-primary" @click="showTooltip">Test</button>
                 <p>{{ type }}</p>
                 <button class="device-card" v-for="product in productsByType[type]">
                     {{ product.brand }} {{ product.model }}
@@ -66,7 +65,6 @@
 </template>
 
 <script>
-import { autoUpdate, computePosition, offset, shift, arrow, autoPlacement } from "@floating-ui/dom";
 import AddDeviceModal from "./modals/AddDeviceModal.vue";
 
 export default {
@@ -99,62 +97,6 @@ export default {
     },
 
     methods: {
-        addNewDevice() {
-            this.$eventBus.$emit("add-device-toggle");
-            new Modal("#addDeviceModal").show();
-            this.$eventBus.$emit("add-device-toggle");
-        },
-
-        showTooltip() {
-            const buttonEl = document.querySelector("#tooltip-button");
-            const tooltipEl = document.querySelector("#tooltip-body");
-            const arrowEl = document.querySelector("#tooltip-arrow");
-
-            if (tooltipEl.style.display === "block") {
-                tooltipEl.style.display = "";
-                this.tooltipCleanup();
-                return;
-            }
-            tooltipEl.style.display = "block";
-
-            this.tooltipCleanup = autoUpdate(buttonEl, tooltipEl, () => {
-                computePosition(buttonEl, tooltipEl, {
-                    placement: "top",
-                    middleware: [
-                        offset(arrowEl.offsetHeight),
-                        shift({padding: 5}),
-                        arrow({element: arrowEl}),
-                        autoPlacement({allowedPlacements: ["top", "bottom"]})
-                    ]
-                }).then(({x, y, placement, middlewareData}) => {
-                    Object.assign(tooltipEl.style, {
-                        left: `${x}px`,
-                        top: `${y}px`
-                    });
-
-                    const {x: arrowX, y: arrowY} = middlewareData.arrow;
-
-                    const oppositeSide = {
-                        top: "bottom",
-                        right: "left",
-                        bottom: "top",
-                        left: "right"
-                    }[placement.split("-")[0]];
-
-                    Object.assign(arrowEl.style, {
-                        left: arrowX != null ? `${arrowX}px` : "",
-                        top: arrowY != null ? `${arrowY}px` : "",
-                        [oppositeSide]: `-${arrowEl.offsetHeight / 2}px`
-                    });
-                });
-            },
-            {
-                elementResize: false
-            });
-        },
-
-        test() {
-        },
         printDebugInfo() {
             const first = this.allProducts.data;
             console.log("read:", first);
@@ -164,14 +106,6 @@ export default {
             console.log("byRoomKeys:", Object.keys(this.productsByRoom));
             console.log("sortByRoom:", this.sortByRoom);
         }
-    },
-
-    mounted() {
-        this.$eventBus.$on("print-debug", this.test);
-    },
-
-    beforeUnmount() {
-        this.$eventBus.$off("print-debug", this.test);
     }
 };
 </script>

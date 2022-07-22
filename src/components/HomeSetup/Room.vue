@@ -6,20 +6,18 @@
             <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el">
                 <div class="device-flex" v-if="cellArray[i].devices.length > 0" :class="{hidden: cellArray[i].overflow}" :style="alignGridFlex(i)">
                     <button class="device" v-for="device in cellArray[i].devices" :key="device.localId">
-                        <!--{{ productsInRoom.find(product => product.productId === device.productId).brand }}-->
                         <span class="device-icon material-symbols-rounded">
                             {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
                         </span>
                     </button>
                 </div>
-                <button class="overflow-button device"
-                        v-if="cellArray[i].devices.length > 1"
-                        v-show="cellArray[i].overflow"
-                        :style="alignGridAbsolute(i)">
-                    <span class="align-text">
-                        +{{ cellArray[i].devices.length }}
-                    </span>
-                </button>
+                <Popover v-if="cellArray[i].devices.length > 1">
+                    <button @click="console.log('p', $parent)" class="overflow-button device" v-show="cellArray[i].overflow" :style="alignGridAbsolute(i)">
+                        <span class="align-text">
+                            +{{ cellArray[i].devices.length }}
+                        </span>
+                    </button>
+                </Popover>
             </div>
         </div>
 
@@ -32,8 +30,14 @@
 </template>
 
 <script>
+import Popover from "../Popover.vue";
+
 export default {
     name: "Room",
+
+    components: {
+        Popover
+    },
 
     data() {
         return {
@@ -170,6 +174,8 @@ export default {
 
         this.resizeObserver = new ResizeObserver(() => this.checkCellOverflow());
         this.resizeObserver.observe(this.$el);
+
+        console.log("pp", this.$parent);
     },
 
     beforeUnmount() {
