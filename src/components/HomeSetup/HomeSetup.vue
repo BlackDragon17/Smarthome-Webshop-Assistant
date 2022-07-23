@@ -64,7 +64,6 @@ export default {
         },
 
         emitEscAction() {
-            console.log("gi");
             if (this.popoverShown) {
                 this.$eventBus.$emit("popover-hide");
             } else if (this.roomViewBusy) {

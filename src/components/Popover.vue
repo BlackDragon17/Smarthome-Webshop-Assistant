@@ -137,12 +137,12 @@ export default {
     },
 
     mounted() {
-        window.addEventListener("click", this.handleClick, true);
+        window.addEventListener("click", this.handleClick);
         this.$eventBus.$on("popover-hide", this.hidePopover);
     },
 
     beforeUnmount() {
-        window.removeEventListener("click", this.handleClick, true);
+        window.removeEventListener("click", this.handleClick);
         if (this.popoverCleanup) {
             this.popoverCleanup();
         }
