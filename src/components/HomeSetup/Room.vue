@@ -5,7 +5,10 @@
         <div class="device-grid">
             <div class="grid-cell" v-for="i in 9" :key="i" :ref="el => cellArray[i].element = el">
                 <div class="device-flex" v-if="cellArray[i].devices.length > 0" :class="{hidden: cellArray[i].overflow}" :style="alignGridFlex(i)">
-                    <button class="device" v-for="device in cellArray[i].devices" :key="device.localId">
+                    <button class="device"
+                            v-for="device in cellArray[i].devices"
+                            :key="device.localId"
+                            @click="$eventBus.$emit('open-device-info', device)">
                         <span class="device-icon material-symbols-rounded">
                             {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
                         </span>
@@ -19,7 +22,10 @@
                     </button>
                     <template #popper>
                         <div class="overflow-device-flex" :style="{maxWidth: cssPopoverMaxWidth}">
-                            <button class="device" v-for="device in cellArray[i].devices" :key="device.localId + 'overflow'">
+                            <button class="device"
+                                    v-for="device in cellArray[i].devices"
+                                    :key="device.localId + 'overflow'"
+                                    @click="$eventBus.$emit('open-device-info', device)">
                                 <span class="device-icon material-symbols-rounded">
                                     {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
                                 </span>
@@ -36,7 +42,10 @@
                     </button>
                     <template #popover>
                         <div class="overflow-device-flex">
-                            <button class="device" v-for="device in cellArray[i].devices" :key="device.localId + 'overflow'">
+                            <button class="device"
+                                    v-for="device in cellArray[i].devices"
+                                    :key="device.localId + 'overflow'"
+                                    @click="$eventBus.$emit('open-device-info', device)">
                                 <span class="device-icon material-symbols-rounded">
                                     {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
                                 </span>
@@ -81,7 +90,7 @@ export default {
         productsInRoom: Array
     },
 
-    emits: ["remove-room"],
+    emits: ["remove-room", "open-device-info"],
 
     computed: {
         cssAlignTitle() {

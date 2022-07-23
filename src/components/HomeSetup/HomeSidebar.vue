@@ -1,6 +1,5 @@
 <template>
     <aside class="sidebar">
-        <AddDeviceModal/>
         <button class="add-device-button btn btn-success">Add new device</button>
 
         <div class="dropdown" v-if="false">
@@ -59,20 +58,8 @@
 </template>
 
 <script>
-import AddDeviceModal from "./modals/AddDeviceModal.vue";
-
 export default {
     name: "HomeSidebar",
-
-    components: {
-        AddDeviceModal
-    },
-
-    data() {
-        return {
-            tooltipCleanup: null
-        };
-    },
 
     props: {
         allProducts: Object,
@@ -82,7 +69,7 @@ export default {
         productsByRoom: Object
     },
 
-    emits: ["add-room-toggle", "delete-room-toggle", "add-device-toggle"],
+    emits: ["open-device-info"],
 
     computed: {
         productsListBorder() {

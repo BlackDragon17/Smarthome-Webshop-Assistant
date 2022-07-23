@@ -18,6 +18,14 @@ import { autoUpdate, computePosition, offset, shift, arrow, autoPlacement } from
 export default {
     name: "Popover",
 
+    /**
+     * TODO:
+     * - Flip arrow border as necessary
+     * - Switch to translate-positioning
+     * - Add fade-in/out
+     * - Make popover hide itself when target goes offscreen
+     */
+
     data() {
         return {
             popoverShown: false,

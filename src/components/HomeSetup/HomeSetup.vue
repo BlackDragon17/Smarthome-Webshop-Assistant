@@ -1,5 +1,7 @@
 <template>
-    <div class="main" tabindex="-1" @keydown.esc="cancelAction">
+    <div class="main" tabindex="-1" @keydown.esc="emitCancelAction">
+        <DeviceInfoModal ref="deviceInfoModal" :setup-devices="currentSetup.products"/>
+
         <HomeSidebar :all-products="allProducts"
                      :current-setup="currentSetup"
                      :sort-by-room="sortByRoom"
@@ -12,6 +14,7 @@
 </template>
 
 <script>
+import DeviceInfoModal from "./modals/DeviceInfoModal.vue";
 import HomeSidebar from "./HomeSidebar.vue";
 import HomeRoomView from "./HomeRoomView.vue";
 
@@ -19,6 +22,7 @@ export default {
     name: "HomeSetup",
 
     components: {
+        DeviceInfoModal,
         HomeSidebar,
         HomeRoomView
     },
@@ -47,40 +51,44 @@ export default {
         focusThis() {
             this.$el.focus();
         },
+        setRoomViewBusy(value) {
+            this.roomViewBusy = value;
+        },
 
-        cancelAction() {
+        openDeviceInfo(device) {
+            this.$refs.deviceInfoModal.openModal(device);
+        },
+
+        emitCancelAction() {
             if (this.roomViewBusy) {
                 this.$eventBus.$emit("room-view-cancel");
             }
         },
-
-        printDebug(event) {
+        emitPrintDebug(event) {
             if (event.keyCode === 68) {
                 this.$eventBus.$emit("print-debug");
             }
-        },
-
-        setRoomViewBusy(value) {
-            this.roomViewBusy = value;
         }
     },
 
     mounted() {
         this.$root.activeRootView = this.$el;
 
+        this.$eventBus.$on("open-device-info", device => this.openDeviceInfo(device));
         this.$eventBus.$on("focus-home-setup", this.focusThis);
         this.$eventBus.$on("room-view-busy", this.setRoomViewBusy.bind(this, true));
         this.$eventBus.$on("room-view-free", this.setRoomViewBusy.bind(this, false));
 
-        window.addEventListener("keydown", this.printDebug);
+        window.addEventListener("keydown", this.emitPrintDebug);
     },
 
     beforeUnmount() {
+        this.$eventBus.$off("open-device-info", device => this.openDeviceInfo(device));
         this.$eventBus.$off("focus-home-setup", this.focusThis);
         this.$eventBus.$off("room-view-busy", this.setRoomViewBusy.bind(this, true));
         this.$eventBus.$off("room-view-free", this.setRoomViewBusy.bind(this, false));
 
-        window.removeEventListener("keydown", this.printDebug);
+        window.removeEventListener("keydown", this.emitPrintDebug);
     }
 };
 </script>

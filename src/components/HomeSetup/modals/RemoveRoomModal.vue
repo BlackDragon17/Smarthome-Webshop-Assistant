@@ -64,7 +64,7 @@ export default {
 
     data() {
         return {
-            roomModal: null,
+            bsModal: null,
 
             removingRoom: {},
             roomDevices: [],
@@ -82,7 +82,7 @@ export default {
     methods: {
         openModal(removingRoom) {
             this.removingRoom = removingRoom;
-            this.roomModal.show();
+            this.bsModal.show();
             this.roomDevices = this.currentSetup.products.filter(device => device.room === this.removingRoom.name);
         },
 
@@ -104,15 +104,20 @@ export default {
             const roomIndex = this.currentSetup.rooms.findIndex(room => room.name.toLowerCase() === this.removingRoom.name.toLowerCase());
             this.currentSetup.rooms.splice(roomIndex, 1);
             this.$emit("room-removed");
-            this.roomModal.hide();
+            this.bsModal.hide();
         }
     },
 
     mounted() {
-        this.roomModal = new Modal("#remove-room-modal");
+        this.bsModal = new Modal("#remove-room-modal");
 
         const domModal = document.getElementById("remove-room-modal");
         domModal.addEventListener("hidden.bs.modal", this.resetModal);
+    },
+
+    beforeUnmount() {
+        const domModal = document.getElementById("remove-room-modal");
+        domModal.removeEventListener("hidden.bs.modal", this.resetModal);
     }
 };
 </script>

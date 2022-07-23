@@ -42,7 +42,7 @@ export default {
 
     data() {
         return {
-            roomModal: null,
+            bsModal: null,
             roomForm: null,
             roomInput: null,
 
@@ -69,14 +69,14 @@ export default {
 
         focusForm() {
             if(this.roomViewState === "normal") {
-                this.roomModal.hide();
+                this.bsModal.hide();
                 return;
             }
             this.roomInput.focus()
         },
 
         openModal(addRoomButton) {
-            this.roomModal.show();
+            this.bsModal.show();
             this.newRoomLocation = addRoomButton.location;
         },
 
@@ -115,18 +115,24 @@ export default {
                 location: {...this.newRoomLocation}
             });
             this.$emit("room-added");
-            this.roomModal.hide();
+            this.bsModal.hide();
         }
     },
 
     mounted() {
-        this.roomModal = new Modal("#add-room-modal");
+        this.bsModal = new Modal("#add-room-modal");
         this.roomForm = document.getElementById("add-room-form");
         this.roomInput = document.getElementById("room-input");
 
         const domModal = document.getElementById("add-room-modal");
         domModal.addEventListener("shown.bs.modal", this.focusForm);
         domModal.addEventListener("hidden.bs.modal", this.resetModal);
+    },
+
+    beforeUnmount() {
+        const domModal = document.getElementById("add-room-modal");
+        domModal.removeEventListener("shown.bs.modal", this.focusForm);
+        domModal.removeEventListener("hidden.bs.modal", this.resetModal);
     }
 };
 </script>
