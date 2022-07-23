@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div @click="togglePopover" ref="popoverTarget">
+        <div ref="popoverTarget" @click="showPopover">
             <slot></slot>
         </div>
         <Teleport :to="this.$root.activeRootView">
@@ -34,30 +34,25 @@ export default {
         };
     },
 
-    methods: {
-        test() {
-        },
+    emits: ["popover-shown", "popover-hidden", "focus-home-setup"],
 
-        togglePopover() {
-            if(!this.popoverShown) {
-                this.showPopover();
-            }
-        },
+    methods: {
         handleClick(event) {
-            if (this.popoverShown
+            if (!this.toggleLock && this.popoverShown
                 && !(event.target === this.$refs.popoverBody || this.$refs.popoverBody.contains(event.target))) {
                 this.hidePopover();
             }
         },
 
         showPopover() {
-            if (this.toggleLock) {
+            if (this.toggleLock || this.popoverShown) {
                 return;
             }
             this.toggleLock = true;
             this.popoverShown = true;
 
             this.$refs.popoverBody.style.display = "block";
+            this.$eventBus.$emit("popover-shown");
 
             this.popoverCleanup = autoUpdate(this.$refs.popoverTarget, this.$refs.popoverBody, () => {
                     computePosition(this.$refs.popoverTarget, this.$refs.popoverBody, {
@@ -93,15 +88,17 @@ export default {
                 {
                     elementResize: false
                 });
+            this.$eventBus.$emit("focus-home-setup");
         },
         hidePopover() {
-            if (this.toggleLock) {
+            if (this.toggleLock || !this.popoverShown) {
                 return;
             }
             this.toggleLock = true;
             this.popoverShown = false;
 
             this.$refs.popoverBody.style.display = "";
+            this.$eventBus.$emit("popover-hidden");
             this.popoverCleanup();
         }
     },
@@ -116,6 +113,7 @@ export default {
 
     mounted() {
         window.addEventListener("click", this.handleClick, true);
+        this.$eventBus.$on("popover-hide", this.hidePopover);
     },
 
     beforeUnmount() {
@@ -123,6 +121,7 @@ export default {
         if (this.popoverCleanup) {
             this.popoverCleanup();
         }
+        this.$eventBus.$off("popover-hide", this.hidePopover);
     }
 };
 </script>

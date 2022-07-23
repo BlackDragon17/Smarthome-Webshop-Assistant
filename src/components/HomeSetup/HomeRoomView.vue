@@ -74,6 +74,8 @@ export default {
         currentSetup: Object
     },
 
+    emits: ["room-view-busy", "room-view-free", "focus-home-setup"],
+
     computed: {
         lowestCoords() {
             let lowestX = Infinity;

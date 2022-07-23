@@ -8,7 +8,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        device productId: {{ device?.productId }}
+                        {{ product?.brand }} {{ product?.model }}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
@@ -41,10 +41,12 @@ export default {
 
     emits: ["focus-home-setup"],
 
+    inject: ["allProducts"],
+
     methods: {
         openModal(device) {
             this.device = device;
-            this.product = null;
+            this.product = this.allProducts[device.productId];
             this.bsModal.show();
         },
 

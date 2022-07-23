@@ -61,6 +61,8 @@
                 <span class="remove-room-icon material-symbols-rounded">delete</span>
             </span>
         </button>
+
+        <div class="add-room-overlay" v-if="roomViewState === 'adding-room'"></div>
     </div>
 </template>
 
@@ -284,6 +286,17 @@ export default {
     font-weight: 600;
 }
 
+
+
+/* Add room overlay */
+
+.add-room-overlay {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+}
 
 
 /* Device grid styling */

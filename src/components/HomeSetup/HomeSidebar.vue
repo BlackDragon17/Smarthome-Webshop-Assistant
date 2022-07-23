@@ -40,7 +40,7 @@
         <div class="products-list" v-if="!sortByRoom">
             <div class="devices-group" v-for="type in Object.keys(devicesByType).sort()">
                 <p>{{ type }}</p>
-                <button class="device-card" v-for="device in devicesByType[type]">
+                <button class="device-card" v-for="device in devicesByType[type]" @click="$eventBus.$emit('open-device-info', device)">
                     {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
                 </button>
             </div>
@@ -49,7 +49,7 @@
         <div class="products-list" v-else>
             <div class="devices-group" v-for="room in Object.keys(devicesByRoom).sort()">
                 <p>{{ room }}</p>
-                <button class="device-card" v-for="device in devicesByRoom[room]">
+                <button class="device-card" v-for="device in devicesByRoom[room]" @click="$eventBus.$emit('open-device-info', device)">
                     {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
                 </button>
             </div>
