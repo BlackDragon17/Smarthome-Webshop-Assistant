@@ -118,7 +118,6 @@ export default {
 
 .sidebar {
     flex-shrink: 0;
-    z-index: 1;
 }
 
 .room-view {

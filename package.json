@@ -10,7 +10,6 @@
   "dependencies": {
     "@floating-ui/dom": "^1.0.0",
     "bootstrap": "^5.2.0",
-    "floating-vue": "^2.0.0-beta.17",
     "vue": "latest"
   },
   "devDependencies": {

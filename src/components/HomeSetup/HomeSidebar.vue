@@ -89,6 +89,8 @@ export default {
     padding: 0.5rem;
     background-color: #F8F8F8;
 
+    position: relative;
+    z-index: 3;
     display: flex;
     flex-direction: column;
 }

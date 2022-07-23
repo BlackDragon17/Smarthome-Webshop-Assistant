@@ -18,14 +18,6 @@ import { autoUpdate, computePosition, offset, shift, arrow, autoPlacement, hide 
 export default {
     name: "Popover",
 
-    /**
-     * TODO:
-     * - Flip arrow border as necessary - done
-     * - Switch to translate-positioning
-     * - Add fade-in/out
-     * - Make popover hide itself when target goes offscreen - done
-     */
-
     data() {
         return {
             popoverShown: false,
@@ -38,8 +30,7 @@ export default {
 
     props: {
         tpTarget: {
-            required: false,
-            default: null
+            required: false
         }
     },
 
@@ -60,7 +51,8 @@ export default {
             this.toggleLock = true;
             this.popoverShown = true;
 
-            this.$refs.popoverBody.style.display = "block";
+            this.$refs.popoverBody.style.visibility = "visible";
+            this.$refs.popoverBody.style.opacity = "1";
             this.$eventBus.$emit("popover-shown");
 
             this.popoverCleanup = autoUpdate(this.$refs.popoverTarget, this.$refs.popoverBody, () => {
@@ -75,18 +67,18 @@ export default {
                         ]
                     }).then(({x, y, placement, middlewareData}) => {
                         // Hide body if overflowing
-                        const {referenceHidden} = middlewareData.hide;
-                        Object.assign(this.$refs.popoverBody.style, {
-                            visibility: referenceHidden ? "hidden" : "visible"
-                        });
-                        if (referenceHidden) {
+                        if (middlewareData.hide.referenceHidden) {
+                            this.$refs.popoverBody.style.transition = "none";
+                            this.$refs.popoverBody.style.visibility = "hidden";
                             return;
+                        } else if (this.$refs.popoverBody.style.transition) {
+                            this.$refs.popoverBody.style.transition = "";
+                            this.$refs.popoverBody.style.visibility = "visible";
                         }
 
                         // Position body
                         Object.assign(this.$refs.popoverBody.style, {
-                            left: `${x}px`,
-                            top: `${y}px`
+                            transform: `translate(${Math.round(x)}px, ${Math.round(y)}px)`
                         });
 
                         // Hide arrow if overflowing
@@ -129,7 +121,8 @@ export default {
             this.popoverShown = false;
             this.arrowSide = "";
 
-            this.$refs.popoverBody.style.display = "";
+            this.$refs.popoverBody.style.opacity = "0";
+            this.$refs.popoverBody.style.visibility = "hidden";
             this.$eventBus.$emit("popover-hidden");
             this.popoverCleanup();
         }
@@ -171,10 +164,13 @@ export default {
     color: #222;
 
     z-index: 2;
-    display: none;
+    visibility: hidden;
+    opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
+
+    transition: visibility 0.17s, opacity 0.17s;
 }
 
 /* Make the popover content appear above the arrow */

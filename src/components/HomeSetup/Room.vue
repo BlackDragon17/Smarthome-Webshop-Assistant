@@ -14,27 +14,7 @@
                         </span>
                     </button>
                 </div>
-                <Dropdown v-if="room.name !== 'Bedroom' && cellArray[i].overflow" class="overflow-dropdown" :style="alignGridAbsolute(i)">
-                    <button class="device overflow-button">
-                        <span class="align-text">
-                            +{{ cellArray[i].devices.length }}
-                        </span>
-                    </button>
-                    <template #popper>
-                        <div class="overflow-device-flex" :style="{maxWidth: cssPopoverMaxWidth}">
-                            <button class="device"
-                                    v-for="device in cellArray[i].devices"
-                                    :key="device.localId + 'overflow'"
-                                    @click="$eventBus.$emit('open-device-info', device)">
-                                <span class="device-icon material-symbols-rounded">
-                                    {{ getDeviceIcon(allProducts[device.productId].type) }}
-                                </span>
-                            </button>
-                        </div>
-                    </template>
-                </Dropdown>
-
-                <Popover v-else-if="cellArray[i].overflow"
+                <Popover v-if="cellArray[i].overflow"
                          class="overflow-dropdown"
                          :style="alignGridAbsolute(i)"
                          :tp-target="$parent.$refs.roomView">
@@ -70,15 +50,13 @@
 </template>
 
 <script>
-import { Dropdown } from "floating-vue";
 import Popover from "../Popover.vue";
 
 export default {
     name: "Room",
 
     components: {
-        Popover,
-        Dropdown
+        Popover
     },
 
     data() {

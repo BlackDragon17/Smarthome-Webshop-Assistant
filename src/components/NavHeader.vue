@@ -41,7 +41,7 @@ header {
     border-bottom: 1px solid #777;
     position: sticky;
     top: 0;
-    z-index: 3;
+    z-index: 4;
 }
 
 /* Outer flex box to align navbar with logo */
