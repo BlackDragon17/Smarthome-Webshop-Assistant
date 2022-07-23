@@ -34,14 +34,17 @@
                     </template>
                 </Dropdown>
 
-                <Popover v-else-if="cellArray[i].overflow" class="overflow-dropdown" :style="alignGridAbsolute(i)">
+                <Popover v-else-if="cellArray[i].overflow"
+                         class="overflow-dropdown"
+                         :style="alignGridAbsolute(i)"
+                         :tp-target="$parent.$refs.roomView">
                     <button class="device overflow-button">
                         <span class="align-text">
                             +{{ cellArray[i].devices.length }}
                         </span>
                     </button>
                     <template #popover>
-                        <div class="overflow-device-flex">
+                        <div class="overflow-device-flex" :style="{maxWidth: cssPopoverMaxWidth}">
                             <button class="device"
                                     v-for="device in cellArray[i].devices"
                                     :key="device.localId + 'overflow'"
@@ -81,7 +84,8 @@ export default {
     data() {
         return {
             cellArray: [],
-            resizeObserver: null
+            resizeObserver: null,
+            resizeKey: false
         };
     },
 
@@ -109,7 +113,13 @@ export default {
             return "bottom: 3rem; margin-bottom: 0.1rem;";
         },
         cssPopoverMaxWidth() {
-            return `calc(${this.$refs.roomEl.offsetWidth}px / 1.3)`;
+            // Referencing a reactive property to force reactive recompute
+            this.resizeKey;
+            // Rounds 80% of room width to the nearest increment of device width including margin (& adds flex margin)
+            const roomWidth = this.$refs.roomEl.offsetWidth * 0.8;
+            const deviceWidth = document.querySelector(".device").offsetWidth + 4;
+            const incremented = Math.round(roomWidth / deviceWidth) * deviceWidth;
+            return `calc(${incremented}px)`;
         }
     },
 
@@ -215,7 +225,10 @@ export default {
     mounted() {
         this.$eventBus.$on("print-debug", this.printDebug);
 
-        this.resizeObserver = new ResizeObserver(() => this.checkCellOverflow());
+        this.resizeObserver = new ResizeObserver(() => {
+            this.checkCellOverflow();
+            this.resizeKey = !this.resizeKey;
+        });
         this.resizeObserver.observe(this.$refs.roomEl);
     },
 
@@ -374,6 +387,7 @@ export default {
 
 .overflow-device-flex {
     margin: 0.25rem;
+    overflow: auto;
     display: flex;
     flex-wrap: wrap;
 }

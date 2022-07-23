@@ -27,6 +27,13 @@
         "x": 1,
         "y": -1
       }
+    },
+    {
+      "name": "Hallway",
+      "location": {
+        "x": 0,
+        "y": 1
+      }
     }
   ],
   "devices": [
@@ -75,6 +82,24 @@
     {
       "productId": "03137251-6156-45f9-b32e-fc6482cbba32",
       "localId": "9e0ddc73-db1f-4c12-900f-6739c5d3bc9f",
+      "room": "Bedroom",
+      "location": 1
+    },
+    {
+      "productId": "03137251-6156-45f9-b32e-fc6482cbba32",
+      "localId": "7d73d41d-dfa4-4934-a7fe-31009afdf3ba",
+      "room": "Bedroom",
+      "location": 1
+    },
+    {
+      "productId": "03137251-6156-45f9-b32e-fc6482cbba32",
+      "localId": "c0ef7c26-7379-4229-981c-771ec48acf20",
+      "room": "Bedroom",
+      "location": 1
+    },
+    {
+      "productId": "03137251-6156-45f9-b32e-fc6482cbba32",
+      "localId": "0cd3f46c-6343-4eb4-9e60-025b1a75cf1a",
       "room": "Bedroom",
       "location": 1
     }

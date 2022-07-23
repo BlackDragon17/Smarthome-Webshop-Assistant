@@ -3,9 +3,9 @@
         <div ref="popoverTarget" @click="showPopover">
             <slot></slot>
         </div>
-        <Teleport :to="this.$root.activeRootView">
-            <div class="popover-body" ref="popoverBody">
-                <div class="popover-arrow" ref="popoverArrow"></div>
+        <Teleport :to="tpTarget ?? $root.activeRootView">
+            <div ref="popoverBody" class="popover-body">
+                <div ref="popoverArrow" class="popover-arrow" :class="arrowSide ? 'arrow-border-' + arrowSide : ''"></div>
                 <slot name="popover"></slot>
             </div>
         </Teleport>
@@ -13,25 +13,34 @@
 </template>
 
 <script>
-import { autoUpdate, computePosition, offset, shift, arrow, autoPlacement } from "@floating-ui/dom";
+import { autoUpdate, computePosition, offset, shift, arrow, autoPlacement, hide } from "@floating-ui/dom";
 
 export default {
     name: "Popover",
 
     /**
      * TODO:
-     * - Flip arrow border as necessary
+     * - Flip arrow border as necessary - done
      * - Switch to translate-positioning
      * - Add fade-in/out
-     * - Make popover hide itself when target goes offscreen
+     * - Make popover hide itself when target goes offscreen - done
      */
 
     data() {
         return {
             popoverShown: false,
             toggleLock: false,
-            popoverCleanup: null
+
+            popoverCleanup: null,
+            arrowSide: ""
         };
+    },
+
+    props: {
+        tpTarget: {
+            required: false,
+            default: null
+        }
     },
 
     emits: ["popover-shown", "popover-hidden", "focus-home-setup"],
@@ -60,42 +69,65 @@ export default {
                         middleware: [
                             offset(this.$refs.popoverArrow.offsetHeight / 2),
                             shift({padding: 5}),
-                            arrow({element: this.$refs.popoverArrow}),
-                            autoPlacement({allowedPlacements: ["top", "bottom"]})
+                            arrow({element: this.$refs.popoverArrow, padding: 7}),
+                            autoPlacement({allowedPlacements: ["top", "bottom"]}),
+                            hide()
                         ]
                     }).then(({x, y, placement, middlewareData}) => {
+                        // Hide body if overflowing
+                        const {referenceHidden} = middlewareData.hide;
+                        Object.assign(this.$refs.popoverBody.style, {
+                            visibility: referenceHidden ? "hidden" : "visible"
+                        });
+                        if (referenceHidden) {
+                            return;
+                        }
+
+                        // Position body
                         Object.assign(this.$refs.popoverBody.style, {
                             left: `${x}px`,
                             top: `${y}px`
                         });
 
-                        const {x: arrowX, y: arrowY} = middlewareData.arrow;
+                        // Hide arrow if overflowing
+                        if (middlewareData.arrow.centerOffset > 1) {
+                            this.$refs.popoverArrow.style.display = "none";
+                            return;
+                        } else if (this.$refs.popoverArrow.style.display) {
+                            this.$refs.popoverArrow.style.display = "";
+                        }
 
+                        // Position arrow
+                        const {x: arrowX, y: arrowY} = middlewareData.arrow;
                         const oppositeSide = {
                             top: "bottom",
                             right: "left",
                             bottom: "top",
                             left: "right"
                         }[placement.split("-")[0]];
+                        this.arrowSide = oppositeSide;
 
                         Object.assign(this.$refs.popoverArrow.style, {
                             left: arrowX != null ? `${arrowX}px` : "",
                             top: arrowY != null ? `${arrowY}px` : "",
-                            [oppositeSide]: `-${(this.$refs.popoverArrow.offsetHeight / 2) + 1}px`
+                            [oppositeSide]: `-${(this.$refs.popoverArrow.offsetHeight / 2) + 0.5}px`
                         });
                     });
                 },
                 {
                     elementResize: false
                 });
+
             this.$eventBus.$emit("focus-home-setup");
         },
+
         hidePopover() {
             if (this.toggleLock || !this.popoverShown) {
                 return;
             }
             this.toggleLock = true;
             this.popoverShown = false;
+            this.arrowSide = "";
 
             this.$refs.popoverBody.style.display = "";
             this.$eventBus.$emit("popover-hidden");
@@ -105,7 +137,7 @@ export default {
 
     watch: {
         toggleLock(newValue) {
-            if(newValue) {
+            if (newValue) {
                 setTimeout(() => this.toggleLock = false, 200);
             }
         }
@@ -129,10 +161,12 @@ export default {
 <style scoped>
 .popover-body {
     margin: 0;
+    max-height: 50vh;
+    /* overflow: auto; */
 
     border: 1px solid lightgray;
     border-radius: 0.5rem;
-    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
     background-color: white;
     color: #222;
 
@@ -143,7 +177,7 @@ export default {
     left: 0;
 }
 
-/* Make the popover body appear above the arrow */
+/* Make the popover content appear above the arrow */
 .popover-body > :nth-child(2) {
     position: relative;
 }
@@ -152,11 +186,20 @@ export default {
     width: 10px;
     height: 10px;
 
-    border-right: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
+    --popover-arrow-border: 1px solid lightgray;
     background-color: inherit;
 
     position: absolute;
     transform: rotate(45deg);
+}
+
+.arrow-border-top {
+    border-top: var(--popover-arrow-border);
+    border-left: var(--popover-arrow-border);
+}
+
+.arrow-border-bottom {
+    border-right: var(--popover-arrow-border);
+    border-bottom: var(--popover-arrow-border);
 }
 </style>
