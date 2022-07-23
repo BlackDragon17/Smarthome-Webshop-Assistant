@@ -14,7 +14,6 @@
                       :room-view-state="roomViewState"
                       :room="room"
                       :current-setup="currentSetup"
-                      :products-in-room="productsByRoom[room.name]"
                       @remove-room="removeSelectedRoom(room)"
                 />
 
@@ -72,8 +71,7 @@ export default {
     },
 
     props: {
-        currentSetup: Object,
-        productsByRoom: Object
+        currentSetup: Object
     },
 
     computed: {

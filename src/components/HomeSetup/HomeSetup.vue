@@ -1,15 +1,13 @@
 <template>
     <div class="main" tabindex="-1" @keydown.esc="emitCancelAction">
-        <DeviceInfoModal ref="deviceInfoModal" :setup-devices="currentSetup.products"/>
+        <DeviceInfoModal ref="deviceInfoModal" :setup-devices="currentSetup.devices"/>
 
-        <HomeSidebar :all-products="allProducts"
+        <HomeSidebar :sort-by-room="sortByRoom"
                      :current-setup="currentSetup"
-                     :sort-by-room="sortByRoom"
-                     :products-by-type="productsByType"
-                     :products-by-room="productsByRoom"/>
+                     :devices-by-type="devicesByType"
+                     :devices-by-room="devicesByRoom"/>
 
-        <HomeRoomView :current-setup="currentSetup"
-                      :products-by-room="productsByRoom"/>
+        <HomeRoomView :current-setup="currentSetup"/>
     </div>
 </template>
 
@@ -35,10 +33,9 @@ export default {
     },
 
     props: {
-        allProducts: Object,
         currentSetup: Object,
-        productsByType: Object,
-        productsByRoom: Object
+        devicesByType: Object,
+        devicesByRoom: Object
     },
 
     computed: {

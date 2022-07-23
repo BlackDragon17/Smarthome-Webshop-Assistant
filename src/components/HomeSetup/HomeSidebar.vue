@@ -38,19 +38,19 @@
         <hr>
 
         <div class="products-list" v-if="!sortByRoom">
-            <div class="devices-group" v-for="type in Object.keys(productsByType).sort()">
+            <div class="devices-group" v-for="type in Object.keys(devicesByType).sort()">
                 <p>{{ type }}</p>
-                <button class="device-card" v-for="product in productsByType[type]">
-                    {{ product.brand }} {{ product.model }}
+                <button class="device-card" v-for="device in devicesByType[type]">
+                    {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
                 </button>
             </div>
         </div>
 
         <div class="products-list" v-else>
-            <div class="devices-group" v-for="room in Object.keys(productsByRoom).sort()">
+            <div class="devices-group" v-for="room in Object.keys(devicesByRoom).sort()">
                 <p>{{ room }}</p>
-                <button class="device-card" v-for="product in productsByRoom[room]">
-                    {{ product.brand }} {{ product.model }}
+                <button class="device-card" v-for="device in devicesByRoom[room]">
+                    {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
                 </button>
             </div>
         </div>
@@ -62,30 +62,19 @@ export default {
     name: "HomeSidebar",
 
     props: {
-        allProducts: Object,
-        currentSetup: Object,
         sortByRoom: Boolean,
-        productsByType: Object,
-        productsByRoom: Object
+        currentSetup: Object,
+        devicesByType: Object,
+        devicesByRoom: Object
     },
 
     emits: ["open-device-info"],
 
+    inject: ["allProducts"],
+
     computed: {
         productsListBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgoldenrod";
-        }
-    },
-
-    methods: {
-        printDebugInfo() {
-            const first = this.allProducts.data;
-            console.log("read:", first);
-            console.log("keys:", Object.keys(this.allProducts.data));
-            console.log("byType:", this.productsByType);
-            console.log("byTypeKeys:", Object.keys(this.productsByType));
-            console.log("byRoomKeys:", Object.keys(this.productsByRoom));
-            console.log("sortByRoom:", this.sortByRoom);
         }
     }
 };

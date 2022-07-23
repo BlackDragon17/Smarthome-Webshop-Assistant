@@ -2,10 +2,9 @@
     <NavHeader ref="header" @header-click="headerAction"/>
 
     <main ref="app">
-        <HomeSetup :all-products="allProducts"
-                   :current-setup="currentSetup"
-                   :products-by-type="productsByType"
-                   :products-by-room="productsByRoom"/>
+        <HomeSetup :current-setup="currentSetup"
+                   :devices-by-type="devicesByType"
+                   :devices-by-room="devicesByRoom"/>
     </main>
 </template>
 
@@ -15,6 +14,10 @@ import { capitalize } from "vue";
 import NavHeader from "./components/NavHeader.vue";
 import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
 
+// Data naming convention:
+//     product: a unique smart home product model released by a company.
+//     device: a device within a user's home setup.
+//             In a setup there can be multiple devices which are the same product (same productId but different localId).
 import allProducts from "/resources/products/packed/PackedJSONs.json";
 import exampleSetup from "/src/assets/default_setups/example1.json";
 
@@ -30,37 +33,65 @@ export default {
         return {
             activeRootView: null,
 
-            allProducts,
+            allProducts: allProducts.data,
             currentSetup: null
         };
     },
 
+    provide() {
+        return {
+            allProducts: this.allProducts
+        };
+    },
+
     computed: {
-        productsByType() {
+        devicesByType() {
             const byType = {};
-            for (const product of this.currentSetup.products) {
-                const type = capitalize(this.allProducts.data[product.productId].type) + "s";
+            for (const device of this.currentSetup.devices) {
+                const type = capitalize(this.allProducts[device.productId].type) + "s";
                 if (byType[type]) {
-                    byType[type].push(this.allProducts.data[product.productId]);
+                    byType[type].push(device);
                 } else {
-                    byType[type] = [this.allProducts.data[product.productId]];
+                    byType[type] = [device];
                 }
             }
             return byType;
         },
-
-        productsByRoom() {
+        devicesByRoom() {
             const byRoom = {};
-            for (const i in this.currentSetup.products) {
-                const room = this.currentSetup.products[i].room;
-                if (byRoom[room]) {
-                    byRoom[room].push(this.allProducts.data[this.currentSetup.products[i].productId]);
+            for (const device of this.currentSetup.devices) {
+                if (byRoom[device.room]) {
+                    byRoom[device.room].push(device);
                 } else {
-                    byRoom[room] = [this.allProducts.data[this.currentSetup.products[i].productId]];
+                    byRoom[device.room] = [device];
                 }
             }
             return byRoom;
-        }
+        },
+
+        // productsByType() {
+        //     const byType = {};
+        //     for (const device of this.currentSetup.devices) {
+        //         const type = capitalize(this.allProducts[device.productId].type) + "s";
+        //         if (byType[type]) {
+        //             byType[type].push(this.allProducts[device.productId]);
+        //         } else {
+        //             byType[type] = [this.allProducts[device.productId]];
+        //         }
+        //     }
+        //     return byType;
+        // },
+        // productsByRoom() {
+        //     const byRoom = {};
+        //     for (const device of this.currentSetup.devices) {
+        //         if (byRoom[device.room]) {
+        //             byRoom[device.room].push(this.allProducts[device.productId]);
+        //         } else {
+        //             byRoom[device.room] = [this.allProducts[device.productId]];
+        //         }
+        //     }
+        //     return byRoom;
+        // }
     },
 
     methods: {
@@ -73,15 +104,15 @@ export default {
                 }
             }
 
-            const products = [];
-            for (const product of setup.products) {
-                if (product.productId && product.localId && product.room && product.location
-                    && rooms.find(room => room.name === product.room)) {
-                    products.push(product);
+            const devices = [];
+            for (const device of setup.devices) {
+                if (device.productId && device.localId && device.room && device.location
+                    && rooms.find(room => room.name === device.room)) {
+                    devices.push(device);
                 }
             }
 
-            this.currentSetup = {rooms, products};
+            this.currentSetup = {rooms, devices};
         },
 
         headerAction(target) {

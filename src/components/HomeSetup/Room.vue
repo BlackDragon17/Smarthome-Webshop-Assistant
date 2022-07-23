@@ -10,7 +10,7 @@
                             :key="device.localId"
                             @click="$eventBus.$emit('open-device-info', device)">
                         <span class="device-icon material-symbols-rounded">
-                            {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
+                            {{ getDeviceIcon(allProducts[device.productId].type) }}
                         </span>
                     </button>
                 </div>
@@ -27,7 +27,7 @@
                                     :key="device.localId + 'overflow'"
                                     @click="$eventBus.$emit('open-device-info', device)">
                                 <span class="device-icon material-symbols-rounded">
-                                    {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
+                                    {{ getDeviceIcon(allProducts[device.productId].type) }}
                                 </span>
                             </button>
                         </div>
@@ -47,7 +47,7 @@
                                     :key="device.localId + 'overflow'"
                                     @click="$eventBus.$emit('open-device-info', device)">
                                 <span class="device-icon material-symbols-rounded">
-                                    {{ getDeviceIcon(productsInRoom.find(product => product.productId === device.productId).type) }}
+                                    {{ getDeviceIcon(allProducts[device.productId].type) }}
                                 </span>
                             </button>
                         </div>
@@ -86,11 +86,12 @@ export default {
     props: {
         roomViewState: String,
         room: Object,
-        currentSetup: Object,
-        productsInRoom: Array
+        currentSetup: Object
     },
 
     emits: ["remove-room", "open-device-info"],
+
+    inject: ["allProducts"],
 
     computed: {
         cssAlignTitle() {
@@ -176,7 +177,7 @@ export default {
                 this.cellArray[i] = {devices: [], overflow: false, element: null};
             }
 
-            const devicesInRoom = this.currentSetup.products.filter(product => product.room === this.room.name);
+            const devicesInRoom = this.currentSetup.devices.filter(product => product.room === this.room.name);
             for (const device of devicesInRoom) {
                 this.cellArray[device.location].devices.push(device);
             }

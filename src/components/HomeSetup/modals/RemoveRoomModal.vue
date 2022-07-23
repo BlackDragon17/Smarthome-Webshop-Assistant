@@ -83,7 +83,7 @@ export default {
         openModal(removingRoom) {
             this.removingRoom = removingRoom;
             this.bsModal.show();
-            this.roomDevices = this.currentSetup.products.filter(device => device.room === this.removingRoom.name);
+            this.roomDevices = this.currentSetup.devices.filter(device => device.room === this.removingRoom.name);
         },
 
         resetModal() {
@@ -95,10 +95,10 @@ export default {
 
         removeRoom() {
             if (this.keepRoomDevices) {
-                const devicesInRoom = this.currentSetup.products.filter(product => product.room === this.removingRoom.name);
+                const devicesInRoom = this.currentSetup.devices.filter(product => product.room === this.removingRoom.name);
                 devicesInRoom.forEach(device => device.room = this.deviceTray);
             } else {
-                this.currentSetup.products = this.currentSetup.products.filter(product => product.room !== this.removingRoom.name);
+                this.currentSetup.devices = this.currentSetup.devices.filter(product => product.room !== this.removingRoom.name);
             }
 
             const roomIndex = this.currentSetup.rooms.findIndex(room => room.name.toLowerCase() === this.removingRoom.name.toLowerCase());
