@@ -107,7 +107,7 @@ export default {
             const devices = [];
             for (const device of setup.devices) {
                 if (device.productId && device.localId && device.room && device.location
-                    && rooms.find(room => room.name === device.room)) {
+                    && (rooms.find(room => room.name === device.room) || device.room === this.deviceTray)) {
                     devices.push(device);
                 }
             }

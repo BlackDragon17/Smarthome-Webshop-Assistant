@@ -8,11 +8,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="material-symbols-rounded">
+                            {{ getIconName(product?.type) }}
+                        </div>
                         {{ product?.brand }} {{ product?.model }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" data-bs-dismiss="modal">Get compatible replacement</button>
+                        <button type="button" class="btn btn-success" v-if="device?.room === deviceTray" data-bs-dismiss="modal">Add to a room</button>
+                        <button type="button" class="btn btn-secondary" v-else data-bs-dismiss="modal">Move to a new&nbsp;spot</button>
+                        <button type="button" class="btn btn-danger" @click="removeDevice">Delete device</button>
                     </div>
                 </div>
             </div>
@@ -36,10 +41,10 @@ export default {
     },
 
     props: {
-        setupDevices: Array,
+        currentDevices: Array
     },
 
-    emits: ["focus-home-setup"],
+    emits: ["device-removed", "focus-home-setup"],
 
     inject: ["allProducts"],
 
@@ -54,6 +59,13 @@ export default {
             this.device = null;
             this.product = null;
             this.$eventBus.$emit("focus-home-setup");
+        },
+
+        removeDevice() {
+            const deviceIndex = this.currentDevices.findIndex(device => device.localId === this.device.localId);
+            this.currentDevices.splice(deviceIndex, 1);
+            this.$emit("device-removed");
+            this.bsModal.hide();
         }
     },
 
@@ -71,4 +83,29 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.modal-footer {
+    border: none;
+
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+button.btn {
+    margin: 0 0.25rem;
+    padding: 0.2rem 0.75rem 0.4rem;
+    line-height: 1.3;
+    max-width: max-content;
+}
+
+@media screen and (min-width: 520px) {
+    button.btn {
+        margin: 0 0.5rem;
+    }
+}
+@media screen and (max-width: 380px) {
+    .modal-footer {
+        padding: 0.75rem 0.1rem;
+    }
+}
+</style>

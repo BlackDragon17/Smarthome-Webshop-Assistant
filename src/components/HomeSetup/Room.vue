@@ -10,7 +10,7 @@
                             :key="device.localId"
                             @click="$eventBus.$emit('open-device-info', device)">
                         <span class="device-icon material-symbols-rounded">
-                            {{ getDeviceIcon(allProducts[device.productId].type) }}
+                            {{ getIconName(allProducts[device.productId].type) }}
                         </span>
                     </button>
                 </div>
@@ -30,7 +30,7 @@
                                     :key="device.localId + 'overflow'"
                                     @click="$eventBus.$emit('open-device-info', device)">
                                 <span class="device-icon material-symbols-rounded">
-                                    {{ getDeviceIcon(allProducts[device.productId].type) }}
+                                    {{ getIconName(allProducts[device.productId].type) }}
                                 </span>
                             </button>
                         </div>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import { nextTick } from "vue";
 import Popover from "../Popover.vue";
 
 export default {
@@ -70,7 +71,7 @@ export default {
     props: {
         roomViewState: String,
         room: Object,
-        currentSetup: Object
+        currentDevices: Array
     },
 
     emits: ["remove-room", "open-device-info"],
@@ -102,17 +103,6 @@ export default {
     },
 
     methods: {
-        getDeviceIcon(deviceType) {
-            switch (deviceType) {
-                case "light":
-                    return "lightbulb";
-                case "hub":
-                    return "hub";
-                case "sensor":
-                    return "sensors";
-            }
-        },
-
         // Margin-based positioning between grid-cell & device-flex (makes overflows work properly)
         // Flexbox-based positioning between device-flex & device (centers items in case of wrap)
         alignGridFlex(i) {
@@ -167,7 +157,18 @@ export default {
                 this.cellArray[i] = {devices: [], overflow: false, element: null};
             }
 
-            const devicesInRoom = this.currentSetup.devices.filter(product => product.room === this.room.name);
+            const devicesInRoom = this.currentDevices.filter(product => product.room === this.room.name);
+            for (const device of devicesInRoom) {
+                this.cellArray[device.location].devices.push(device);
+            }
+        },
+        updateCellArray() {
+            for (let i = 1; i <= 9; i++) {
+                this.cellArray[i].devices = [];
+                this.cellArray[i].overflow = false;
+            }
+
+            const devicesInRoom = this.currentDevices.filter(product => product.room === this.room.name);
             for (const device of devicesInRoom) {
                 this.cellArray[device.location].devices.push(device);
             }
@@ -193,6 +194,17 @@ export default {
                 console.log("cell height", this.cellArray[cellNr].element.offsetHeight);
                 console.log("cell scr height", this.cellArray[cellNr].element.scrollHeight);
             }
+        }
+    },
+
+    watch: {
+        currentDevices: {
+            async handler() {
+                this.updateCellArray();
+                await nextTick();
+                this.checkCellOverflow();
+            },
+            deep: true
         }
     },
 

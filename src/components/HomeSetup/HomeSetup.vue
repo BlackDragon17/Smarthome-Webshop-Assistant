@@ -1,6 +1,6 @@
 <template>
     <div class="main" tabindex="-1" @keydown.esc="emitEscAction">
-        <DeviceInfoModal ref="deviceInfoModal" :setup-devices="currentSetup.devices"/>
+        <DeviceInfoModal ref="deviceInfoModal" :current-devices="currentSetup.devices" @device-removed="emitEscRoomViewAction"/>
 
         <HomeSidebar :sort-by-room="sortByRoom"
                      :current-setup="currentSetup"
@@ -70,6 +70,12 @@ export default {
                 this.$eventBus.$emit("room-view-cancel");
             }
         },
+        emitEscRoomViewAction() {
+            if (this.roomViewBusy) {
+                this.$eventBus.$emit("room-view-cancel");
+            }
+        },
+
         emitPrintDebug(event) {
             if (event.keyCode === 68) {
                 this.$eventBus.$emit("print-debug");

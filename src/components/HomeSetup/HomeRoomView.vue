@@ -13,7 +13,7 @@
                       :style="positionRoom(room)"
                       :room-view-state="roomViewState"
                       :room="room"
-                      :current-setup="currentSetup"
+                      :current-devices="currentSetup.devices"
                       @remove-room="removeSelectedRoom(room)"
                 />
 
