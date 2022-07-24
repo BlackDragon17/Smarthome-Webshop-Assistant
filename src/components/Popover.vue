@@ -66,14 +66,19 @@ export default {
                             hide()
                         ]
                     }).then(({x, y, placement, middlewareData}) => {
-                        // Hide body if overflowing
-                        if (middlewareData.hide.referenceHidden) {
-                            this.$refs.popoverBody.style.transition = "none";
+                        // Hide body when popover target moves off-screen (positive body offsets).
+                        // Similarly to device overflow detection, we need a buffer where no rule applies to avoid flickering (here: the size of a scrollbar).
+                        const bodyOffsets = middlewareData.hide.referenceHiddenOffsets;
+                        if (bodyOffsets.top > 0 || bodyOffsets.right > 18 || bodyOffsets.bottom > 18 || bodyOffsets.left > 0) {
                             this.$refs.popoverBody.style.visibility = "hidden";
+                            this.$refs.popoverBody.style.transform = "";
                             return;
-                        } else if (this.$refs.popoverBody.style.transition) {
-                            this.$refs.popoverBody.style.transition = "";
+                        } else if (bodyOffsets.right <= 0 && bodyOffsets.bottom <= 0) {
+                            // We only need this buffer where scrollbars can appear: right & bottom
                             this.$refs.popoverBody.style.visibility = "visible";
+                        }
+                        if (this.$refs.popoverBody.style.visibility === "hidden") {
+                            return;
                         }
 
                         // Position body
@@ -82,15 +87,15 @@ export default {
                         });
 
                         // Hide arrow if overflowing
-                        if (middlewareData.arrow.centerOffset > 1) {
-                            this.$refs.popoverArrow.style.display = "none";
+                        const {x: arrowX, y: arrowY, centerOffset: arrowOffset} = middlewareData.arrow;
+                        if (arrowOffset > 0) {
+                            this.$refs.popoverArrow.style.visibility = "hidden";
                             return;
-                        } else if (this.$refs.popoverArrow.style.display) {
-                            this.$refs.popoverArrow.style.display = "";
+                        } else if (this.$refs.popoverArrow.style.visibility) {
+                            this.$refs.popoverArrow.style.visibility = "";
                         }
 
                         // Position arrow
-                        const {x: arrowX, y: arrowY} = middlewareData.arrow;
                         const oppositeSide = {
                             top: "bottom",
                             right: "left",
@@ -123,8 +128,8 @@ export default {
 
             this.$refs.popoverBody.style.opacity = "0";
             this.$refs.popoverBody.style.visibility = "hidden";
-            this.$eventBus.$emit("popover-hidden");
             this.popoverCleanup();
+            this.$eventBus.$emit("popover-hidden");
         }
     },
 
