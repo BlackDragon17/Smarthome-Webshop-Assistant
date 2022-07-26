@@ -1,13 +1,16 @@
 <template>
     <div class="main" tabindex="-1" @keydown.esc="emitEscAction">
-        <DeviceInfoModal ref="deviceInfoModal" :current-devices="currentSetup.devices" @device-removed="emitEscRoomViewAction"/>
+        <DeviceInfoModal ref="deviceInfoModal"
+                         :current-devices="currentSetup.devices"
+                         :device-queue="deviceQueue"
+                         @device-removed="emitEscRoomViewAction"/>
 
         <HomeSidebar :sort-by-room="sortByRoom"
                      :current-setup="currentSetup"
                      :devices-by-type="devicesByType"
                      :devices-by-room="devicesByRoom"/>
 
-        <HomeRoomView :current-setup="currentSetup"/>
+        <HomeRoomView :current-setup="currentSetup" :device-queue="deviceQueue"/>
     </div>
 </template>
 
@@ -37,7 +40,8 @@ export default {
     props: {
         currentSetup: Object,
         devicesByType: Object,
-        devicesByRoom: Object
+        devicesByRoom: Object,
+        deviceQueue: Array
     },
 
     emits: ["print-debug", "room-view-cancel", "popover-hide"],

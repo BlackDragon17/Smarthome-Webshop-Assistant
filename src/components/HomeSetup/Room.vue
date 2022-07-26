@@ -14,6 +14,7 @@
                         </span>
                     </button>
                 </div>
+
                 <Popover v-if="cellArray[i].overflow"
                          class="overflow-dropdown"
                          :style="alignGridAbsolute(i)"
@@ -36,6 +37,12 @@
                         </div>
                     </template>
                 </Popover>
+
+                <button class="add-device-overlay"
+                        v-if="roomViewState === 'adding-device' || roomViewState === 'moving-device'"
+                        :style="getBorderLines(i)">
+                    <span class="add-device-icon material-symbols-rounded">add_circle</span>
+                </button>
             </div>
         </div>
 
@@ -147,6 +154,18 @@ export default {
                     return "bottom: 0; left: 50%; transform: translateX(-50%);";
                 case 9:
                     return "bottom: 0; right: 0;";
+            }
+        },
+        getBorderLines(i) {
+            switch (i) {
+                case 2:
+                case 8:
+                    return "border-left: var(--device-overlay-border); border-right: var(--device-overlay-border);";
+                case 4:
+                case 6:
+                    return "border-top: var(--device-overlay-border); border-bottom: var(--device-overlay-border);";
+                case 5:
+                    return "border: var(--device-overlay-border);"
             }
         },
 
@@ -292,13 +311,41 @@ export default {
 
 
 /* Add room overlay */
-
 .add-room-overlay {
     width: 100%;
     height: 100%;
 
     position: absolute;
     top: 0;
+}
+
+
+
+/* Add device overlay */
+
+.add-device-overlay {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: rgba(1, 148, 7, 0.2);
+    --device-overlay-border: 2px solid white;
+
+    position: absolute;
+    top: 0;
+}
+
+.add-device-overlay:hover, .add-device-overlay:focus {
+    background-color: rgba(76, 175, 80, 0.82);
+}
+
+.add-device-overlay:active {
+    background-color: var(--green-devices-overlay);
+}
+
+.add-device-icon {
+    color: white;
+    font-size: 1.75rem;
+    font-variation-settings: "GRAD" 100;
 }
 
 

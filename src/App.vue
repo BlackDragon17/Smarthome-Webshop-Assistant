@@ -4,7 +4,8 @@
     <main ref="app">
         <HomeSetup :current-setup="currentSetup"
                    :devices-by-type="devicesByType"
-                   :devices-by-room="devicesByRoom"/>
+                   :devices-by-room="devicesByRoom"
+                   :device-queue="deviceQueue"/>
     </main>
 </template>
 
@@ -34,7 +35,8 @@ export default {
             activeRootView: null,
 
             allProducts: allProducts.data,
-            currentSetup: null
+            currentSetup: null,
+            deviceQueue: []
         };
     },
 
@@ -67,7 +69,7 @@ export default {
                 }
             }
             return byRoom;
-        },
+        }
 
         // productsByType() {
         //     const byType = {};
@@ -182,6 +184,8 @@ p {
     --green-devices-main: #4CAF50;
     --green-devices-main-darker1: #439846; /* lightness -6 */
     --green-devices-main-darker2: #38803A; /* lightness -13 */
+
+    --green-devices-overlay: #44A148;
 
     --gray-button-hover: #DFDFDF;
 }

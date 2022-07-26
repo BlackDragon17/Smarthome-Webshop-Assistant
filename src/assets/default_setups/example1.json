@@ -29,16 +29,9 @@
       }
     },
     {
-      "name": "Bedroom 2",
-      "location": {
-        "x": 2,
-        "y": 0
-      }
-    },
-    {
       "name": "Balcony",
       "location": {
-        "x": 3,
+        "x": 2,
         "y": 0
       }
     }

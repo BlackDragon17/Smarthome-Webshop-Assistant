@@ -8,15 +8,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="material-symbols-rounded">
+                        <div class="inline-icon material-symbols-rounded">
                             {{ getIconName(product?.type) }}
                         </div>
                         {{ product?.brand }} {{ product?.model }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" data-bs-dismiss="modal">Get compatible replacement</button>
-                        <button type="button" class="btn btn-success" v-if="device?.room === deviceTray" data-bs-dismiss="modal">Add to a room</button>
-                        <button type="button" class="btn btn-secondary" v-else data-bs-dismiss="modal">Move to a new&nbsp;spot</button>
+                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="replaceDevice">Get compatible replacement</button>
+                        <button type="button" class="btn btn-success" v-if="device?.room === deviceTray" @click="moveDevice">Add to a room</button>
+                        <button type="button" class="btn btn-secondary" v-else @click="moveDevice">Move to a new&nbsp;spot</button>
                         <button type="button" class="btn btn-danger" @click="removeDevice">Delete device</button>
                     </div>
                 </div>
@@ -41,10 +41,11 @@ export default {
     },
 
     props: {
-        currentDevices: Array
+        currentDevices: Array,
+        deviceQueue: Array
     },
 
-    emits: ["device-removed", "focus-home-setup"],
+    emits: ["move-device", "device-removed", "focus-home-setup"],
 
     inject: ["allProducts"],
 
@@ -59,6 +60,22 @@ export default {
             this.device = null;
             this.product = null;
             this.$eventBus.$emit("focus-home-setup");
+        },
+
+
+        // Button callbacks
+
+        replaceDevice() {
+            //this.$eventBus.$emit("replace-device", this.device);
+            this.bsModal.hide();
+        },
+
+        moveDevice() {
+            const deviceIndex = this.currentDevices.findIndex(device => device.localId === this.device.localId);
+            this.currentDevices.splice(deviceIndex, 1);
+            this.deviceQueue.push(this.device);
+            this.$eventBus.$emit("move-device");
+            this.bsModal.hide();
         },
 
         removeDevice() {

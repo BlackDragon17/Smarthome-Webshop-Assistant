@@ -7,7 +7,6 @@
 
         <div class="room-grid-container">
             <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && allowMarginOverride}">
-
                 <Room v-for="room in currentSetup.rooms"
                       :key="room.name"
                       :style="positionRoom(room)"
@@ -32,7 +31,7 @@
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
             <button class="remove-room-button btn btn-secondary" @click="removeRoom">Remove a room</button>
         </div>
-        <button v-else-if="roomViewState !== 'adding-device' && roomViewState !== 'init'"
+        <button v-else-if="roomViewState !== 'init'"
                 class="cancel-button btn btn-danger relative-centering"
                 @click="endAction">
             Cancel
@@ -71,7 +70,8 @@ export default {
     },
 
     props: {
-        currentSetup: Object
+        currentSetup: Object,
+        deviceQueue: Array
     },
 
     emits: ["room-view-busy", "room-view-free", "focus-home-setup"],
@@ -221,20 +221,33 @@ export default {
         },
 
 
-        // Control button callbacks
+        // Control button callbacks / action entry points
 
         addNewRoom() {
             this.createAddRoomButtons();
             this.actionHeadingText = "Select a spot to add the new room at:";
             this.roomViewState = "adding-room";
-            this.$eventBus.$emit("room-view-busy");
-            this.$eventBus.$emit("focus-home-setup");
-            this.checkOverflow();
+            this.actionStart();
         },
 
         removeRoom() {
             this.actionHeadingText = "Select a room to be removed:";
             this.roomViewState = "removing-room";
+            this.actionStart();
+        },
+
+        moveDevice() {
+            const device = this.deviceQueue[0];
+            if (device.room === this.deviceTray) {
+                this.actionHeadingText = "Select a spot to place the device at:";
+            } else {
+                this.actionHeadingText = "Select a spot to move the device to:";
+            }
+            this.roomViewState = "moving-device";
+            this.actionStart();
+        },
+
+        actionStart() {
             this.$eventBus.$emit("room-view-busy");
             this.$eventBus.$emit("focus-home-setup");
             this.checkOverflow();
@@ -248,12 +261,18 @@ export default {
             }
         },
 
-        endAction() {
+        endAction(device) {
             switch (this.roomViewState) {
                 case "adding-room":
                     this.removeAddRoomButtons();
                     break;
                 case "removing-room":
+                    break;
+                case "moving-device":
+                    if (this.deviceQueue.length > 0) {
+                        const device = this.deviceQueue.pop();
+                        this.currentSetup.devices.push(device);
+                    }
                     break;
                 case "normal":
                     return;
@@ -287,6 +306,7 @@ export default {
 
     mounted() {
         this.$eventBus.$on("room-view-cancel", this.endAction);
+        this.$eventBus.$on("move-device", this.moveDevice);
 
         // Compute actionHeadingHeight and hide it
         const heading = document.querySelector(".action-heading");
@@ -303,6 +323,7 @@ export default {
 
     beforeUnmount() {
         this.$eventBus.$off("room-view-cancel", this.endAction);
+        this.$eventBus.$off("move-device", this.moveDevice);
     }
 };
 </script>
