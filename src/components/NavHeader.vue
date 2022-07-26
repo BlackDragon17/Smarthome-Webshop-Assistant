@@ -3,8 +3,8 @@
         <nav class="header" ref="header">
             <a href="#" class="logo" @click="headerAction('logo')">SH<span>WA</span></a>
             <ul class="header-nav">
-                <li><a href="#" @click="headerAction('setup')">Home Setup</a></li>
-                <li><a href="#" @click="headerAction('database')">Product Database</a></li>
+                <li><a href="#" @click="headerAction('HomeSetup')">Home Setup</a></li>
+                <li><a href="#" @click="headerAction('ProductDatabase')">Product Database</a></li>
             </ul>
         </nav>
 

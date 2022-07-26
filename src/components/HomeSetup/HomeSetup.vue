@@ -86,7 +86,7 @@ export default {
     },
 
     mounted() {
-        this.$root.activeRootView = this.$el;
+        this.$root.activeViewRoot = this.$el;
 
         this.$eventBus.$on("focus-home-setup", this.focusThis);
         this.$eventBus.$on("open-device-info", device => this.openDeviceInfo(device));

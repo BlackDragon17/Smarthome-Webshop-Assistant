@@ -2,10 +2,12 @@
     <NavHeader ref="header" @header-click="headerAction"/>
 
     <main ref="app">
-        <HomeSetup :current-setup="currentSetup"
+        <HomeSetup v-if="activeView === 'HomeSetup'"
+                   :current-setup="currentSetup"
                    :devices-by-type="devicesByType"
                    :devices-by-room="devicesByRoom"
                    :device-queue="deviceQueue"/>
+        <ProductDatabase v-else-if="activeView === 'ProductDatabase'"/>
     </main>
 </template>
 
@@ -14,6 +16,7 @@ import { capitalize } from "vue";
 
 import NavHeader from "./components/NavHeader.vue";
 import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
+import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
 
 // Data naming convention:
 //     product: a unique smart home product model released by a company.
@@ -27,12 +30,14 @@ export default {
 
     components: {
         NavHeader,
-        HomeSetup
+        HomeSetup,
+        ProductDatabase
     },
 
     data() {
         return {
-            activeRootView: null,
+            activeView: "HomeSetup",
+            activeViewRoot: null,
 
             allProducts: allProducts.data,
             currentSetup: null,
@@ -118,9 +123,8 @@ export default {
         },
 
         headerAction(target) {
-            //TODO: Switch page
-            console.log("Header target:", target);
-            this.$eventBus.$emit("focus-home-setup");
+            this.activeView = target;
+            //this.$eventBus.$emit("focus-home-setup");
         }
     },
 

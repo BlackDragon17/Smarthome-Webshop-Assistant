@@ -3,7 +3,7 @@
         <div ref="popoverTarget" @click="showPopover">
             <slot></slot>
         </div>
-        <Teleport :to="tpTarget ?? $root.activeRootView">
+        <Teleport :to="tpTarget ?? $root.activeViewRoot">
             <div ref="popoverBody" class="popover-body">
                 <div ref="popoverArrow" class="popover-arrow" :class="arrowSide ? 'arrow-border-' + arrowSide : ''"></div>
                 <slot name="popover"></slot>
