@@ -5,8 +5,7 @@
                          :device-queue="deviceQueue"
                          @device-removed="emitEscRoomViewAction"/>
 
-        <HomeSidebar :sort-by-room="sortByRoom"
-                     :current-setup="currentSetup"
+        <HomeSidebar :current-setup="currentSetup"
                      :devices-by-type="devicesByType"
                      :devices-by-room="devicesByRoom"/>
 
@@ -31,9 +30,7 @@ export default {
     data() {
         return {
             roomViewBusy: false,
-            popoverShown: false,
-
-            sortByRoom: false
+            popoverShown: false
         };
     },
 
@@ -64,6 +61,7 @@ export default {
         },
 
         openDeviceInfo(device) {
+            this.emitEscRoomViewAction();
             this.$refs.deviceInfoModal.openModal(device);
         },
 

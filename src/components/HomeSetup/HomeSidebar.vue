@@ -67,8 +67,13 @@
 export default {
     name: "HomeSidebar",
 
+    data() {
+        return {
+            sortByRoom: false
+        };
+    },
+
     props: {
-        sortByRoom: Boolean,
         currentSetup: Object,
         devicesByType: Object,
         devicesByRoom: Object
