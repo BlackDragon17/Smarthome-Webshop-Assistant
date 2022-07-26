@@ -14,7 +14,9 @@
                         {{ product?.brand }} {{ product?.model }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="replaceDevice">Get compatible replacement</button>
+                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="replaceDevice">Get compatible
+                            replacement
+                        </button>
                         <button type="button" class="btn btn-success" v-if="device?.room === deviceTray" @click="moveDevice">Add to a room</button>
                         <button type="button" class="btn btn-secondary" v-else @click="moveDevice">Move to a new&nbsp;spot</button>
                         <button type="button" class="btn btn-danger" @click="removeDevice">Delete device</button>
@@ -120,6 +122,7 @@ button.btn {
         margin: 0 0.5rem;
     }
 }
+
 @media screen and (max-width: 380px) {
     .modal-footer {
         padding: 0.75rem 0.1rem;

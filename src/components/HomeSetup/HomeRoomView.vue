@@ -1,7 +1,7 @@
 <template>
     <section ref="roomView" class="room-view">
-        <AddRoomModal ref="addRoomModal" :room-view-state="roomViewState" :setup-rooms="currentSetup.rooms" @room-added="endAction"/>
-        <RemoveRoomModal ref="removeRoomModal" :room-view-state="roomViewState" :current-setup="currentSetup" @room-removed="endAction"/>
+        <AddRoomModal ref="addRoomModal" :room-view-state="roomViewState" :setup-rooms="currentSetup.rooms" @added-room="endAction"/>
+        <RemoveRoomModal ref="removeRoomModal" :room-view-state="roomViewState" :current-setup="currentSetup" @removed-room="endAction"/>
 
         <h3 class="action-heading relative-centering" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
 
@@ -13,8 +13,9 @@
                       :room-view-state="roomViewState"
                       :room="room"
                       :current-devices="currentSetup.devices"
+                      :device-queue="deviceQueue"
                       @remove-room="removeSelectedRoom(room)"
-                />
+                      @added-device="endAction"/>
 
                 <button class="add-room-grid-button"
                         v-for="button in addRoomButtons"
@@ -261,7 +262,7 @@ export default {
             }
         },
 
-        endAction(device) {
+        endAction() {
             switch (this.roomViewState) {
                 case "adding-room":
                     this.removeAddRoomButtons();

@@ -58,7 +58,7 @@ export default {
         setupRooms: Array
     },
 
-    emits: ["room-added", "focus-home-setup"],
+    emits: ["added-room", "focus-home-setup"],
 
     methods: {
         onInput() {
@@ -68,11 +68,11 @@ export default {
         },
 
         focusForm() {
-            if(this.roomViewState === "normal") {
+            if (this.roomViewState === "normal") {
                 this.bsModal.hide();
                 return;
             }
-            this.roomInput.focus()
+            this.roomInput.focus();
         },
 
         openModal(addRoomButton) {
@@ -114,7 +114,7 @@ export default {
                 name: capitalize(input),
                 location: {...this.newRoomLocation}
             });
-            this.$emit("room-added");
+            this.$emit("added-room");
             this.bsModal.hide();
         }
     },

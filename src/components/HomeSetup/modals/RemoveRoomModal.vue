@@ -77,7 +77,7 @@ export default {
         currentSetup: Object
     },
 
-    emits: ["room-removed", "focus-home-setup"],
+    emits: ["removed-room", "focus-home-setup"],
 
     methods: {
         openModal(removingRoom) {
@@ -103,7 +103,7 @@ export default {
 
             const roomIndex = this.currentSetup.rooms.findIndex(room => room.name.toLowerCase() === this.removingRoom.name.toLowerCase());
             this.currentSetup.rooms.splice(roomIndex, 1);
-            this.$emit("room-removed");
+            this.$emit("removed-room");
             this.bsModal.hide();
         }
     },

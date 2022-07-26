@@ -40,7 +40,8 @@
 
                 <button class="add-device-overlay"
                         v-if="roomViewState === 'adding-device' || roomViewState === 'moving-device'"
-                        :style="getBorderLines(i)">
+                        :style="getBorderLines(i)"
+                        @click="addDeviceAt(i)">
                     <span class="add-device-icon material-symbols-rounded">add_circle</span>
                 </button>
             </div>
@@ -78,10 +79,11 @@ export default {
     props: {
         roomViewState: String,
         room: Object,
-        currentDevices: Array
+        currentDevices: Array,
+        deviceQueue: Array
     },
 
-    emits: ["remove-room", "open-device-info"],
+    emits: ["added-device", "remove-room", "open-device-info"],
 
     inject: ["allProducts"],
 
@@ -165,7 +167,7 @@ export default {
                 case 6:
                     return "border-top: var(--device-overlay-border); border-bottom: var(--device-overlay-border);";
                 case 5:
-                    return "border: var(--device-overlay-border);"
+                    return "border: var(--device-overlay-border);";
             }
         },
 
@@ -204,6 +206,16 @@ export default {
                     this.cellArray[i].overflow = false;
                 }
             }
+        },
+
+        // Grid button callback
+        addDeviceAt(location) {
+            const device = this.deviceQueue.pop();
+            device.localId = device.localId ?? crypto.randomUUID();
+            device.room = this.room.name;
+            device.location = location;
+            this.currentDevices.push(device);
+            this.$emit("added-device");
         },
 
         printDebug() {
