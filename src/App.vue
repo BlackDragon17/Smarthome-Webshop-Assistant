@@ -1,5 +1,5 @@
 <template>
-    <NavHeader ref="header" @header-click="headerAction"/>
+    <NavHeader ref="header" :active-view="activeView" @header-click="headerAction"/>
 
     <main ref="app">
         <HomeSetup v-if="activeView === 'HomeSetup'"
@@ -164,7 +164,7 @@ p {
 
 .btn {
     border: none;
-    border-radius: 0.5rem;
+    border-radius: var(--button-border-radius);
     font-weight: 600;
 }
 
@@ -192,6 +192,8 @@ p {
     --green-devices-overlay: #44A148;
 
     --gray-button-hover: #DFDFDF;
+
+    --button-border-radius: 0.5rem;
 }
 
 /* *:focus { */

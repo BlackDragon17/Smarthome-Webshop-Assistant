@@ -57,7 +57,6 @@ export default {
 
             this.popoverCleanup = autoUpdate(this.$refs.popoverTarget, this.$refs.popoverBody, () => {
                     computePosition(this.$refs.popoverTarget, this.$refs.popoverBody, {
-                        placement: "top",
                         middleware: [
                             offset(this.$refs.popoverArrow.offsetHeight / 2),
                             shift({padding: 5}),
