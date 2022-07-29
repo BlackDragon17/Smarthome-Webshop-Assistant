@@ -3,8 +3,8 @@
   "model": "Colour A60 E27",
   "generation": "N/A",
   "revision": 2020,
-  "type": "light",
-  "subtype": "bulb",
+  "category": "light",
+  "type": "bulb",
   "network": {
     "wifi": [
       "2.4GHz"

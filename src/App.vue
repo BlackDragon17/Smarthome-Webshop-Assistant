@@ -4,7 +4,7 @@
     <main ref="app">
         <HomeSetup v-if="activeView === 'HomeSetup'"
                    :current-setup="currentSetup"
-                   :devices-by-type="devicesByType"
+                   :devices-by-category="devicesByCategory"
                    :devices-by-room="devicesByRoom"
                    :device-queue="deviceQueue"/>
         <ProductDatabase v-else-if="activeView === 'ProductDatabase'"/>
@@ -52,17 +52,17 @@ export default {
     },
 
     computed: {
-        devicesByType() {
-            const byType = {};
+        devicesByCategory() {
+            const byCategory = {};
             for (const device of this.currentSetup.devices) {
-                const type = capitalize(this.allProducts[device.productId].type) + "s";
-                if (byType[type]) {
-                    byType[type].push(device);
+                const category = capitalize(this.allProducts[device.productId].type) + "s";
+                if (byCategory[category]) {
+                    byCategory[category].push(device);
                 } else {
-                    byType[type] = [device];
+                    byCategory[category] = [device];
                 }
             }
-            return byType;
+            return byCategory;
         },
         devicesByRoom() {
             const byRoom = {};
@@ -76,17 +76,17 @@ export default {
             return byRoom;
         }
 
-        // productsByType() {
-        //     const byType = {};
+        // productsByCategory() {
+        //     const byCategory = {};
         //     for (const device of this.currentSetup.devices) {
-        //         const type = capitalize(this.allProducts[device.productId].type) + "s";
-        //         if (byType[type]) {
-        //             byType[type].push(this.allProducts[device.productId]);
+        //         const category = capitalize(this.allProducts[device.productId].category) + "s";
+        //         if (byCategory[category]) {
+        //             byCategory[category].push(this.allProducts[device.productId]);
         //         } else {
-        //             byType[type] = [this.allProducts[device.productId]];
+        //             byCategory[category] = [this.allProducts[device.productId]];
         //         }
         //     }
-        //     return byType;
+        //     return byCategory;
         // },
         // productsByRoom() {
         //     const byRoom = {};

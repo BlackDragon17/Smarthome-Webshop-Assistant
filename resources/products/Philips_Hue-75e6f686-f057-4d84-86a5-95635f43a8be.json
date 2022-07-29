@@ -3,8 +3,8 @@
   "model": "Bridge",
   "generation": 2,
   "revision": "N/A",
-  "type": "hub",
-  "subtype": "proprietary",
+  "category": "hub",
+  "type": "proprietary",
   "network": {
     "zigbee": [
       "gen3"

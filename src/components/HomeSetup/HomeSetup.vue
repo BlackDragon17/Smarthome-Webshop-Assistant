@@ -6,7 +6,7 @@
                          @device-removed="emitEscRoomViewAction"/>
 
         <HomeSidebar :current-setup="currentSetup"
-                     :devices-by-type="devicesByType"
+                     :devices-by-category="devicesByCategory"
                      :devices-by-room="devicesByRoom"/>
 
         <HomeRoomView :current-setup="currentSetup" :device-queue="deviceQueue"/>
@@ -36,7 +36,7 @@ export default {
 
     props: {
         currentSetup: Object,
-        devicesByType: Object,
+        devicesByCategory: Object,
         devicesByRoom: Object,
         deviceQueue: Array
     },

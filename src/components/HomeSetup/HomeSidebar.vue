@@ -38,11 +38,11 @@
         <hr>
 
         <div class="products-list" v-if="!sortByRoom">
-            <div class="devices-group" v-for="type in Object.keys(devicesByType).sort()">
-                <p>{{ type }}</p>
-                <button class="device-card" v-for="device in devicesByType[type]" @click="$eventBus.$emit('open-device-info', device)">
+            <div class="devices-group" v-for="category in Object.keys(devicesByCategory).sort()">
+                <p>{{ category }}</p>
+                <button class="device-card" v-for="device in devicesByCategory[category]" @click="$eventBus.$emit('open-device-info', device)">
                     <span class="inline-icon material-symbols-rounded">
-                        {{ getIconName(allProducts[device.productId].type) }}
+                        {{ getIconName(allProducts[device.productId].category) }}
                     </span>
                     {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
                 </button>
@@ -54,7 +54,7 @@
                 <p>{{ room }}</p>
                 <button class="device-card" v-for="device in devicesByRoom[room]" @click="$eventBus.$emit('open-device-info', device)">
                     <span class="inline-icon material-symbols-rounded">
-                        {{ getIconName(allProducts[device.productId].type) }}
+                        {{ getIconName(allProducts[device.productId].category) }}
                     </span>
                     {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
                 </button>
@@ -75,7 +75,7 @@ export default {
 
     props: {
         currentSetup: Object,
-        devicesByType: Object,
+        devicesByCategory: Object,
         devicesByRoom: Object
     },
 

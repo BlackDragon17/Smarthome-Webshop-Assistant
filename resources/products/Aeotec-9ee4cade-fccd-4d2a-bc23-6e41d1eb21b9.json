@@ -3,8 +3,8 @@
   "model": "MultiSensor 6",
   "generation": 6,
   "revision": "N/A",
-  "type": "sensor",
-  "subtype": "multi",
+  "category": "sensor",
+  "type": "multi",
   "network": {
     "z-wave": [
       "plus",

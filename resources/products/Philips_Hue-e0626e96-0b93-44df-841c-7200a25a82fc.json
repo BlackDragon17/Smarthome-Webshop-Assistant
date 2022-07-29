@@ -3,8 +3,8 @@
   "model": "White and Color Ambience",
   "generation": "N/A",
   "revision": 2022,
-  "type": "light",
-  "subtype": "bulb",
+  "category": "light",
+  "type": "bulb",
   "network": {
     "zigbee": [
       "gen3"

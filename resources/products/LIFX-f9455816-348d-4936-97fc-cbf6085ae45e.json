@@ -3,8 +3,8 @@
   "model": "Candle White to Warm E14",
   "generation": "N/A",
   "revision": 2020,
-  "type": "light",
-  "subtype": "candle ",
+  "category": "light",
+  "type": "candle",
   "network": {
     "wifi": [
       "2.4GHz"

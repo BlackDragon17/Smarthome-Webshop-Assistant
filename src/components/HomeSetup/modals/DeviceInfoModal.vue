@@ -9,7 +9,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="inline-icon material-symbols-rounded">
-                            {{ getIconName(product?.type) }}
+                            {{ getIconName(product?.category) }}
                         </div>
                         {{ product?.brand }} {{ product?.model }}
                     </div>
