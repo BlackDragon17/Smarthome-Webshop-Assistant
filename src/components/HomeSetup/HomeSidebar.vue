@@ -152,7 +152,7 @@ export default {
 .products-list {
     /* Override horizontal sidebar padding to fix device shadow clipping */
     margin: 0 -0.3rem 0.7rem -0.5rem;
-    padding-left: 0.5rem;
+    padding: 0 0.6rem;
     width: calc(100% + 0.8rem);
 
     border: v-bind(productsListBorder);
@@ -161,7 +161,6 @@ export default {
 
 .devices-group {
     margin-bottom: 1.5rem;
-    padding: 0 0.6rem 0 0.1rem;
 }
 
 .devices-group > :first-child {

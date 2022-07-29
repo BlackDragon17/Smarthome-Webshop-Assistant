@@ -36,7 +36,7 @@ export default {
 
     data() {
         return {
-            activeView: "HomeSetup",
+            activeView: "ProductDatabase",
             activeViewRoot: null,
 
             allProducts: allProducts.data,

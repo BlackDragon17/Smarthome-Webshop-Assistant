@@ -3,7 +3,7 @@
         <AddRoomModal ref="addRoomModal" :room-view-state="roomViewState" :setup-rooms="currentSetup.rooms" @added-room="endAction"/>
         <RemoveRoomModal ref="removeRoomModal" :room-view-state="roomViewState" :current-setup="currentSetup" @removed-room="endAction"/>
 
-        <h3 class="action-heading relative-centering" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h3>
+        <h2 class="action-heading relative-centering" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h2>
 
         <div class="room-grid-container">
             <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && allowMarginOverride}">
