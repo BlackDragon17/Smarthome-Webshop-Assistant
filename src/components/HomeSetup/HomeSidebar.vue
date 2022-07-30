@@ -2,15 +2,6 @@
     <aside class="sidebar">
         <button class="add-device-button btn btn-success">Add new device</button>
 
-        <div class="dropdown" v-if="false">
-            <button class="btn btn-primary" data-bs-toggle="dropdown" data-bs-auto-close="outside" style="margin-left: 9rem">Test</button>
-
-            <div id="my-pop" class="my-pop dropdown-menu" style="box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);">
-                <p style="font-weight: bold">Heading</p>
-                <p>Body</p>
-            </div>
-        </div>
-
         <div class="sort-group">
             <span class="sort-label">Sort devices by</span>
             <div class="sort-button-group btn-group" role="group" aria-label="Toggle for switching product sort order">
@@ -176,7 +167,7 @@ export default {
     min-height: 5.5rem;
 
     border: 1px solid lightgray;
-    border-radius: 0.5rem;
+    border-radius: var(--button-border-radius);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
     background-color: white;
 }
