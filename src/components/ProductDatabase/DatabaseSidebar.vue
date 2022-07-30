@@ -200,12 +200,12 @@ export default {
 
         // Reset dependant filters on selection change
         categoryChanged() {
-            this.filters.type = '';
-            this.filters.formFactor = '';
+            this.filters.type = "";
+            this.filters.formFactor = "";
             this.filters.features = [];
         },
         typeChanged() {
-            this.filters.formFactor = '';
+            this.filters.formFactor = "";
         },
 
         // Brand selection logic
@@ -266,11 +266,12 @@ export default {
     font-size: 1.2rem;
 }
 
-.filter-input:not(:disabled):hover {
+.filter-input:not(:disabled):hover, .filter-input:not(:disabled):focus {
     border: 1px solid var(--blue-logo);
 }
 
-.filter-input:not(:disabled) + .filter-label:hover {
+.filter-input:not(:disabled):hover + .filter-label,
+.filter-input:not(:disabled):focus + .filter-label {
     color: var(--blue-room-text);
 }
 </style>

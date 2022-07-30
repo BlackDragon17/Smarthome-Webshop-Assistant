@@ -20,6 +20,6 @@
   "varLumen": true,
   "varKelvin": true,
   "multicolor": true,
-  "socket": "E27",
+  "socket": "e27",
   "productId": "03137251-6156-45f9-b32e-fc6482cbba32"
 }

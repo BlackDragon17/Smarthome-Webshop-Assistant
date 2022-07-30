@@ -9,6 +9,6 @@ const app = createApp(App);
 app.config.globalProperties.$eventBus = $eventBus;
 app.config.globalProperties.getIconName = getIconName;
 app.config.globalProperties.deviceTray = "Tray (not in a room)";
-app.config.globalProperties.hideBorders = false;
+app.config.globalProperties.hideBorders = true;
 
 app.mount("#app");

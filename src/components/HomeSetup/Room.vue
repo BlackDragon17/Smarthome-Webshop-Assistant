@@ -103,11 +103,11 @@ export default {
         cssPopoverMaxWidth() {
             // Referencing a reactive property to force reactive recompute
             this.resizeKey;
-            // Rounds 80% of room width to the nearest increment of device width including margin (& adds flex margin)
+            // Rounds 80% of room width to the nearest increment of device width including margin
             const roomWidth = this.$refs.roomEl.offsetWidth * 0.8;
             const deviceWidth = document.querySelector(".device").offsetWidth + 4;
             const incremented = Math.round(roomWidth / deviceWidth) * deviceWidth;
-            return `calc(${incremented}px)`;
+            return incremented + "px";
         }
     },
 
@@ -366,7 +366,6 @@ export default {
 .device-grid {
     width: 100%;
     height: 100%;
-    /* background-color: rgba(219, 21, 238, 0.2); */
 
     display: grid;
     grid-template-columns: repeat(3, calc(100% / 3));
@@ -391,6 +390,7 @@ export default {
 
 .device {
     margin: 2px;
+    padding: 0;
     width: 3rem;
     height: 3rem;
 

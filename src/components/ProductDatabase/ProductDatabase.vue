@@ -2,7 +2,7 @@
     <div class="main">
         <DatabaseSidebar :filters="filters" :all-brands="allBrands"/>
 
-        <DatabaseProductView :filters="filters"/>
+        <DatabaseProductView :filtered-products="filteredProducts"/>
         <!--<button @click="test">Test</button>-->
     </div>
 </template>
@@ -22,7 +22,7 @@ export default {
     data() {
         return {
             filters: {
-                category: "light",
+                category: "all",
                 type: "",
                 formFactor: "",
                 features: [],
@@ -45,13 +45,14 @@ export default {
             return brands;
         },
 
+        // TODO: Figure out what to do regarding "bulb" vs "candle"
         filteredProducts() {
             let filteredProducts = [];
             for (const productId in this.allProducts) {
                 filteredProducts.push(this.allProducts[productId]);
             }
 
-            if (this.filters.category !== 'all') {
+            if (this.filters.category !== "all") {
                 filteredProducts = filteredProducts.filter(product => product.category === this.filters.category);
             }
             if (this.filters.type) {
@@ -61,6 +62,9 @@ export default {
                 if (this.filters.type === "bulb") {
                     filteredProducts = filteredProducts.filter(product => product.socket === this.filters.formFactor);
                 }
+            }
+            if (this.filters.features) {
+                filteredProducts = filteredProducts.filter(product => this.filters.features.every(feature => product[feature]));
             }
             if (!this.filters.anyBrand) {
                 filteredProducts = filteredProducts.filter(product => this.filters.brands.includes(product.brand));
@@ -76,7 +80,7 @@ export default {
 
     methods: {
         test() {
-            this.allProducts.forEach(() => console.log('aaa'));
+            this.allProducts.forEach(() => console.log("aaa"));
         }
     },
 
