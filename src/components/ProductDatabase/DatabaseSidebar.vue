@@ -1,6 +1,10 @@
 <template>
     <aside class="sidebar">
         <h3 class="sidebar-heading">Filter products</h3>
+        <div class="compatibility-switch form-check form-switch">
+            <input type="checkbox" role="switch" id="compatibility-switch" class="filter-input form-check-input" name="compatibility">
+            <label for="compatibility-switch" class="filter-label form-check-label">Compatibility filters</label>
+        </div>
         <hr>
         <div class="filter-list">
             <div class="filter-group" @change="categoryChanged">
@@ -249,6 +253,10 @@ export default {
 .sidebar-heading {
     font-size: 1.4rem;
     margin: 0.3rem 0;
+}
+
+.compatibility-switch {
+    margin: 0.5rem 0 0.1rem;
 }
 
 .filter-list {

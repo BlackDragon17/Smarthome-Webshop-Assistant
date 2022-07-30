@@ -89,22 +89,18 @@ export default {
         this.$root.activeViewRoot = this.$el;
 
         this.$eventBus.$on("focus-home-setup", this.focusThis);
-        this.$eventBus.$on("open-device-info", device => this.openDeviceInfo(device));
-        this.$eventBus.$on("room-view-busy", this.setRoomViewBusy.bind(this, true));
-        this.$eventBus.$on("room-view-free", this.setRoomViewBusy.bind(this, false));
-        this.$eventBus.$on("popover-shown", this.setPopoverShown.bind(this, true));
-        this.$eventBus.$on("popover-hidden", this.setPopoverShown.bind(this, false));
+        this.$eventBus.$on("open-device-info", this.openDeviceInfo);
+        this.$eventBus.$on("room-view-busy", this.setRoomViewBusy);
+        this.$eventBus.$on("popover-shown", this.setPopoverShown);
 
         window.addEventListener("keydown", this.emitPrintDebug);
     },
 
     beforeUnmount() {
         this.$eventBus.$off("focus-home-setup", this.focusThis);
-        this.$eventBus.$off("open-device-info", device => this.openDeviceInfo(device));
-        this.$eventBus.$off("room-view-busy", this.setRoomViewBusy.bind(this, true));
-        this.$eventBus.$off("room-view-free", this.setRoomViewBusy.bind(this, false));
-        this.$eventBus.$off("popover-shown", this.setPopoverShown.bind(this, true));
-        this.$eventBus.$off("popover-hidden", this.setPopoverShown.bind(this, false));
+        this.$eventBus.$off("open-device-info", this.openDeviceInfo);
+        this.$eventBus.$off("room-view-busy", this.setRoomViewBusy);
+        this.$eventBus.$off("popover-shown", this.setPopoverShown);
 
         window.removeEventListener("keydown", this.emitPrintDebug);
     }

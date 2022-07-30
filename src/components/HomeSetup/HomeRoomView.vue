@@ -249,7 +249,7 @@ export default {
         },
 
         actionStart() {
-            this.$eventBus.$emit("room-view-busy");
+            this.$eventBus.$emit("room-view-busy", true);
             this.$eventBus.$emit("focus-home-setup");
             this.checkOverflow();
         },
@@ -282,7 +282,7 @@ export default {
             this.roomViewState = "normal";
             this.actionHeadingText = "";
             this.allowMarginOverride = true;
-            this.$eventBus.$emit("room-view-free");
+            this.$eventBus.$emit("room-view-busy", false);
         },
 
 

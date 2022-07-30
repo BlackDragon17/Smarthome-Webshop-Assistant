@@ -1,5 +1,10 @@
 <template>
     <section ref="productView" class="product-view">
+        <div class="grid-header">
+            <h2 class="display-heading">{{ filteredProducts.length }} compatible products</h2>
+            <hr>
+        </div>
+
         <div class="product-grid">
             <article class="product-card" v-for="product in filteredProducts">
                 <div class="product-icon material-symbols-rounded">
@@ -64,19 +69,37 @@ export default {
 .product-view {
     display: flex;
     flex-direction: column;
-    align-items: center;
     overflow: auto;
 }
 
+
+/* Grid header */
+
+.grid-header {
+    padding: 1rem;
+}
+
+.display-heading {
+    margin-left: 0.4rem;
+    font-size: 1.5rem;
+}
+
+.grid-header > hr {
+    margin-bottom: 0;
+}
+
+
+
+/* Product grid styling */
 .product-grid {
-    margin: 2rem 1rem;
+    margin: 0 auto;
+    padding: 1rem;
     border: v-bind(productsFlexBorder);
 
     display: grid;
     grid-template-columns: repeat(v-bind(gridColumns), minmax(15rem, 20rem));
     grid-gap: 1rem;
 }
-
 
 
 /* Product card styling */

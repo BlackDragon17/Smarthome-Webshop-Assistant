@@ -53,7 +53,7 @@ export default {
 
             this.$refs.popoverBody.style.visibility = "visible";
             this.$refs.popoverBody.style.opacity = "1";
-            this.$eventBus.$emit("popover-shown");
+            this.$eventBus.$emit("popover-shown", true);
 
             this.popoverCleanup = autoUpdate(this.$refs.popoverTarget, this.$refs.popoverBody, () => {
                     computePosition(this.$refs.popoverTarget, this.$refs.popoverBody, {
@@ -128,7 +128,7 @@ export default {
             this.$refs.popoverBody.style.opacity = "0";
             this.$refs.popoverBody.style.visibility = "hidden";
             this.popoverCleanup();
-            this.$eventBus.$emit("popover-hidden");
+            this.$eventBus.$emit("popover-shown", false);
         }
     },
 
