@@ -1,0 +1,28 @@
+{
+  "brand": "Amazon",
+  "model": "Echo Dot with Clock",
+  "generation": 4,
+  "revision": "2020",
+  "category": "hub",
+  "type": "proprietary",
+  "network": {
+    "bluetooth": [],
+    "wifi": [
+      "2.4GHz",
+      "5GHz",
+      "AC"
+    ]
+  },
+  "control": [
+    "alexa"
+  ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "eu": "B084J4KZ8J",
+    "com": "B07XJ8C8F7"
+  },
+  "expandable": false,
+  "productId": "d20c39d8-d1f5-4947-8cd3-b14632cb043a"
+}

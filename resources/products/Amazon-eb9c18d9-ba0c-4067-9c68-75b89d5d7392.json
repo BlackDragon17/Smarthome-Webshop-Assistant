@@ -1,0 +1,29 @@
+{
+  "brand": "Amazon",
+  "model": "Echo Dot",
+  "generation": 4,
+  "revision": "2020",
+  "category": "hub",
+  "type": "proprietary",
+  "network": {
+    "bluetooth": [],
+    "wifi": [
+      "2.4GHz",
+      "5GHz",
+      "AC"
+    ]
+  },
+  "control": [
+    "alexa"
+  ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "eu": "B084DWG2VQ",
+    "pl": "B085K45C3",
+    "com": "B07XJ8C8F5"
+  },
+  "expandable": false,
+  "productId": "eb9c18d9-ba0c-4067-9c68-75b89d5d7392"
+}

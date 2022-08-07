@@ -1,0 +1,35 @@
+{
+  "brand": "Aeotec",
+  "model": "Smart Home Hub",
+  "generation": 3,
+  "revision": "N/A",
+  "category": "hub",
+  "type": "open",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ],
+    "z-wave": [
+      "plus"
+    ],
+    "wifi": [
+      "2.4GHz",
+      "5GHz",
+      "AC"
+    ]
+  },
+  "control": [
+    "alexa",
+    "googleAssistant",
+    "smartThings"
+  ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "eu": "B08NDH9NXN",
+    "com": "B08TWDNQ5Q"
+  },
+  "expandable": false,
+  "productId": "2d863444-87aa-46d4-a9c1-0aaafbab1c90"
+}

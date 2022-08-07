@@ -25,6 +25,9 @@
     "wall",
     "battery"
   ],
-  "amazonDP": "B0141FQDJQ",
+  "amazonDP": {
+    "eu": "B0141FQDJQ",
+    "com": "B0151Z8ZQY"
+  },
   "productId": "9ee4cade-fccd-4d2a-bc23-6e41d1eb21b9"
 }

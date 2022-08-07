@@ -19,6 +19,8 @@
   "powerSource": [
     "wall"
   ],
-  "amazonDP": "B07226MG2T",
+  "amazonDP": {
+    "com": "B07226MG2T"
+  },
   "productId": "019e1e56-cd76-4782-91aa-5da0696b2428"
 }

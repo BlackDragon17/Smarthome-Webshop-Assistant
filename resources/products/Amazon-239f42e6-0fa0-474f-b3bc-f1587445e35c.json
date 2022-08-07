@@ -1,0 +1,32 @@
+{
+  "brand": "Amazon",
+  "model": "Echo",
+  "generation": 4,
+  "revision": "2020",
+  "category": "hub",
+  "type": "proprietary",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ],
+    "bluetooth": [],
+    "wifi": [
+      "2.4GHz",
+      "5GHz",
+      "AC"
+    ]
+  },
+  "control": [
+    "alexa"
+  ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "eu": "B085FXHR38",
+    "pl": "B085H3DKLT",
+    "com": "B07XKF5RM3"
+  },
+  "expandable": false,
+  "productId": "239f42e6-0fa0-474f-b3bc-f1587445e35c"
+}

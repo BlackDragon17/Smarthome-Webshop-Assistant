@@ -8,7 +8,8 @@
   "network": {
     "zigbee": [
       "gen3"
-    ]
+    ],
+    "ethernet": []
   },
   "control": [
     "brandApp",
@@ -20,7 +21,10 @@
   "powerSource": [
     "wall"
   ],
-  "amazonDP": "B09CV9F3KR",
+  "amazonDP": {
+    "eu": "B09CV9F3KR",
+    "com": "B016H0QZ7I"
+  },
   "expandable": false,
   "productId": "75e6f686-f057-4d84-86a5-95635f43a8be"
 }
