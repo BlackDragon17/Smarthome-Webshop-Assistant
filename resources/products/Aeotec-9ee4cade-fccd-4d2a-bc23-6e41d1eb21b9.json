@@ -13,7 +13,7 @@
     "vibration"
   ],
   "network": {
-    "z-wave": [
+    "zWave": [
       "plus",
       "gen5"
     ]

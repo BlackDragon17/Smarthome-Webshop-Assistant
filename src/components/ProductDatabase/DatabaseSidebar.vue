@@ -218,7 +218,7 @@
                     <input type="checkbox"
                            id="filter-network-checkbox-5"
                            class="filter-input form-check-input"
-                           value="z-wave"
+                           value="zWave"
                            v-model="filters.networks"
                            @change="checkboxNetwork"
                            :disabled="false">

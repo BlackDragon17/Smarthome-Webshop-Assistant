@@ -9,7 +9,7 @@
     "zigbee": [
       "gen3"
     ],
-    "z-wave": [
+    "zWave": [
       "plus"
     ],
     "wifi": [

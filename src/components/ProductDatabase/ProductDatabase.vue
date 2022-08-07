@@ -104,23 +104,67 @@ export default {
             const productsMap = new Map();
             // Compatibility filtering is based on the user's hub(s) and on user's controls as a secondary factor.
             for (const hub of hubs) {
-                if (hub.brand === "Philips Hue" && hub.model.includes("Bridge")) {
+                if (hub.brand === "Philips Hue" && hub.model === "Bridge") {
                     // The Philips Hue Bridge only speaks to Zigbee devices.
                     const relevantProducts = products.filter(product => product.network.zigbee);
 
                     // The Philips Hue Bridge will only expose Philips Hue or Friends-of-Hue products to HomeKit.
                     if (this.currentSetup.controls.assistants.includes("homeKit")) {
-                        relevantProducts.filter(product => product.brand === hub.brand || product.certs?.includes("friendsOfHue")).forEach(product => productsMap.set(product.productId, product));
+                        relevantProducts.filter(product => product.brand === hub.brand || product.certs?.includes("friendsOfHue"))
+                            .map(product => {
+                                product.compatScore = 5;
+                                product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
+                                return product;
+                            }).forEach(product => productsMap.set(product.productId, product));
                     }
 
                     // For lights, the Hue Bridge will connect to any Zigbee LL/Gen3 device. For other device types same restrictions as for HomeKit apply.
                     if (["alexa", "googleAssistant", "cortana"].some(assistant => this.currentSetup.controls.assistants.includes(assistant))
                         || this.currentSetup.controls.brandApps.includes(hub.brand)) {
                         relevantProducts.filter(product => (product.category === "light" && product.network.zigbee?.find(type => type === "gen3" || type === "ll"))
-                            || product.brand === hub.brand || product.certs?.includes("friendsOfHue")).forEach(product => productsMap.set(product.productId, product));
+                            || product.brand === hub.brand || product.certs?.includes("friendsOfHue")).map(product => {
+                            product.compatScore = 5;
+                            product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
+                            return product;
+                        }).forEach(product => productsMap.set(product.productId, product));
                     }
                 }
+
+                if (hub.brand === "Amazon") {
+                    if (hub.model === "Echo" || hub.model.includes("Echo Studio") || hub.model.includes("Echo Show 10")) {
+                        // The Amazon Echo, Echo Studio, and Echo Show 10 can speak to Zigbee devices,
+                        // as well as to Philips Hue Bluetooth devices (via Philip's custom Alexa Gadget Interface).
+                        // Note that devices communicating with Alexa via Wi-Fi do not ever (directly) communicate to an Echo devices and are thus not relevant here.
+                        const relevantProducts = products.filter(product => product.network.zigbee || (product.brand === "Philips Hue" && product.network.bluetooth));
+                        // No further filtering needed.
+                        relevantProducts.map(product => {
+                            product.compatScore = 5;
+                            product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
+                            return product;
+                        }).forEach(product => productsMap.set(product.productId, product));
+                    } else {
+                        // Other Echos only do Bluetooth.
+                        const relevantProducts = products.filter(product => product.brand === "Philips Hue" && product.network.bluetooth);
+                        relevantProducts.map(product => {
+                            product.compatScore = 5;
+                            product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
+                            return product;
+                        }).forEach(product => productsMap.set(product.productId, product));
+                    }
+                }
+
+                if (hub.brand === "Aeotec" && hub.model === "Smart Home Hub") {
+                    // It's a relatively open platform speaking relatively modern versions of Zigbee and Z-Wave.
+                    const relevantProducts = products.filter(product => product.network.zigbee || product.network.zWave);
+                    relevantProducts.map(product => {
+                        product.compatScore = 5;
+                        product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
+                        return product;
+                    }).forEach(product => productsMap.set(product.productId, product));
+                }
             }
+
+            // TODO: For Wi-Fi (score 4) and Bluetooth (score 3) devices which qualify (in terms of control) -- add them here.
 
             console.log("productsMap", productsMap);
         }

@@ -12,7 +12,7 @@
     "motion"
   ],
   "network": {
-    "z-wave": [
+    "zWave": [
       "plus"
     ]
   },
