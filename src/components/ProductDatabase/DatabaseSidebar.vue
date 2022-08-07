@@ -41,9 +41,18 @@
                            id="filter-category-radio-4"
                            class="filter-input form-check-input"
                            name="category"
+                           value="switch"
+                           v-model="filters.category">
+                    <label for="filter-category-radio-4" class="filter-label form-check-label">Buttons & Switches</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio"
+                           id="filter-category-radio-5"
+                           class="filter-input form-check-input"
+                           name="category"
                            value="sensor"
                            v-model="filters.category">
-                    <label for="filter-category-radio-4" class="filter-label form-check-label">Sensors</label>
+                    <label for="filter-category-radio-5" class="filter-label form-check-label">Sensors</label>
                 </div>
                 <hr>
             </div>

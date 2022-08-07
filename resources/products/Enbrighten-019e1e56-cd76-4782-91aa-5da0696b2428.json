@@ -1,0 +1,24 @@
+{
+  "brand": "Enbrighten",
+  "model": "Smart Motion Switch",
+  "generation": 1,
+  "revision": "N/A",
+  "category": [
+    "switch",
+    "sensor"
+  ],
+  "type": "lightSwitch",
+  "senses": [
+    "motion"
+  ],
+  "network": {
+    "z-wave": [
+      "plus"
+    ]
+  },
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": "B07226MG2T",
+  "productId": "019e1e56-cd76-4782-91aa-5da0696b2428"
+}

@@ -62,7 +62,7 @@ export default {
             }
 
             if (this.filters.category !== "all") {
-                filteredProducts = filteredProducts.filter(product => product.category === this.filters.category);
+                filteredProducts = filteredProducts.filter(product => product.category === this.filters.category || product.category.includes(this.filters.category));
             }
             if (this.filters.type) {
                 filteredProducts = filteredProducts.filter(product => product.type === this.filters.type);

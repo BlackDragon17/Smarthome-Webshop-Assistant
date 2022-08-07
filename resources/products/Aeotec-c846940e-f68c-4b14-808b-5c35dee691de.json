@@ -4,7 +4,14 @@
   "generation": 7,
   "revision": "N/A",
   "category": "sensor",
-  "type": "multi",
+  "senses": [
+    "humidity",
+    "light",
+    "motion",
+    "UV",
+    "temperature",
+    "vibration"
+  ],
   "network": {
     "z-wave": [
       "plus",
