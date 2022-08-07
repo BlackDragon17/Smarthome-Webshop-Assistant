@@ -15,5 +15,9 @@
   "control": [
     "smartThings"
   ],
+  "powerSource": [
+    "wall",
+    "battery"
+  ],
   "productId": "c846940e-f68c-4b14-808b-5c35dee691de"
 }

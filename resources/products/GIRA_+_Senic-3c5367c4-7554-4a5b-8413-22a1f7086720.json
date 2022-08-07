@@ -1,0 +1,19 @@
+{
+  "brand": "GIRA + Senic",
+  "model": "Friends of Hue Switch",
+  "generation": 1,
+  "revision": "N/A",
+  "category": "switch",
+  "type": "lightSwitch",
+  "network": {
+    "zigbee": []
+  },
+  "certs": [
+    "friendsOfHue"
+  ],
+  "powerSource": [
+    "self"
+  ],
+  "amazonDP": "B07VRDKD8S",
+  "productId": "3c5367c4-7554-4a5b-8413-22a1f7086720"
+}

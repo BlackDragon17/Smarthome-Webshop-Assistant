@@ -2,7 +2,7 @@
   "brand": "Philips Hue",
   "model": "Bridge",
   "generation": 2,
-  "revision": "N/A",
+  "revision": 2,
   "category": "hub",
   "type": "proprietary",
   "network": {
@@ -17,6 +17,10 @@
     "homeKit",
     "cortana"
   ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": "B09CV9F3KR",
   "expandable": false,
   "productId": "75e6f686-f057-4d84-86a5-95635f43a8be"
 }

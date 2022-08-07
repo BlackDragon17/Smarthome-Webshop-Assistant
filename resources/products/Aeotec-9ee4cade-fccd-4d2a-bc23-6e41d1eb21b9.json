@@ -14,5 +14,10 @@
   "control": [
     "smartThings"
   ],
+  "powerSource": [
+    "wall",
+    "battery"
+  ],
+  "amazonDP": "B0141FQDJQ",
   "productId": "9ee4cade-fccd-4d2a-bc23-6e41d1eb21b9"
 }

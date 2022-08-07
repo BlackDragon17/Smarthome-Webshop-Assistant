@@ -12,10 +12,12 @@
     "bluetooth": []
   },
   "control": [
-    "brandApp",
-    "alexa",
-    "googleAssistant"
+    "brandApp"
   ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": "B099P3CP1K",
   "lumen": "1100",
   "varLumen": true,
   "varKelvin": true,

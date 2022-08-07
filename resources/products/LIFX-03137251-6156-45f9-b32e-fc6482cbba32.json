@@ -16,6 +16,10 @@
     "googleAssistant",
     "homeKit"
   ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": "B08BY2JVJK",
   "lumen": 1200,
   "varLumen": true,
   "varKelvin": true,

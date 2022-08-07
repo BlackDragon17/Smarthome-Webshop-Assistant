@@ -4,7 +4,7 @@
   "generation": "N/A",
   "revision": 2020,
   "category": "light",
-  "type": "candle",
+  "type": "bulb",
   "network": {
     "wifi": [
       "2.4GHz"
@@ -16,6 +16,10 @@
     "googleAssistant",
     "homeKit"
   ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": "B08BX1FYDZ",
   "lumen": 480,
   "varLumen": true,
   "varKelvin": true,
