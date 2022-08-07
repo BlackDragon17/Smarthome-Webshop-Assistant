@@ -7,7 +7,9 @@
                    :devices-by-category="devicesByCategory"
                    :devices-by-room="devicesByRoom"
                    :device-queue="deviceQueue"/>
-        <ProductDatabase v-else-if="activeView === 'ProductDatabase'"/>
+        <ProductDatabase v-else-if="activeView === 'ProductDatabase'"
+                         :current-setup="currentSetup"
+                         :setup-products="setupProducts"/>
     </main>
 </template>
 
@@ -24,6 +26,17 @@ import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
 //             In a setup there can be multiple devices which are the same product (same productId but different localId).
 import allProducts from "/resources/products/packed/PackedJSONs.json";
 import exampleSetup from "/src/assets/default_setups/example1.json";
+
+// TODO: Notes:
+// - when initially loading a setup, App.vue should generate appropriate filters
+//     - these would be the basic always-on filters regarding the whole setup
+// - when selecting a device to replace, an event with the productId shall be sent.
+//   App.vue will create the appropriate filters and switch to the database
+// - the filters should additionally contain the ID in a "replacementFor" field, which's existence will alter UI behavior
+//     - if the user tries to switch back to home setup before a replacement is chosen, a cancel-confirmation modal shall pop up
+// - when a device requires a hub add-on (regardless of mode), a modal with that info shall pop up
+//     - entering hub selection mode shall be implemented in the same way as device replacement, including UI behavior
+// - we will need to update HomeRoomView.vue et al to add a device and its hub as if it were one from the queue
 
 export default {
     name: "App",
@@ -74,6 +87,16 @@ export default {
                 }
             }
             return byRoom;
+        },
+
+        setupProducts() {
+            const products = [];
+            for (const device of this.currentSetup.devices) {
+                if (!products.find(product => product.productId === device.productId)) {
+                    products.push(this.allProducts[device.productId]);
+                }
+            }
+            return products;
         }
 
         // productsByCategory() {
@@ -104,6 +127,14 @@ export default {
     methods: {
         // Check integrity of given setup and load it
         checkAndLoadSetup(setup) {
+            const controls = {};
+            if (setup.controls.brandApps?.length > 0) {
+                controls.brandApps = setup.controls.brandApps;
+            }
+            if (setup.controls.assistants?.length > 0) {
+                controls.assistants = setup.controls.assistants;
+            }
+
             const rooms = [];
             for (const room of setup.rooms) {
                 if (room.name && room.location) {
@@ -119,7 +150,7 @@ export default {
                 }
             }
 
-            this.currentSetup = {rooms, devices};
+            this.currentSetup = {controls, rooms, devices};
         },
 
         headerAction(target) {

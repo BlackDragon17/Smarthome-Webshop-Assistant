@@ -1,4 +1,8 @@
 {
+  "controls": {
+    "brandApps": ["LIFX"],
+    "assistants": ["alexa"]
+  },
   "rooms": [
     {
       "name": "Living Room",

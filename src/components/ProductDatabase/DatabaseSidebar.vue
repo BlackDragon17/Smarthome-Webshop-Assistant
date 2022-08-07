@@ -160,14 +160,73 @@
             </div>
 
             <div class="filter-group">
+                <h4 class="filter-group-heading">Connectivity <small>({{ filters.category === "hub" ? "all" : "any" }} of:)</small></h4>
+                <div class="form-check" v-if="filters.category !== 'hub'">
+                    <input type="checkbox"
+                           id="filter-network-checkbox-any"
+                           class="filter-input form-check-input"
+                           v-model="filters.anyNetwork"
+                           @change="checkboxAnyNetwork">
+                    <label for="filter-network-checkbox-any" class="filter-label form-check-label">Any</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox"
+                           id="filter-network-checkbox-1"
+                           class="filter-input form-check-input"
+                           value="thread"
+                           v-model="filters.networks"
+                           @change="checkboxNetwork">
+                    <label for="filter-feature-checkbox-1" class="filter-label form-check-label">Thread</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox"
+                           id="filter-network-checkbox-2"
+                           class="filter-input form-check-input"
+                           value="wifi"
+                           v-model="filters.networks"
+                           @change="checkboxNetwork">
+                    <label for="filter-feature-checkbox-2" class="filter-label form-check-label">Wi-Fi</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox"
+                           id="filter-network-checkbox-3"
+                           class="filter-input form-check-input"
+                           value="bluetooth"
+                           v-model="filters.networks"
+                           @change="checkboxNetwork">
+                    <label for="filter-feature-checkbox-3" class="filter-label form-check-label">Bluetooth</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox"
+                           id="filter-network-checkbox-4"
+                           class="filter-input form-check-input"
+                           value="zigbee"
+                           v-model="filters.networks"
+                           @change="checkboxNetwork">
+                    <label for="filter-feature-checkbox-4" class="filter-label form-check-label">Zigbee</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox"
+                           id="filter-network-checkbox-5"
+                           class="filter-input form-check-input"
+                           value="z-wave"
+                           v-model="filters.networks"
+                           @change="checkboxNetwork"
+                           :disabled="false">
+                    <label for="filter-feature-checkbox-5" class="filter-label form-check-label">Z-Wave</label>
+                </div>
+                <hr>
+            </div>
+
+            <div class="filter-group">
                 <h4 class="filter-group-heading">Brand</h4>
                 <div class="form-check">
                     <input type="checkbox"
-                           id="filter-brand-checkbox-all"
+                           id="filter-brand-checkbox-any"
                            class="filter-input form-check-input"
                            v-model="filters.anyBrand"
-                           @change="checkboxAllBrands">
-                    <label for="filter-brand-checkbox-all" class="filter-label form-check-label">Any</label>
+                           @change="checkboxAnyBrand">
+                    <label for="filter-brand-checkbox-any" class="filter-label form-check-label">Any</label>
                 </div>
                 <div class="form-check" v-for="(brand, index) in allBrands" :key="brand">
                     <input type="checkbox"
@@ -207,18 +266,34 @@ export default {
             this.filters.type = "";
             this.filters.formFactor = "";
             this.filters.features = [];
+            if (this.filters.category === "hub") {
+                this.filters.networks = ["wifi"];
+            } else {
+                this.filters.networks = [];
+                this.filters.anyNetwork = true;
+            }
         },
         typeChanged() {
             this.filters.formFactor = "";
         },
 
-        // Brand selection logic
-        checkboxAllBrands() {
+
+        // Logic for toggling "Any" checkbox options
+        // Brands
+        checkboxAnyBrand() {
             this.filters.anyBrand = true;
             this.filters.brands = [];
         },
         checkboxBrand() {
             this.filters.anyBrand = this.filters.brands.length <= 0;
+        },
+        // Networks
+        checkboxAnyNetwork() {
+            this.filters.anyNetwork = true;
+            this.filters.networks = [];
+        },
+        checkboxNetwork() {
+            this.filters.anyNetwork = this.filters.networks.length <= 0;
         }
     }
 };

@@ -8,10 +8,6 @@
   "network": {
     "zigbee": [
       "gen3"
-    ],
-    "bluetooth": [],
-    "wifi": [
-      "2.4GHz"
     ]
   },
   "control": [
