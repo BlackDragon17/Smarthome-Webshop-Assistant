@@ -68,7 +68,7 @@ export default {
         devicesByCategory() {
             const byCategory = {};
             for (const device of this.currentSetup.devices) {
-                const category = capitalize(this.allProducts[device.productId].type) + "s";
+                const category = capitalize(this.allProducts[device.productId].category) + "s";
                 if (byCategory[category]) {
                     byCategory[category].push(device);
                 } else {

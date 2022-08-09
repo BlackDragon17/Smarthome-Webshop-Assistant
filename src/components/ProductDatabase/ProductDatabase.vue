@@ -102,6 +102,13 @@ export default {
 
             // By using a map we can form "unions" of the results of the different filters. The map avoids duplicates and has better insertion perf than the JS Object.
             const productsMap = new Map();
+
+            // We process possible compatibilities from the least to the most desirable (i.e. if fitting hubs exist in setup: Bluetooth -> Wi-Fi -> Zigbee/Z-Wave -> Thread).
+            // Since each addition of the same product overwrites its last entry, we will thus be able to show it with the best possible connectivity option.
+            if (hubs.length > 0) {
+                this.filterWifiAndBluetoothProducts(products, false, productsMap);
+            }
+
             // Compatibility filtering is based on the user's hub(s) and on user's controls as a secondary factor.
             for (const hub of hubs) {
                 if (hub.brand === "Philips Hue" && hub.model === "Bridge") {
@@ -164,9 +171,78 @@ export default {
                 }
             }
 
-            // TODO: For Wi-Fi (score 4) and Bluetooth (score 3) devices which qualify (in terms of control) -- add them here.
+            // In the absence of hubs (with the required control options), Wi-Fi and Bluetooth are instead scored higher at 5 and 4, respectively.
+            // Also, switches are handled separately, since direct connectivity to other products must be ensured.
+            if (hubs.length <= 0) {
+                const relevantSetupProducts = this.setupProducts.filter(product => product.category !== "hub" && product.category !== "switch" && !product.category.includes("switch"));
+
+                // If there are no products in the setup which could be controlled via a switch, we treat switches as any other device.
+                if (relevantSetupProducts.length <= 0) {
+                    this.filterWifiAndBluetoothProducts(products, true, productsMap);
+                }
+                // Otherwise, we only allow switches which will actually be able to control the products in the setup.
+                else {
+                    const nonSwitches = products.filter(product => product.category !== "switch" && !product.category.includes("switch"));
+                    this.filterWifiAndBluetoothProducts(nonSwitches, true, productsMap);
+
+                    const switches = products.filter(product => product.category === "switch" || product.category.includes("switch"));
+                    // Outside hub-based networks, switches will generally only work with products of the same vendor.
+                    for (const setupProduct of relevantSetupProducts) {
+                        const setupProductNetworks = Object.values(setupProduct.network);
+                        // An exception is made for Philips Hue, where other vendors can implement the Friends Of Hue protocol.
+                        if (setupProduct.brand === "Philips Hue") {
+                            switches.filter(product => (product.brand === setupProduct.brand || product.certs.includes("friendsOfHue")) && Object.values(product.network).some(network => setupProductNetworks.includes(network)))
+                                .map(product => {
+                                    product.compatScore = 5;
+                                    product.compatMsg = `Can directly control your ${brand} devices.`;
+                                    return product;
+                                }).forEach(product => productsMap.set(product.productId, product));
+                        } else {
+                            switches.filter(product => product.brand === setupProduct.brand && Object.values(product.network).some(network => setupProductNetworks.includes(network)))
+                                .map(product => {
+                                    product.compatScore = 5;
+                                    product.compatMsg = `Can directly control your ${brand} devices.`;
+                                    return product;
+                                }).forEach(product => productsMap.set(product.productId, product));
+                        }
+                    }
+                }
+            }
 
             console.log("productsMap", productsMap);
+        },
+
+        /**
+         * Avoids code repetition in main filters method by taking care of Wi-Fi and Bluetooth devices.
+         * @param products {Array} The base product Array to filter from.
+         * @param noHubs {boolean} Upgrades the compatScore if we have no hubs.
+         * @param productsMap {Map} The Map to add filtered products to.
+         */
+        filterWifiAndBluetoothProducts(products, noHubs, productsMap) {
+            const bluetoothProducts = products.filter(product => product.network.bluetooth);
+            // Vendor app-based control via Bluetooth.
+            bluetoothProducts.filter(product => this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
+                .map(product => {
+                    product.compatScore = noHubs ? 3 : 4;
+                    product.compatMsg = `Can connect to the ${product.brand} app via Bluetooth. Note: due to Bluetooth, you must be in the same physical space as this device to control it.`;
+                    return product;
+                }).forEach(product => productsMap.set(product.productId, product));
+
+            const wifiProducts = products.filter(product => (product.network.wifi || product.network.ethernet));
+            // Assistant-based control via Wi-Fi.
+            wifiProducts.filter(product => this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant)))
+                .map(product => {
+                    product.compatScore = noHubs ? 4 : 5;
+                    product.compatMsg = `Can connect to ${this.getPropertyName(this.currentSetup.controls.assistants.find(assistant => product.control.includes(assistant)))} via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
+                    return product;
+                }).forEach(product => productsMap.set(product.productId, product));
+            // Vendor app-based control via Wi-Fi.
+            wifiProducts.filter(product => this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
+                .map(product => {
+                    product.compatScore = noHubs ? 4 : 5;
+                    product.compatMsg = `Can connect to the ${product.brand} app via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
+                    return product;
+                }).forEach(product => productsMap.set(product.productId, product));
         }
     },
 
