@@ -26,6 +26,13 @@ export default function(property) {
         case "thread":
             return "Thread";
 
+        case "hub":
+        case "light":
+        case "sensor":
+            return capitalize(property) + "s";
+        case "switch":
+            return "Buttons & Switches";
+
         default:
             return capitalize(property);
     }

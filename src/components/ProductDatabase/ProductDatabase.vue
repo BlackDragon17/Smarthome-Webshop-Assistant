@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <DatabaseSidebar :filters="filters" :all-brands="allBrands"/>
+        <DatabaseSidebar :filter-values="filterValues" :filter-rules="filterRules" :options-all-values="optionsAllValues"/>
 
         <DatabaseProductView :filtered-products="filteredProducts"/>
         <button @click="createCompatFilters">Test</button>
@@ -10,6 +10,7 @@
 <script>
 import DatabaseSidebar from "./DatabaseSidebar.vue";
 import DatabaseProductView from "./DatabaseProductView.vue";
+import FilterRules from "../../assets/javascript/filter-rules";
 
 export default {
     name: "ProductDatabase",
@@ -21,7 +22,7 @@ export default {
 
     data() {
         return {
-            filters: {
+            filterValues: {
                 category: "all",
                 type: "",
                 formFactor: "",
@@ -32,7 +33,8 @@ export default {
                 // except for the hub-category, where we filter with AND + don't show the any-checkbox
                 anyNetwork: true,
                 networks: []
-            }
+            },
+            filterRules: new FilterRules()
         };
     },
 
@@ -44,6 +46,22 @@ export default {
     inject: ["allProducts"],
 
     computed: {
+        // Return arrays of possible option values, in order to create filter inputs via v-for instead of manually
+        allCategories() {
+            // const categories = [];
+            // for (const productId in this.allProducts) {
+            //     const productCategories = Array.isArray(this.allProducts[productId].category) ?
+            //         this.allProducts[productId].category : [this.allProducts[productId].category];
+            //     for (const category of productCategories) {
+            //         if (!categories.includes(category)) {
+            //             categories.push(category);
+            //         }
+            //     }
+            // }
+            // return categories;
+            // Since I want the categories to be shown in a certain order, I'm returning them manually.
+            return ["hub", "light", "switch", "sensor"];
+        },
         allBrands() {
             const brands = [];
             for (const productId in this.allProducts) {
@@ -53,6 +71,12 @@ export default {
             }
             return brands;
         },
+        optionsAllValues() {
+            return {
+                allCategories: this.allCategories,
+                allBrands: this.allBrands
+            };
+        },
 
         // TODO: Figure out what to do regarding "bulb" vs "candle"
         filteredProducts() {
@@ -61,24 +85,24 @@ export default {
                 filteredProducts.push(this.allProducts[productId]);
             }
 
-            if (this.filters.category !== "all") {
-                filteredProducts = filteredProducts.filter(product => product.category === this.filters.category || product.category.includes(this.filters.category));
+            if (this.filterValues.category !== "all") {
+                filteredProducts = filteredProducts.filter(product => product.category === this.filterValues.category || product.category.includes(this.filterValues.category));
             }
-            if (this.filters.type) {
-                filteredProducts = filteredProducts.filter(product => product.type === this.filters.type);
+            if (this.filterValues.type) {
+                filteredProducts = filteredProducts.filter(product => product.type === this.filterValues.type);
             }
-            if (this.filters.formFactor) {
-                if (this.filters.type === "bulb") {
-                    filteredProducts = filteredProducts.filter(product => product.socket === this.filters.formFactor);
+            if (this.filterValues.formFactor) {
+                if (this.filterValues.type === "bulb") {
+                    filteredProducts = filteredProducts.filter(product => product.socket === this.filterValues.formFactor);
                 }
             }
-            if (this.filters.features) {
-                filteredProducts = filteredProducts.filter(product => this.filters.features.every(feature => product[feature]));
+            if (this.filterValues.features) {
+                filteredProducts = filteredProducts.filter(product => this.filterValues.features.every(feature => product[feature]));
             }
             // TODO: Networks
-            // if (this.filters.category !== "hub" && )
-            if (!this.filters.anyBrand) {
-                filteredProducts = filteredProducts.filter(product => this.filters.brands.includes(product.brand));
+            // if (this.filterValues.category !== "hub" && )
+            if (!this.filterValues.anyBrand) {
+                filteredProducts = filteredProducts.filter(product => this.filterValues.brands.includes(product.brand));
             }
 
             return filteredProducts;
@@ -106,6 +130,8 @@ export default {
             // We process possible compatibilities from the least to the most desirable (i.e. if fitting hubs exist in setup: Bluetooth -> Wi-Fi -> Zigbee/Z-Wave -> Thread).
             // Since each addition of the same product overwrites its last entry, we will thus be able to show it with the best possible connectivity option.
             if (hubs.length > 0) {
+                this.filterRules.networks.addAllowed("wifi");
+                this.filterRules.networks.addAllowed("bluetooth");
                 this.filterWifiAndBluetoothProducts(products, false, productsMap);
             }
 
@@ -114,6 +140,7 @@ export default {
                 if (hub.brand === "Philips Hue" && hub.model === "Bridge") {
                     // The Philips Hue Bridge only speaks to Zigbee devices.
                     const relevantProducts = products.filter(product => product.network.zigbee);
+                    this.filterRules.networks.addAllowed("zigbee");
 
                     // The Philips Hue Bridge will only expose Philips Hue or Friends-of-Hue products to HomeKit.
                     if (this.currentSetup.controls.assistants.includes("homeKit")) {
@@ -143,6 +170,8 @@ export default {
                         // as well as to Philips Hue Bluetooth devices (via Philip's custom Alexa Gadget Interface).
                         // Note that devices communicating with Alexa via Wi-Fi do not ever (directly) communicate to an Echo devices and are thus not relevant here.
                         const relevantProducts = products.filter(product => product.network.zigbee || (product.brand === "Philips Hue" && product.network.bluetooth));
+                        this.filterRules.networks.addAllowed("zigbee");
+
                         // No further filtering needed.
                         relevantProducts.map(product => {
                             product.compatScore = 5;
@@ -163,6 +192,9 @@ export default {
                 if (hub.brand === "Aeotec" && hub.model === "Smart Home Hub") {
                     // It's a relatively open platform speaking relatively modern versions of Zigbee and Z-Wave.
                     const relevantProducts = products.filter(product => product.network.zigbee || product.network.zWave);
+                    this.filterRules.networks.addAllowed("zigbee");
+                    this.filterRules.networks.addAllowed("zWave");
+
                     relevantProducts.map(product => {
                         product.compatScore = 5;
                         product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
@@ -223,7 +255,7 @@ export default {
             // Vendor app-based control via Bluetooth.
             bluetoothProducts.filter(product => this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
                 .map(product => {
-                    product.compatScore = noHubs ? 3 : 4;
+                    product.compatScore = noHubs ? 4 : 3;
                     product.compatMsg = `Can connect to the ${product.brand} app via Bluetooth. Note: due to Bluetooth, you must be in the same physical space as this device to control it.`;
                     return product;
                 }).forEach(product => productsMap.set(product.productId, product));
@@ -232,18 +264,22 @@ export default {
             // Assistant-based control via Wi-Fi.
             wifiProducts.filter(product => this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant)))
                 .map(product => {
-                    product.compatScore = noHubs ? 4 : 5;
+                    product.compatScore = noHubs ? 5 : 4;
                     product.compatMsg = `Can connect to ${this.getPropertyName(this.currentSetup.controls.assistants.find(assistant => product.control.includes(assistant)))} via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
                     return product;
                 }).forEach(product => productsMap.set(product.productId, product));
             // Vendor app-based control via Wi-Fi.
             wifiProducts.filter(product => this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
                 .map(product => {
-                    product.compatScore = noHubs ? 4 : 5;
+                    product.compatScore = noHubs ? 5 : 4;
                     product.compatMsg = `Can connect to the ${product.brand} app via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
                     return product;
                 }).forEach(product => productsMap.set(product.productId, product));
         }
+    },
+
+    beforeMount() {
+        this.createCompatFilters();
     },
 
     mounted() {
