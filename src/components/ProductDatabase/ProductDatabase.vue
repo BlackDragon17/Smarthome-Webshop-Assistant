@@ -1,6 +1,10 @@
 <template>
     <div class="main">
-        <DatabaseSidebar :filter-values="filterValues" :filter-rules="filterRules" :options-all-values="optionsAllValues"/>
+        <DatabaseSidebar :filter-values="filterValues"
+                         :filter-rules="filterRules"
+                         :options-all-values="optionsAllValues"
+                         :replace-id="replaceId"
+                         @compat-filters-toggled="toggleCompatFilters"/>
 
         <DatabaseProductView :filtered-products="filteredProducts"/>
         <button @click="createCompatFilters">Test</button>
@@ -22,19 +26,21 @@ export default {
 
     data() {
         return {
-            filterValues: {
+            defaultFilterValues: {
                 category: "all",
                 type: "",
                 formFactor: "",
                 features: [],
-                anyBrand: true,
-                brands: [],
-                // We usually use the OR-selector for supported networks
-                // except for the hub-category, where we filter with AND + don't show the any-checkbox
                 anyNetwork: true,
-                networks: []
+                networks: [],
+                anyBrand: true,
+                brands: []
             },
-            filterRules: new FilterRules()
+
+            filterValues: null,
+            filterRules: null,
+
+            replaceId: null
         };
     },
 
@@ -48,19 +54,18 @@ export default {
     computed: {
         // Return arrays of possible option values, in order to create filter inputs via v-for instead of manually
         allCategories() {
-            // const categories = [];
-            // for (const productId in this.allProducts) {
-            //     const productCategories = Array.isArray(this.allProducts[productId].category) ?
-            //         this.allProducts[productId].category : [this.allProducts[productId].category];
-            //     for (const category of productCategories) {
-            //         if (!categories.includes(category)) {
-            //             categories.push(category);
-            //         }
-            //     }
-            // }
-            // return categories;
-            // Since I want the categories to be shown in a certain order, I'm returning them manually.
-            return ["hub", "light", "switch", "sensor"];
+            // Pre-populate the array to show these categories in the specified order.
+            const categories = ["hub", "light", "switch", "sensor"];
+            for (const productId in this.allProducts) {
+                const productCategories = Array.isArray(this.allProducts[productId].category) ?
+                    this.allProducts[productId].category : [this.allProducts[productId].category];
+                for (const category of productCategories) {
+                    if (!categories.includes(category)) {
+                        categories.push(category);
+                    }
+                }
+            }
+            return categories;
         },
         allBrands() {
             const brands = [];
@@ -115,6 +120,8 @@ export default {
 
     methods: {
         createCompatFilters() {
+            this.filterRules = new FilterRules();
+
             // Find setup hubs which support user's preferred control method.
             const hubs = this.setupProducts.filter(product => product.category === "hub" && (
                 (this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
@@ -275,11 +282,70 @@ export default {
                     product.compatMsg = `Can connect to the ${product.brand} app via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
                     return product;
                 }).forEach(product => productsMap.set(product.productId, product));
+        },
+
+        createFilterValues(filterValues) {
+            const baseFilters = filterValues ? filterValues : {...this.defaultFilterValues};
+
+            // Category (radio)
+            if (this.filterRules.category.required.length > 0) {
+                baseFilters.category = this.filterRules.category.required[0];
+            }
+            // Type (radio)
+            if (this.filterRules.type.required.length > 0) {
+                baseFilters.type = this.filterRules.type.required[0];
+            }
+            // Form factor (radio)
+            if (this.filterRules.formFactor.required.length > 0) {
+                baseFilters.formFactor = this.filterRules.formFactor.required[0];
+            }
+            // Features (checkbox, all-of)
+            baseFilters.features = this.filterRules.features.required;
+            // Networks (checkbox, category === hub ? all-of : any-of)
+            if (baseFilters.category === "hub" && this.filterRules.networks.required > 0) {
+                // Actually we'll only half-select these in CSS and not add them to filters.
+                // This is because we'll actually filter them based on the any-principle in createHubCompatFilters(),
+                // to avoid empty results. Items clicked by users will still follow the all-of principle.
+                // baseFilters.anyNetwork = false;
+                // baseFilters.networks = this.filterRules.networks.required;
+            } else if (Array.isArray(this.filterRules.networks.allowed) && this.filterRules.networks.allowed.length > 0) {
+                baseFilters.anyNetwork = false;
+                baseFilters.networks = this.filterRules.networks.allowed;
+            }
+            // Brand (checkbox, any-of)
+            if (Array.isArray(this.filterRules.brands.allowed) && this.filterRules.brands.allowed.length > 0) {
+                baseFilters.anyBrand = false;
+                baseFilters.brands = this.filterRules.brands.allowed;
+            }
+
+            this.filterValues = baseFilters;
+        },
+
+        toggleCompatFilters(value) {
+            if (value) {
+                this.createFilterValues({...this.defaultFilterValues, category: this.filterValues.category});
+            } else {
+                this.filterValues = {...this.defaultFilterValues, category: this.filterValues.category};
+            }
+        }
+    },
+
+    watch: {
+        "filterValues.category": {
+            handler(newCategory, oldCategory) {
+                if (newCategory === "hub") {
+                    // TODO
+                } else if (oldCategory === "hub") {
+                    this.createCompatFilters();
+                    this.createFilterValues({...this.filterValues});
+                }
+            }
         }
     },
 
     beforeMount() {
         this.createCompatFilters();
+        this.createFilterValues();
     },
 
     mounted() {

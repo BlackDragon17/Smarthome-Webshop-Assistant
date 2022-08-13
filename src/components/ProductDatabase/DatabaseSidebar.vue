@@ -7,7 +7,9 @@
                    id="compatibility-switch"
                    class="filter-input form-check-input"
                    name="compatibility"
-                   v-model="compatFiltersEnabled">
+                   v-model="compatFiltersEnabled"
+                   :disabled="replaceId"
+                   @change="$emit('compat-filters-toggled', compatFiltersEnabled)">
             <label for="compatibility-switch" class="filter-label form-check-label">Compatibility filters</label>
         </div>
         <hr>
@@ -150,7 +152,7 @@
 
             <div class="filter-group">
                 <h4 class="filter-group-heading">Connectivity <small>({{ filterValues.category === "hub" ? "all" : "any" }} of:)</small></h4>
-                <div class="form-check" v-if="filterValues.category !== 'hub'">
+                <div class="form-check">
                     <input type="checkbox"
                            id="filter-network-checkbox-any"
                            class="filter-input form-check-input"
@@ -252,21 +254,21 @@ export default {
     props: {
         filterValues: Object,
         filterRules: Object,
-        optionsAllValues: Object
+        optionsAllValues: Object,
+
+        replaceId: String,
     },
 
+    emits: ["compat-filters-toggled"],
+
     computed: {
-        filterListBorder() {
-            return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgoldenrod";
+        activeFilterRules() {
+            return this.compatFiltersEnabled ? this.filterRules : new FilterRules();
         },
 
-        activeFilterRules() {
-            if (!this.compatFiltersEnabled || !this.filterRules) {
-                return new FilterRules();
-            } else {
-                return this.filterRules;
-            }
-        },
+        filterListBorder() {
+            return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgoldenrod";
+        }
     },
 
     methods: {
@@ -277,12 +279,6 @@ export default {
             this.filterValues.type = "";
             this.filterValues.formFactor = "";
             this.filterValues.features = [];
-            if (this.filterValues.category === "hub") {
-                this.filterValues.networks = ["wifi"];
-            } else {
-                this.filterValues.networks = [];
-                this.filterValues.anyNetwork = true;
-            }
         },
         typeChanged() {
             this.filterValues.formFactor = "";
