@@ -26,6 +26,8 @@ export default {
 
     data() {
         return {
+            compatFiltersEnabled: true,
+
             defaultFilterValues: {
                 category: "all",
                 type: "",
@@ -36,9 +38,10 @@ export default {
                 anyBrand: true,
                 brands: []
             },
-
             filterValues: null,
             filterRules: null,
+
+            productsMap: null,
 
             replaceId: null
         };
@@ -85,30 +88,53 @@ export default {
 
         // TODO: Figure out what to do regarding "bulb" vs "candle"
         filteredProducts() {
+            console.log("applying");
             let filteredProducts = [];
-            for (const productId in this.allProducts) {
-                filteredProducts.push(this.allProducts[productId]);
+            if (this.compatFiltersEnabled) {
+                for (const product of this.productsMap.values()) {
+                    filteredProducts.push(product);
+                }
+            } else {
+                for (const productId in this.allProducts) {
+                    filteredProducts.push(this.allProducts[productId]);
+                }
             }
+            console.log("amount after filter step 0:", filteredProducts.length);
 
+            // Category
             if (this.filterValues.category !== "all") {
                 filteredProducts = filteredProducts.filter(product => product.category === this.filterValues.category || product.category.includes(this.filterValues.category));
             }
+            console.log("amount after filter step 1:", filteredProducts.length);
+            // Type
             if (this.filterValues.type) {
                 filteredProducts = filteredProducts.filter(product => product.type === this.filterValues.type);
             }
+            console.log("amount after filter step 2:", filteredProducts.length);
+            // Form factor
             if (this.filterValues.formFactor) {
                 if (this.filterValues.type === "bulb") {
                     filteredProducts = filteredProducts.filter(product => product.socket === this.filterValues.formFactor);
                 }
             }
+            console.log("amount after filter step 3:", filteredProducts.length);
+            // Features
             if (this.filterValues.features) {
                 filteredProducts = filteredProducts.filter(product => this.filterValues.features.every(feature => product[feature]));
             }
-            // TODO: Networks
-            // if (this.filterValues.category !== "hub" && )
+            console.log("amount after filter step 4:", filteredProducts.length);
+            // Networks
+            if (!this.filterValues.anyNetwork && this.filterValues.category === "hub") {
+                filteredProducts = filteredProducts.filter(product => this.filterValues.networks.every(network => product.network[network]));
+            } else if (!this.filterValues.anyNetwork) {
+                filteredProducts = filteredProducts.filter(product => this.filterValues.networks.some(network => product.network[network]));
+            }
+            console.log("amount after filter step 5:", filteredProducts.length);
+            // Brand
             if (!this.filterValues.anyBrand) {
                 filteredProducts = filteredProducts.filter(product => this.filterValues.brands.includes(product.brand));
             }
+            console.log("amount after filter step 6:", filteredProducts.length);
 
             return filteredProducts;
         },
@@ -248,7 +274,7 @@ export default {
                 }
             }
 
-            console.log("productsMap", productsMap);
+            this.productsMap = productsMap;
         },
 
         /**
@@ -322,6 +348,7 @@ export default {
         },
 
         toggleCompatFilters(value) {
+            this.compatFiltersEnabled = value;
             if (value) {
                 this.createFilterValues({...this.defaultFilterValues, category: this.filterValues.category});
             } else {
