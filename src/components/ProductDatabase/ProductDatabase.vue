@@ -1,13 +1,14 @@
 <template>
     <div class="main">
         <DatabaseSidebar :filter-values="filterValues"
+                         :default-filter-values="defaultFilterValues"
                          :filter-rules="filterRules"
                          :options-all-values="optionsAllValues"
                          :replace-id="replaceId"
                          @compat-filters-toggled="toggleCompatFilters"/>
 
         <DatabaseProductView :filtered-products="filteredProducts"/>
-        <button @click="createCompatFilters">Test</button>
+        <!--<button @click="createCompatFilters">Test</button>-->
     </div>
 </template>
 
@@ -30,8 +31,10 @@ export default {
 
             defaultFilterValues: {
                 category: "all",
-                type: "",
-                formFactor: "",
+                type: "any",
+                formFactor: "any",
+                anySense: true,
+                senses: [],
                 features: [],
                 anyNetwork: true,
                 networks: [],
@@ -70,6 +73,19 @@ export default {
             }
             return categories;
         },
+        allSenses() {
+            const senses = [];
+            for (const productId in this.allProducts) {
+                if (this.allProducts[productId].category === "sensor" || this.allProducts[productId].category.includes("sensor")) {
+                    for (const sense of this.allProducts[productId].senses) {
+                        if (!senses.includes(sense)) {
+                            senses.push(sense);
+                        }
+                    }
+                }
+            }
+            return senses.sort();
+        },
         allBrands() {
             const brands = [];
             for (const productId in this.allProducts) {
@@ -77,18 +93,23 @@ export default {
                     brands.push(this.allProducts[productId].brand);
                 }
             }
-            return brands;
+            return brands.sort();
         },
         optionsAllValues() {
             return {
                 allCategories: this.allCategories,
+                allSenses: this.allSenses,
                 allBrands: this.allBrands
             };
         },
 
-        // TODO: Figure out what to do regarding "bulb" vs "candle"
+        /**
+         * Applies filterValues (which model the sidebar checkboxes) to products.
+         * Uses productsMap or allProducts as filter-base depending on the "compatibility filters" switch.
+         * @returns {product[]} The final products array to be displayed in the DatabaseProductView.
+         */
         filteredProducts() {
-            console.log("applying");
+            console.log("applying filterValues:", {...this.filterValues});
             let filteredProducts = [];
             if (this.compatFiltersEnabled) {
                 for (const product of this.productsMap.values()) {
@@ -99,42 +120,49 @@ export default {
                     filteredProducts.push(this.allProducts[productId]);
                 }
             }
-            console.log("amount after filter step 0:", filteredProducts.length);
+            console.log("products before:", filteredProducts.length);
 
             // Category
-            if (this.filterValues.category !== "all") {
+            if (this.filterValues.category !== this.defaultFilterValues.category) {
                 filteredProducts = filteredProducts.filter(product => product.category === this.filterValues.category || product.category.includes(this.filterValues.category));
             }
-            console.log("amount after filter step 1:", filteredProducts.length);
+            // console.log("amount after filter step 1:", filteredProducts.length);
             // Type
-            if (this.filterValues.type) {
+            if (this.filterValues.type !== this.defaultFilterValues.type) {
                 filteredProducts = filteredProducts.filter(product => product.type === this.filterValues.type);
             }
-            console.log("amount after filter step 2:", filteredProducts.length);
+            // console.log("amount after filter step 2:", filteredProducts.length);
             // Form factor
-            if (this.filterValues.formFactor) {
+            if (this.filterValues.formFactor !== this.defaultFilterValues.formFactor) {
                 if (this.filterValues.type === "bulb") {
                     filteredProducts = filteredProducts.filter(product => product.socket === this.filterValues.formFactor);
                 }
             }
-            console.log("amount after filter step 3:", filteredProducts.length);
+            // console.log("amount after filter step 3:", filteredProducts.length);
+            // Senses
+            if (!this.filterValues.anySense) {
+                filteredProducts = filteredProducts.filter(product => this.filterValues.senses.every(sense => product.senses.includes(sense)));
+            }
+            // console.log("amount after filter step 4:", filteredProducts.length);
             // Features
-            if (this.filterValues.features) {
+            if (this.filterValues.features.length > 0) {
                 filteredProducts = filteredProducts.filter(product => this.filterValues.features.every(feature => product[feature]));
             }
-            console.log("amount after filter step 4:", filteredProducts.length);
+            // console.log("amount after filter step 5:", filteredProducts.length);
             // Networks
             if (!this.filterValues.anyNetwork && this.filterValues.category === "hub") {
-                filteredProducts = filteredProducts.filter(product => this.filterValues.networks.every(network => product.network[network]));
+                filteredProducts = filteredProducts.filter(product =>
+                    this.filterValues.networks.every(network => network === "wifi" ? (product.network.wifi || product.network.ethernet) : product.network[network]));
             } else if (!this.filterValues.anyNetwork) {
-                filteredProducts = filteredProducts.filter(product => this.filterValues.networks.some(network => product.network[network]));
+                filteredProducts = filteredProducts.filter(product =>
+                    this.filterValues.networks.some(network => network === "wifi" ? (product.network.wifi || product.network.ethernet) : product.network[network]));
             }
-            console.log("amount after filter step 5:", filteredProducts.length);
+            // console.log("amount after filter step 6:", filteredProducts.length);
             // Brand
             if (!this.filterValues.anyBrand) {
                 filteredProducts = filteredProducts.filter(product => this.filterValues.brands.includes(product.brand));
             }
-            console.log("amount after filter step 6:", filteredProducts.length);
+            console.log("products after:", filteredProducts.length);
 
             return filteredProducts;
         },
@@ -145,6 +173,11 @@ export default {
     },
 
     methods: {
+        /**
+         * This is where the main product compatibility logic is housed.
+         * Applies advanced filtering to allProducts and saves the result to productsMap.
+         * Also creates FilterRules used to disable and preselect the sidebar's filter checkboxes.
+         */
         createCompatFilters() {
             this.filterRules = new FilterRules();
 
@@ -310,6 +343,11 @@ export default {
                 }).forEach(product => productsMap.set(product.productId, product));
         },
 
+        /**
+         * Computes pre-selections of the sidebar filter checkboxes (modelled via filterValues)
+         * based on the FilterRules created by {@link createCompatFilters}.
+         * @param filterValues {Object} Optional filterValues instance to base the new filterValues off of.
+         */
         createFilterValues(filterValues) {
             const baseFilters = filterValues ? filterValues : {...this.defaultFilterValues};
 
@@ -327,6 +365,9 @@ export default {
             }
             // Features (checkbox, all-of)
             baseFilters.features = this.filterRules.features.required;
+            // Senses (checkbox, all-of)
+            baseFilters.anySense = this.filterRules.senses.required.length <= 0;
+            baseFilters.senses = this.filterRules.senses.required;
             // Networks (checkbox, category === hub ? all-of : any-of)
             if (baseFilters.category === "hub" && this.filterRules.networks.required > 0) {
                 // Actually we'll only half-select these in CSS and not add them to filters.
@@ -347,6 +388,8 @@ export default {
             this.filterValues = baseFilters;
         },
 
+        // We only want pre-selections to apply when the "compatibility filters" switch is on.
+        // Conditional usage of the productsMap for the resulting filteredProducts is realized inside the filteredProducts function.
         toggleCompatFilters(value) {
             this.compatFiltersEnabled = value;
             if (value) {

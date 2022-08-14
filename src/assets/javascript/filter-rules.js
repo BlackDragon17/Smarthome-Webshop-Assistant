@@ -28,6 +28,7 @@ export default class FilterRules {
         this.category = new FilterRule();
         this.type = new FilterRule();
         this.formFactor = new FilterRule();
+        this.senses = new FilterRule();
         this.features = new FilterRule();
         this.networks = new FilterRule();
         this.brands = new FilterRule();
