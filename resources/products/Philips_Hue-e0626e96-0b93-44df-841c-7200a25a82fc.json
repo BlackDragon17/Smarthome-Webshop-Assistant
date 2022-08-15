@@ -2,7 +2,7 @@
   "brand": "Philips Hue",
   "model": "White and Color Ambience",
   "generation": "N/A",
-  "revision": 2022,
+  "revision": "2022",
   "category": "light",
   "type": "bulb",
   "network": {
@@ -18,7 +18,7 @@
     "wall"
   ],
   "amazonDP": "B099P3CP1K",
-  "lumen": "1100",
+  "lumen": 1100,
   "varLumen": true,
   "varKelvin": true,
   "multicolor": true,

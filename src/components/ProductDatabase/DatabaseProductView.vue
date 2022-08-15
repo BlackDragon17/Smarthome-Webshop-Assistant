@@ -1,7 +1,8 @@
 <template>
     <section ref="productView" class="product-view">
         <div class="grid-header">
-            <h2 class="display-heading">{{ filteredProducts.length }} compatible products</h2>
+            <h2 class="display-heading">{{ filteredProducts.length }} {{ compatFiltersEnabled ? "compatible" : "" }}
+                {{ currentCategory === "all" ? "products" : getPropertyName(currentCategory).toLowerCase() }}</h2>
             <hr>
         </div>
 
@@ -30,7 +31,9 @@ export default {
     },
 
     props: {
-        filteredProducts: Array
+        filteredProducts: Array,
+        compatFiltersEnabled: Boolean,
+        currentCategory: String
     },
 
     inject: ["allProducts"],

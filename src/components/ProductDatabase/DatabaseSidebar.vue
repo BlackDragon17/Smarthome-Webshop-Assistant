@@ -232,9 +232,9 @@
                     <input type="checkbox"
                            id="filter-network-checkbox-2"
                            class="filter-input form-check-input"
-                           value="wifi"
+                           value="lan"
                            v-model="filterValues.networks"
-                           :disabled="isCheckboxDisabled('networks', 'wifi')"
+                           :disabled="isCheckboxDisabled('networks', 'lan')"
                            @change="checkboxNetwork">
                     <label for="filter-network-checkbox-2" class="filter-label form-check-label">Wi-Fi / Ethernet</label>
                 </div>

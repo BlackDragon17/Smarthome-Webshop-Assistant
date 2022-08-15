@@ -2,12 +2,15 @@
   "brand": "Philips Hue",
   "model": "Bridge",
   "generation": 2,
-  "revision": 2,
+  "revision": "2",
   "category": "hub",
   "type": "proprietary",
   "network": {
     "zigbee": [
       "gen3"
+    ],
+    "lan": [
+      "ethernet"
     ],
     "ethernet": []
   },

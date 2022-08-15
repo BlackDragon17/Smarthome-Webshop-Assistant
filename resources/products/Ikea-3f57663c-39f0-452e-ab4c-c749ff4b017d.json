@@ -1,0 +1,25 @@
+{
+  "brand": "Ikea",
+  "model": "TRÅDFRI",
+  "generation": "N/A",
+  "revision": "N/A",
+  "category": "light",
+  "type": "bulb",
+  "network": {
+    "zigbee": []
+  },
+  "control": [],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "de": "B08NF5ZWSC"
+  },
+  "purchaseLik": "https://www.ikea.com/de/de/p/tradfri-led-leuchtmittel-e27-806-lm-kabellos-dimmbar-farb-und-weissspektrum-rund-opalweiss-70439158/",
+  "lumen": 806,
+  "varLumen": true,
+  "varKelvin": true,
+  "multicolor": true,
+  "socket": "e27",
+  "productId": "3f57663c-39f0-452e-ab4c-c749ff4b017d"
+}

@@ -11,6 +11,8 @@ export default function(property) {
             return "Buttons & Switches";
 
         // Networks
+        case "lan":
+            return "Wi-Fi / Ethernet";
         case "wifi":
             return "Wi-Fi";
         case "ethernet":

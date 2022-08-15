@@ -2,10 +2,13 @@
   "brand": "LIFX",
   "model": "Colour A60 E27",
   "generation": "N/A",
-  "revision": 2020,
+  "revision": "2020",
   "category": "light",
   "type": "bulb",
   "network": {
+    "lan": [
+      "wifi"
+    ],
     "wifi": [
       "2.4GHz"
     ]

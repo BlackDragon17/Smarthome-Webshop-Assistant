@@ -32,6 +32,11 @@ class FilterRule {
             this.hubNetworks.push(prop);
         }
     }
+
+    removeHubNetwork(prop) {
+        const index = this.hubNetworks?.findIndex(item => item === prop);
+        if (index > -1) this.hubNetworks.splice(index, 1);
+    }
 }
 
 export default class FilterRules {

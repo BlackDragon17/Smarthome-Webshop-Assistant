@@ -9,12 +9,15 @@
     "zigbee": [
       "gen3"
     ],
-    "bluetooth": [],
+    "lan": [
+      "wifi"
+    ],
     "wifi": [
       "2.4GHz",
       "5GHz",
       "AC"
-    ]
+    ],
+    "bluetooth": []
   },
   "control": [
     "alexa"

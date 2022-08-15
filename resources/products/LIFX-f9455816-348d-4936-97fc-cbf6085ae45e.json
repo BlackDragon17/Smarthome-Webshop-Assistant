@@ -2,10 +2,13 @@
   "brand": "LIFX",
   "model": "Candle White to Warm E14",
   "generation": "N/A",
-  "revision": 2020,
+  "revision": "2020",
   "category": "light",
   "type": "bulb",
   "network": {
+    "lan": [
+      "wifi"
+    ],
     "wifi": [
       "2.4GHz"
     ]

@@ -2,13 +2,14 @@
   "brand": "Apple",
   "model": "HomePod mini",
   "generation": "N/A",
-  "revision": 2020,
+  "revision": "2020",
   "category": "hub",
   "type": "proprietary",
   "network": {
     "thread": [
       "borderRouter"
     ],
+    "lan": ["wifi"],
     "wifi": [
       "n"
     ],

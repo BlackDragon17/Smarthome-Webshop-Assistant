@@ -1,7 +1,6 @@
 {
   "controls": {
-    "brandApps": ["LIFX"],
-    "assistants": ["alexa"]
+    "assistants": ["homeKit"]
   },
   "rooms": [
     {
@@ -105,6 +104,12 @@
       "productId": "03137251-6156-45f9-b32e-fc6482cbba32",
       "localId": "0cd3f46c-6343-4eb4-9e60-025b1a75cf1a",
       "room": "Bathroom",
+      "location": 1
+    },
+    {
+      "productId": "3f57663c-39f0-452e-ab4c-c749ff4b017d",
+      "localId": "b7a76a1b-6140-4446-aea7-f14c4e9dd5bd",
+      "room": "Living Room",
       "location": 1
     }
   ]
