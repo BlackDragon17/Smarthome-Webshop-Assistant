@@ -1,0 +1,30 @@
+{
+  "brand": "Apple",
+  "model": "HomePod mini",
+  "generation": "N/A",
+  "revision": 2020,
+  "category": "hub",
+  "type": "proprietary",
+  "network": {
+    "thread": [
+      "borderRouter"
+    ],
+    "wifi": [
+      "n"
+    ],
+    "bluetooth": [
+      "5.0"
+    ]
+  },
+  "control": [
+    "homeKit",
+    "siri"
+  ],
+  "homeKitHubType": "hub",
+  "powerSource": [
+    "wall"
+  ],
+  "purchaseLink": "https://www.apple.com/shop/buy-homepod/homepod-mini",
+  "expandable": false,
+  "productId": "e5feff15-c052-4697-b4e4-86fdff437315"
+}

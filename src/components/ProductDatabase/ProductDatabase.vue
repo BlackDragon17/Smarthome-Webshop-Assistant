@@ -182,7 +182,7 @@ export default {
             this.filterRules = new FilterRules();
 
             // Find setup hubs which support user's preferred control method.
-            const hubs = this.setupProducts.filter(product => product.category === "hub" && (
+            const setupHubs = this.setupProducts.filter(product => product.category === "hub" && (
                 (this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
                     || (this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
             ));
@@ -195,14 +195,14 @@ export default {
 
             // We process possible compatibilities from the least to the most desirable (i.e. if fitting hubs exist in setup: Bluetooth -> Wi-Fi -> Zigbee/Z-Wave -> Thread).
             // Since each addition of the same product overwrites its last entry, we will thus be able to show it with the best possible connectivity option.
-            if (hubs.length > 0) {
+            if (setupHubs.length > 0) {
                 this.filterRules.networks.addAllowed("wifi");
                 this.filterRules.networks.addAllowed("bluetooth");
                 this.filterWifiAndBluetoothProducts(products, false, productsMap);
             }
 
             // Compatibility filtering is based on the user's hub(s) and on user's controls as a secondary factor.
-            for (const hub of hubs) {
+            for (const hub of setupHubs) {
                 if (hub.brand === "Philips Hue" && hub.model === "Bridge") {
                     // The Philips Hue Bridge only speaks to Zigbee devices.
                     const relevantProducts = products.filter(product => product.network.zigbee);
@@ -271,7 +271,7 @@ export default {
 
             // In the absence of hubs (with the required control options), Wi-Fi and Bluetooth are instead scored higher at 5 and 4, respectively.
             // Also, switches are handled separately, since direct connectivity to other products must be ensured.
-            if (hubs.length <= 0) {
+            if (setupHubs.length <= 0) {
                 const relevantSetupProducts = this.setupProducts.filter(product => product.category !== "hub" && product.category !== "switch" && !product.category.includes("switch"));
 
                 // If there are no products in the setup which could be controlled via a switch, we treat switches as any other device.
@@ -303,6 +303,58 @@ export default {
                                     return product;
                                 }).forEach(product => productsMap.set(product.productId, product));
                         }
+                    }
+                }
+            }
+
+            // TODO: add hub filtering (can add the hubs all here, add extra prop to filterRule, only have filterValue.category=hub-specific logic in
+            // sidebar + applyFilterRules
+            // Get all networks used by the setupProducts. Each item in the following array is a network followed by an optional pre-condition.
+            // const relevantNetworks = [];
+            // this.setupProducts.filter(product => product.category !== "hub").map(product => {
+            //     if (product.brand === "Philips Hue" && product.category === "light" && product.network.bluetooth) {
+            //
+            //     }
+            // });
+
+            // Hubs filtering section
+
+            // Get all hub products which support the user's preferred control method.
+            const hubs = Object.values(this.allProducts).filter(product => product.category === "hub" && (
+                (this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
+                    || (this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
+            ));
+
+            // Get all non-hub setup products.
+            const setupProducts = this.setupProducts.filter(product => product.category !== "hub");
+
+            // Similarly to how product filtering is setupHub-centric, hub filtering is setupProduct-centric.
+            // Also like above, we begin with the worst connectivity options and end with the best.
+            for (const product of setupProducts) {
+                if (product.brand === "Philips Hue" && product.category === "light" && product.network.bluetooth) {
+                    const relevantHubs = hubs.filter(hub => hub.brand === "Amazon" && hub.model.includes("Echo"));
+                    if (relevantHubs.length > 0) this.filterRules.networks.addHubNetwork("bluetooth");
+                    relevantHubs.map(hub => {
+                        // hub.compatScore
+                    });
+                }
+
+                // Apple hubs provide the best experience for devices with built-in HomeKit support.
+                if (this.currentSetup.controls.assistants?.includes("homeKit")) {
+                    if (product.control.includes("homeKit") && product.network.wifi || product.network.ethernet || product.network.bluetooth) {
+                        const relevantHubs = hubs.filter(hub => hub.brand === "Apple" && Object.keys(hub.network).some(network => Object.keys(product.network).includes(network)));
+
+                    }
+
+                    // HomeKit over Thread requires an Apple HomeKit hub (homeKitHubType=hub) to operate.
+                    if (product.control.includes("homeKit") && product.network.thread) {
+                        const relevantHubs = hubs.filter(hub => hub.brand === "Apple" && hub.network.thread?.includes("borderRouter"));
+                        if (relevantHubs.length > 0) this.filterRules.networks.addHubNetwork("thread");
+                        relevantHubs.map(hub => {
+                            hub.compatScore = 5;
+                            hub.compatMsg = "An Apple hub such as this allows your HomeKit devices to create a Thread network.";
+                            return hub;
+                        }).forEach(hub => productsMap.set(hub.productId, hub));
                     }
                 }
             }
@@ -369,13 +421,12 @@ export default {
             baseFilters.anySense = this.filterRules.senses.required.length <= 0;
             baseFilters.senses = this.filterRules.senses.required;
             // Networks (checkbox, category === hub ? all-of : any-of)
-            if (baseFilters.category === "hub" && this.filterRules.networks.required > 0) {
-                // Actually we'll only half-select these in CSS and not add them to filters.
-                // This is because we'll actually filter them based on the any-principle in createHubCompatFilters(),
-                // to avoid empty results. Items clicked by users will still follow the all-of principle.
-                // baseFilters.anyNetwork = false;
-                // baseFilters.networks = this.filterRules.networks.required;
-            } else if (Array.isArray(this.filterRules.networks.allowed) && this.filterRules.networks.allowed.length > 0) {
+            // Note that in hub-mode we're filtering according to the "all-of"(-the-selected) rule.
+            // Yet, if our setup includes products which taken together would require networking technologies not found on a single hub,
+            // these filters would result in an empty page. Thus, while we still filter according to the all-of mode for any user selections,
+            // the rules coming from createCompatFilters() will be visual-only. createCompatFilters() will by itself spit out hubs
+            // in an any-of principle, with higher compat-scores for hubs with a higher amount of relevant networking capabilities.
+            if (baseFilters.category !== "hub" && Array.isArray(this.filterRules.networks.allowed) && this.filterRules.networks.allowed.length > 0) {
                 baseFilters.anyNetwork = false;
                 baseFilters.networks = this.filterRules.networks.allowed;
             }

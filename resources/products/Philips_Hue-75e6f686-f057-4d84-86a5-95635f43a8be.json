@@ -18,6 +18,7 @@
     "homeKit",
     "cortana"
   ],
+  "homeKitHubType": "bridge",
   "powerSource": [
     "wall"
   ],

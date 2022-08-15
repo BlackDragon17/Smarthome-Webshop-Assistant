@@ -15,7 +15,7 @@
     "wifi": [
       "2.4GHz",
       "5GHz",
-      "AC"
+      "ac"
     ]
   },
   "control": [

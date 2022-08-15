@@ -1,11 +1,16 @@
 class FilterRule {
-    constructor() {
+    constructor(networkRule) {
         // By default, all values of a given option are allowed.
         // If allowed is an array (incl. an empty one), everything except its values is disabled (incl. the all/any values!).
-        // For "any-of" options, these will also be pre-selected.
+        // Used for any-of options. The allowed values will be pre-selected.
         this.allowed = "all";
-        // Options which are required are always pre-selected and disabled.
+        // Used for all-of options and radios. The required values will be disabled and pre-selected.
+        // For radios, all other options are also disabled, for all-of checkbox groups, they will not.
         this.required = [];
+        // See explanation in createFilterValues().
+        if (networkRule) {
+            this.hubNetworks = [];
+        }
     }
 
     addAllowed(prop) {
@@ -21,16 +26,22 @@ class FilterRule {
             this.required.push(prop);
         }
     }
+
+    addHubNetwork(prop) {
+        if (this.hubNetworks && !this.hubNetworks.includes(prop)) {
+            this.hubNetworks.push(prop);
+        }
+    }
 }
 
 export default class FilterRules {
     constructor() {
-        this.category = new FilterRule();
-        this.type = new FilterRule();
-        this.formFactor = new FilterRule();
-        this.senses = new FilterRule();
-        this.features = new FilterRule();
-        this.networks = new FilterRule();
-        this.brands = new FilterRule();
+        this.category = new FilterRule(false);
+        this.type = new FilterRule(false);
+        this.formFactor = new FilterRule(false);
+        this.senses = new FilterRule(false);
+        this.features = new FilterRule(false);
+        this.networks = new FilterRule(true);
+        this.brands = new FilterRule(false);
     }
 }
