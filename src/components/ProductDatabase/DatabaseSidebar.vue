@@ -24,7 +24,7 @@
                            name="category"
                            value="all"
                            v-model="filterValues.category"
-                           :disabled="isRadioDisabled('category')">
+                           :disabled="isOptionAnyDisabled('category')">
                     <label for="filter-category-radio-all" class="filter-label form-check-label">All</label>
                 </div>
                 <div class="form-check" v-for="(category, index) in optionsAllValues.allCategories" :key="category">
@@ -34,7 +34,7 @@
                            name="category"
                            :value="category"
                            v-model="filterValues.category"
-                           :disabled="isRadioDisabled('category')">
+                           :disabled="isOptionDisabled('category', category)">
                     <label :for="`filter-category-radio-${index}`" class="filter-label form-check-label">{{ getPropertyName(category) }}</label>
                 </div>
                 <hr>
@@ -50,7 +50,7 @@
                            name="type"
                            value="any"
                            v-model="filterValues.type"
-                           :disabled="isRadioDisabled('type')">
+                           :disabled="isOptionAnyDisabled('type')">
                     <label for="filter-type-radio-any" class="filter-label form-check-label">Any</label>
                 </div>
 
@@ -62,7 +62,7 @@
                                name="type"
                                value="open"
                                v-model="filterValues.type"
-                               :disabled="isRadioDisabled('type')">
+                               :disabled="isOptionDisabled('type', 'open')">
                         <label for="filter-type-radio-1" class="filter-label form-check-label">Open</label>
                     </div>
                     <div class="form-check">
@@ -72,7 +72,7 @@
                                name="type"
                                value="proprietary"
                                v-model="filterValues.type"
-                               :disabled="isRadioDisabled('type')">
+                               :disabled="isOptionDisabled('type', 'proprietary')">
                         <label for="filter-type-radio-2" class="filter-label form-check-label">Proprietary</label>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                                name="type"
                                value="lamp"
                                v-model="filterValues.type"
-                               :disabled="isRadioDisabled('type')">
+                               :disabled="isOptionDisabled('type', 'lamp')">
                         <label for="filter-type-radio-1" class="filter-label form-check-label">Lamp</label>
                     </div>
                     <div class="form-check">
@@ -95,7 +95,7 @@
                                name="type"
                                value="bulb"
                                v-model="filterValues.type"
-                               :disabled="isRadioDisabled('type')">
+                               :disabled="isOptionDisabled('type', 'bulb')">
                         <label for="filter-type-radio-2" class="filter-label form-check-label">Bulb</label>
                     </div>
                     <div class="form-check">
@@ -105,7 +105,7 @@
                                name="type"
                                value="lightStrip"
                                v-model="filterValues.type"
-                               :disabled="isRadioDisabled('type')">
+                               :disabled="isOptionDisabled('type', 'lightStrip')">
                         <label for="filter-type-radio-3" class="filter-label form-check-label">Light strip</label>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                            name="formFactor"
                            value="any"
                            v-model="filterValues.formFactor"
-                           :disabled="isRadioDisabled('formFactor')">
+                           :disabled="isOptionAnyDisabled('formFactor')">
                     <label for="filter-form-factor-radio-any" class="filter-label form-check-label">Any</label>
                 </div>
                 <div class="form-check">
@@ -132,7 +132,7 @@
                            name="formFactor"
                            value="e14"
                            v-model="filterValues.formFactor"
-                           :disabled="isRadioDisabled('formFactor')">
+                           :disabled="isOptionDisabled('formFactor', 'e14')">
                     <label for="filter-form-factor-radio-1" class="filter-label form-check-label">E14</label>
                 </div>
                 <div class="form-check">
@@ -142,7 +142,7 @@
                            name="formFactor"
                            value="e27"
                            v-model="filterValues.formFactor"
-                           :disabled="isRadioDisabled('formFactor')">
+                           :disabled="isOptionDisabled('formFactor', 'e27')">
                     <label for="filter-form-factor-radio-2" class="filter-label form-check-label">E27</label>
                 </div>
                 <hr>
@@ -156,8 +156,8 @@
                            id="filter-sense-checkbox-any"
                            class="filter-input form-check-input"
                            v-model="filterValues.anySense"
-                           :disabled="isCheckboxAnyDisabled('senses')"
-                           @change="checkboxAnySense">
+                           :disabled="isOptionAnyDisabled('senses')"
+                           @change="switchAnyOptionAny('senses')">
                     <label for="filter-sense-checkbox-any" class="filter-label form-check-label">Any</label>
                 </div>
                 <div class="form-check" v-for="(sense, index) in optionsAllValues.allSenses" :key="sense">
@@ -166,8 +166,8 @@
                            class="filter-input form-check-input"
                            :value="sense"
                            v-model="filterValues.senses"
-                           :disabled="isCheckboxDisabled('senses', sense)"
-                           @change="checkboxSense">
+                           :disabled="isOptionDisabled('senses', sense)"
+                           @change="switchAnyOption('senses', sense)">
                     <label :for="`filter-sense-checkbox-${index}`" class="filter-label form-check-label">{{ getSenseName(sense) }}</label>
                 </div>
                 <hr>
@@ -182,7 +182,7 @@
                            class="filter-input form-check-input"
                            value="varLumen"
                            v-model="filterValues.features"
-                           :disabled="isCheckboxDisabled('features', 'varLumen')">
+                           :disabled="isOptionDisabled('features', 'varLumen')">
                     <label for="filter-feature-checkbox-1" class="filter-label form-check-label">Adjustable brightness</label>
                 </div>
                 <div class="form-check">
@@ -191,7 +191,7 @@
                            class="filter-input form-check-input"
                            value="varKelvin"
                            v-model="filterValues.features"
-                           :disabled="isCheckboxDisabled('features', 'varKelvin')">
+                           :disabled="isOptionDisabled('features', 'varKelvin')">
                     <label for="filter-feature-checkbox-2" class="filter-label form-check-label">Adjustable color temperature</label>
                 </div>
                 <div class="form-check">
@@ -200,7 +200,7 @@
                            class="filter-input form-check-input"
                            value="multicolor"
                            v-model="filterValues.features"
-                           :disabled="isCheckboxDisabled('features', 'multicolor')">
+                           :disabled="isOptionDisabled('features', 'multicolor')">
                     <label for="filter-feature-checkbox-3" class="filter-label form-check-label">Adjustable light color (RGB)</label>
                 </div>
                 <hr>
@@ -214,8 +214,8 @@
                            id="filter-network-checkbox-any"
                            class="filter-input form-check-input"
                            v-model="filterValues.anyNetwork"
-                           :disabled="isCheckboxAnyDisabled('networks')"
-                           @change="checkboxAnyNetwork">
+                           :disabled="isOptionAnyDisabled('networks')"
+                           @change="switchAnyOptionAny('networks')">
                     <label for="filter-network-checkbox-any" class="filter-label form-check-label">Any</label>
                 </div>
                 <div class="form-check">
@@ -224,8 +224,8 @@
                            class="filter-input form-check-input"
                            value="thread"
                            v-model="filterValues.networks"
-                           :disabled="isCheckboxDisabled('networks', 'thread')"
-                           @change="checkboxNetwork">
+                           :disabled="isOptionDisabled('networks', 'thread')"
+                           @change="switchAnyOption('networks', 'thread')">
                     <label for="filter-network-checkbox-1" class="filter-label form-check-label">Thread</label>
                 </div>
                 <div class="form-check">
@@ -234,8 +234,8 @@
                            class="filter-input form-check-input"
                            value="lan"
                            v-model="filterValues.networks"
-                           :disabled="isCheckboxDisabled('networks', 'lan')"
-                           @change="checkboxNetwork">
+                           :disabled="isOptionDisabled('networks', 'lan')"
+                           @change="switchAnyOption('networks', 'lan')">
                     <label for="filter-network-checkbox-2" class="filter-label form-check-label">Wi-Fi / Ethernet</label>
                 </div>
                 <div class="form-check">
@@ -244,8 +244,8 @@
                            class="filter-input form-check-input"
                            value="bluetooth"
                            v-model="filterValues.networks"
-                           :disabled="isCheckboxDisabled('networks', 'bluetooth')"
-                           @change="checkboxNetwork">
+                           :disabled="isOptionDisabled('networks', 'bluetooth')"
+                           @change="switchAnyOption('networks', 'bluetooth')">
                     <label for="filter-network-checkbox-3" class="filter-label form-check-label">Bluetooth</label>
                 </div>
                 <div class="form-check">
@@ -254,8 +254,8 @@
                            class="filter-input form-check-input"
                            value="zigbee"
                            v-model="filterValues.networks"
-                           :disabled="isCheckboxDisabled('networks', 'zigbee')"
-                           @change="checkboxNetwork">
+                           :disabled="isOptionDisabled('networks', 'zigbee')"
+                           @change="switchAnyOption('networks', 'zigbee')">
                     <label for="filter-network-checkbox-4" class="filter-label form-check-label">Zigbee</label>
                 </div>
                 <div class="form-check">
@@ -264,8 +264,8 @@
                            class="filter-input form-check-input"
                            value="zWave"
                            v-model="filterValues.networks"
-                           :disabled="isCheckboxDisabled('networks', 'zWave')"
-                           @change="checkboxNetwork">
+                           :disabled="isOptionDisabled('networks', 'zWave')"
+                           @change="switchAnyOption('networks', 'zWave')">
                     <label for="filter-network-checkbox-5" class="filter-label form-check-label">Z-Wave</label>
                 </div>
                 <hr>
@@ -279,8 +279,8 @@
                            id="filter-brand-checkbox-any"
                            class="filter-input form-check-input"
                            v-model="filterValues.anyBrand"
-                           :disabled="isCheckboxAnyDisabled('brands')"
-                           @change="checkboxAnyBrand">
+                           :disabled="isOptionAnyDisabled('brands')"
+                           @change="switchAnyOptionAny('brands')">
                     <label for="filter-brand-checkbox-any" class="filter-label form-check-label">Any</label>
                 </div>
                 <div class="form-check" v-for="(brand, index) in optionsAllValues.allBrands" :key="brand">
@@ -289,8 +289,8 @@
                            class="filter-input form-check-input"
                            :value="brand"
                            v-model="filterValues.brands"
-                           :disabled="isCheckboxDisabled('brands', brand)"
-                           @change="checkboxBrand">
+                           :disabled="isOptionDisabled('brands', brand)"
+                           @change="switchAnyOption('brands', brand)">
                     <label :for="`filter-brand-checkbox-${index}`" class="filter-label form-check-label">{{ brand }}</label>
                 </div>
                 <hr>
@@ -300,6 +300,7 @@
 </template>
 
 <script>
+import { capitalize } from "vue";
 import FilterRules from "../../assets/javascript/filter-rules";
 
 export default {
@@ -347,41 +348,36 @@ export default {
 
 
         // Logic for toggling "Any" checkbox options
-        // Senses
-        checkboxAnySense() {
-            this.filterValues.anySense = true;
-            this.filterValues.senses = [];
+        // Ony "any" option value press, unchecks all other values and prevents own unselection.
+        switchAnyOptionAny(option) {
+            const anyOption = "any" + capitalize(option.slice(0, -1));
+            this.filterValues[anyOption] = true;
+            this.filterValues[option] = [];
         },
-        checkboxSense() {
-            this.filterValues.anySense = this.filterValues.senses.length <= 0;
-        },
-        // Networks
-        checkboxAnyNetwork() {
-            this.filterValues.anyNetwork = true;
-            this.filterValues.networks = [];
-        },
-        checkboxNetwork() {
-            this.filterValues.anyNetwork = this.filterValues.networks.length <= 0;
-        },
-        // Brands
-        checkboxAnyBrand() {
-            this.filterValues.anyBrand = true;
-            this.filterValues.brands = [];
-        },
-        checkboxBrand() {
-            this.filterValues.anyBrand = this.filterValues.brands.length <= 0;
+        // On option value press, checks/unchecks "any" value according to currently selected values
+        // and prevents last value unselection when "any" value is disabled.
+        switchAnyOption(option, value) {
+            if (this.isOptionAnyDisabled(option) && this.filterValues[option].length <= 0) {
+                this.filterValues[option].push(value);
+            } else {
+                const anyOption = "any" + capitalize(option.slice(0, -1));
+                this.filterValues[anyOption] = this.filterValues[option].length <= 0;
+            }
         },
 
         // Check disabled status
-        isRadioDisabled(property) {
-            return this.filterRules[property].required.length > 0;
+        isOptionDisabled(option, value) {
+            if (!this.compatFiltersEnabled || (option === "networks" && this.filterValues.category === "hub")) {
+                return false;
+            }
+            return (this.activeFilterRules[option].allowed !== "all" && !this.activeFilterRules[option].allowed.includes(value))
+                || this.activeFilterRules[option].required.includes(value);
         },
-        isCheckboxDisabled(property, value) {
-            return (this.activeFilterRules[property].allowed !== "all" && !this.activeFilterRules[property].allowed.includes(value))
-                || this.activeFilterRules[property].required.includes(value);
-        },
-        isCheckboxAnyDisabled(property) {
-            return this.activeFilterRules[property].allowed !== "all" || this.activeFilterRules[property].required.length > 0;
+        isOptionAnyDisabled(option) {
+            if (!this.compatFiltersEnabled || (option === "networks" && this.filterValues.category === "hub")) {
+                return false;
+            }
+            return this.activeFilterRules[option].allowed !== "all" || this.activeFilterRules[option].required.length > 0;
         }
     }
 };
