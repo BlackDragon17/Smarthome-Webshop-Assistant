@@ -307,24 +307,13 @@ export default {
                 }
             }
 
-            // Get all networks used by the setupProducts. Each item in the following array is a network followed by an optional pre-condition.
-            // const relevantNetworks = [];
-            // this.setupProducts.filter(product => product.category !== "hub").map(product => {
-            //     if (product.brand === "Philips Hue" && product.category === "light" && product.network.bluetooth) {
-            //
-            //     }
-            // });
-
-            // Hubs filtering section
-
-            // Note that unlike with the filtering of the other devices, the general pre-filtering of hubs will not be adding any network entries to FilterRules.
+            // Hubs filtering
+            // Unlike with the filtering of other devices, the general compatibility filtering of hubs will not be adding any network entries to FilterRules.
             // This is because we cannot make any pre-selections in an all-of filter, as that could cause us to not display any compatible products.
-            // Leaving networks filtering at any-of for hubs isn't an option either, as the user would then have no way of e.g. enforcing the hubs to have Bluetooth.
+            // Leaving networks filtering at any-of for hubs isn't an option either, since the user would then have no way of e.g. enforcing the hubs to have Bluetooth.
             // The option of mixing all-of and any-of with visual annotation is overly complex both for the usability and program logic. Thus, no pre-selections.
 
-            // Get all non-hub setup products.
             const setupProducts = this.setupProducts.filter(product => product.category !== "hub");
-
             this.findCompatibleHubs(setupProducts, productsMap);
 
             this.productsMap = productsMap;
@@ -345,76 +334,77 @@ export default {
             ));
 
             // Similarly to how product filtering is setupHub-centric, hub filtering is setupProduct-centric,
-            // except here the utilized control method is sometimes at the top layer.
+            // except here we don't for-loop over the setupProducts since we don't want to add hubs which can only
+            // connect to a single device in the house -- or at least be able to penalize the compatScore appropriately.
             // Also like above, we begin with the worst connectivity options and end with the best.
-            for (const product of setupProducts) {
-                // Amazon Echo hubs offer the unique capability of controlling Philips Hue devices via Bluetooth.
-                if (product.brand === "Philips Hue" && product.category === "light" && product.network.bluetooth) {
-                    const relevantHubs = hubs.filter(hub => hub.brand === "Amazon" && hub.model.includes("Echo"));
-                    relevantHubs.map(hub => {
-                        hub.compatScore = 3;
-                        hub.compatMsg = "Can directly connect to and control your Philips Hue lights via Alexa.";
-                        return hub;
-                    }).forEach(hub => productsMap.set(hub.productId, hub));
+
+            // Amazon Echo hubs offer the unique capability of controlling Philips Hue devices via Bluetooth.
+            if (setupProducts.filter(product => product.brand === "Philips Hue" && product.category === "light" && product.network.bluetooth).length > 0) {
+                const relevantHubs = hubs.filter(hub => hub.brand === "Amazon" && hub.model.includes("Echo"));
+                relevantHubs.map(hub => {
+                    hub.compatScore = 3;
+                    hub.compatMsg = "Can directly connect to and control your Philips Hue lights via Alexa.";
+                    return hub;
+                }).forEach(hub => productsMap.set(hub.productId, hub));
+            }
+
+            const hubDependants = setupProducts.filter(product => product.network.thread || product.network.zigbee || product.network.zWave);
+            const zigbeeProducts = hubDependants.filter(product => product.network.zigbee);
+            const zigbeeHueProducts = zigbeeProducts.filter(product => product.brand === "Philips Hue" || product.certs?.includes("friendsOfHue"));
+
+            if (zigbeeProducts.length > 0) {
+                const hueBridgeHubs = hubs.filter(hub => hub.brand === "Philips Hue" && hub.category === "hub" && hub.network.zigbee);
+                // If we only use HomeKit, we can only use the Hue Bridge if we only have Philips Hue / Friends-of-Hue devices at home,
+                // since those are the only ones which the bridge exposes to HomeKit.
+                if (this.currentSetup.controls.assistants?.includes("homeKit") && this.currentSetup.controls.assistants.length === 1) {
+                    if (zigbeeProducts.length === zigbeeHueProducts.length) {
+                        hueBridgeHubs.map(hub => {
+                            hub.compatScore = hubDependants.length === zigbeeProducts.length ? 5 : 4;
+                            hub.compatMsg = "Allows you to control all of your Philips Hue devices via HomeKit.";
+                            return hub;
+                        }).forEach(hub => productsMap.set(hub.productId, hub));
+                    }
+                } else {
+                    const zigbeeHueCompatProducts = zigbeeProducts.filter(product => product.category === "light"
+                        || (product => product.brand === "Philips Hue" || product.certs?.includes("friendsOfHue")));
+                    // We should only recommend the Philips Hue Bridge if it can actually control all the Setup's Zigbee devices.
+                    if (zigbeeProducts.length === zigbeeHueCompatProducts) {
+                        hueBridgeHubs.map(hub => {
+                            hub.compatScore = hubDependants.length === zigbeeProducts.length ? 5 : 4;
+                            hub.compatMsg = "Allows you to control all of your Zigbee devices";
+                            return hub;
+                        }).forEach(hub => productsMap.set(hub.productId, hub));
+                    }
                 }
+            }
 
-                // TODO: Add general, networks-amount-based case
+            // TODO: Add general Zigbee/Z-Wave cases.
 
+            if (this.currentSetup.controls.assistants?.includes("homeKit")) {
+                const homeKitProducts = setupProducts.filter(product => product.control.includes("homeKit"));
 
-                if (this.currentSetup.controls.assistants?.includes("homeKit")) {
-                    // If we only use HomeKit and have non-Philips/friendsOfHue Zigbee devices, we cannot utilize the Philips Hue Bridge,
-                    // since it only exposes Philips/friendsOfHue devices to HomeKit.
-                    if (this.currentSetup.controls.assistants.length === 1 && (!this.currentSetup.brandApps || this.currentSetup.brandApps.length <= 0)) {
-                        if (product.network.zigbee && !(product.brand === "Philips Hue" || product.certs?.includes("friendsOfHue"))) {
-                            // Delete any Philips Hue hubs from the productsMap and hubs array.
-                            productsMap.forEach(product => {
-                                if (product.brand === "Philips Hue" && product.category === "hub") productsMap.delete(product.productId);
-                            });
-                            const hubIndexes = hubs.filter(hub => hub.brand === "Philips Hue" && hub.category === "hub").map(hub => hubs.findIndex(h => h.productId === hub.productId));
-                            hubIndexes.forEach(index => hubs.splice(index, 1));
-
-                            // Check if we still have Zigbee hubs after the deletion.
-                            const zigbeeHubs = [];
-                            productsMap.forEach(product => {
-                                if (product.category === "hub" && product.network.zigbee) {
-                                    zigbeeHubs.push(product);
-                                }
-                            });
-                        }
+                // For HomeKit setups, direct HomeKit devices will have to connect to a HomeKit endpoint one way or another.
+                // It is better for that endpoint to be a dedicated homeKitHubType=hub rather than just a phone,
+                // since that enables device remote control outside the range of Bluetooth / the Wi-Fi router.
+                if (homeKitProducts.length > 0) {
+                    const homeKitLanBtProducts = homeKitProducts.filter(product => product.network.lan || product.network.bluetooth);
+                    if (homeKitLanBtProducts.length > 0) {
+                        const relevantHubs = hubs.filter(hub => hub.brand === "Apple" && (hub.network.lan || hub.network.bluetooth));
+                        relevantHubs.map(hub => {
+                            hub.compatScore = 4;
+                            hub.compatMsg = "Can directly connect to and control your HomeKit devices.";
+                            return hub;
+                        }).forEach(hub => productsMap.set(hub.productId, hub));
                     }
 
-                    // For HomeKit setups, direct HomeKit devices will have to connect to a HomeKit endpoint one way or another.
-                    // It is better for that endpoint to be a dedicated homeKitHubType=hub rather than just a phone,
-                    // since that enables device remote control outside the range of Bluetooth / the Wi-Fi router.
-                    if (product.control.includes("homeKit")) {
-                        if (product.network.lan) {
-                            const relevantHubs = hubs.filter(hub => hub.brand === "Apple" && Object.keys(hub.network).some(network => Object.keys(product.network).includes(network)));
-                            relevantHubs.map(hub => {
-                                hub.compatScore = 5;
-                                hub.compatMsg = "Can directly connect to and control your HomeKit devices.";
-                                return hub;
-                            }).forEach(hub => productsMap.set(hub.productId, hub));
-                        }
-                        if (product.network.bluetooth) {
-                            const relevantHubs = hubs.filter(hub => hub.brand === "Apple" && Object.keys(hub.network).some(network => Object.keys(product.network).includes(network)));
-                            relevantHubs.map(hub => {
-                                hub.compatScore = 5;
-                                hub.compatMsg = "Can directly connect to and control your HomeKit devices.";
-                                return hub;
-                            }).forEach(hub => productsMap.set(hub.productId, hub));
-                        }
-
-                        // HomeKit over Thread requires an Apple HomeKit hub (homeKitHubType=hub) to work at all.
-                        if (product.network.thread) {
-                            const relevantHubs = hubs.filter(hub => hub.brand === "Apple" && hub.network.thread?.includes("borderRouter"));
-                            relevantHubs.map(hub => {
-                                hub.compatScore = 5;
-                                hub.compatMsg = "An Apple hub such as this allows your HomeKit devices to create a Thread network.";
-                                return hub;
-                            }).forEach(hub => productsMap.set(hub.productId, hub));
-                        }
-                    } else {
-
+                    // HomeKit over Thread requires an Apple HomeKit hub (homeKitHubType=hub) to work at all.
+                    if (homeKitProducts.find(product => product.network.thread)) {
+                        const relevantHubs = hubs.filter(hub => hub.brand === "Apple" && hub.network.thread?.includes("borderRouter"));
+                        relevantHubs.map(hub => {
+                            hub.compatScore = 6;
+                            hub.compatMsg = "An Apple hub such as this allows your HomeKit devices to create a Thread network.";
+                            return hub;
+                        }).forEach(hub => productsMap.set(hub.productId, hub));
                     }
                 }
             }
