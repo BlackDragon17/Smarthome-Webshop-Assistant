@@ -4,7 +4,8 @@
   "generation": 1,
   "revision": "N/A",
   "category": "switch",
-  "type": "lightSwitch",
+  "type": "switch",
+  "subtype": "lightSwitch",
   "network": {
     "zigbee": []
   },

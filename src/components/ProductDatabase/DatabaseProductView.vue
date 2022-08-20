@@ -7,21 +7,20 @@
         </div>
 
         <div class="product-grid">
-            <article class="product-card" v-for="product in filteredProducts">
-                <div class="product-icon material-symbols-rounded">
-                    {{ $getName.categoryIcon(product.category) }}
-                </div>
-                <h3 class="product-name">{{ product.brand }} {{ product.model }}</h3>
-                <p>{{ $getName.categoryProduct(product) }}</p>
-                <button class="add-product-button btn btn-success relative-centering">Add to home setup</button>
-            </article>
+            <Product v-for="product in filteredProducts" :key="product.productId" :product="product" :current-category="currentCategory"/>
         </div>
     </section>
 </template>
 
 <script>
+import Product from "@/components/ProductDatabase/Product.vue";
+
 export default {
     name: "DatabaseProductView",
+
+    components: {
+        Product
+    },
 
     data() {
         return {
@@ -40,6 +39,10 @@ export default {
     inject: ["allProducts"],
 
     computed: {
+        headingText() {
+
+        },
+
         productsFlexBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkorchid";
         }
@@ -93,8 +96,7 @@ export default {
 }
 
 
-
-/* Product grid styling */
+/* Product grid */
 .product-grid {
     margin: 0 auto;
     padding: 1rem;
@@ -103,46 +105,5 @@ export default {
     display: grid;
     grid-template-columns: repeat(v-bind(gridColumns), minmax(15rem, 20rem));
     grid-gap: 1rem;
-}
-
-
-/* Product card styling */
-
-.product-card {
-    display: block;
-    padding: 1rem;
-    height: 16rem;
-
-    border: 1px solid lightgray;
-    border-radius: var(--button-border-radius);
-    box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.12);
-
-    position: relative;
-}
-
-.product-card:hover, .product-card:focus {
-    border-color: darkgray;
-}
-
-.product-icon {
-    display: block;
-    margin-bottom: 1.1rem;
-
-    text-align: center;
-    font-size: 4rem;
-    font-weight: 300;
-    font-variation-settings: "GRAD" -200;
-}
-
-.product-name {
-    font-size: 1.07rem;
-    font-weight: 600;
-}
-
-.add-product-button {
-    background-color: var(--green-devices-main);
-
-    position: absolute;
-    bottom: 0.5rem;
 }
 </style>

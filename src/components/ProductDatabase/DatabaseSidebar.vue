@@ -41,7 +41,7 @@
             </div>
 
             <!-- Type -->
-            <div class="filter-group" v-if="filterValues.category === 'hub' || filterValues.category === 'light'" @change="typeChanged">
+            <div class="filter-group" v-if="['hub', 'light', 'switch'].includes(filterValues.category)" @change="typeChanged">
                 <h4 class="filter-group-heading">Type of {{ filterValues.category }}</h4>
                 <div class="form-check">
                     <input type="radio"
@@ -107,6 +107,39 @@
                                v-model="filterValues.type"
                                :disabled="isOptionDisabled('type', 'lightStrip')">
                         <label for="filter-type-radio-3" class="filter-label form-check-label">Light strip</label>
+                    </div>
+                </div>
+
+                <div v-if="filterValues.category === 'switch'">
+                    <div class="form-check">
+                        <input type="radio"
+                               id="filter-type-radio-1"
+                               class="filter-input form-check-input"
+                               name="type"
+                               value="button"
+                               v-model="filterValues.type"
+                               :disabled="isOptionDisabled('type', 'button')">
+                        <label for="filter-type-radio-1" class="filter-label form-check-label">Button</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio"
+                               id="filter-type-radio-2"
+                               class="filter-input form-check-input"
+                               name="type"
+                               value="dial"
+                               v-model="filterValues.type"
+                               :disabled="isOptionDisabled('type', 'dial')">
+                        <label for="filter-type-radio-2" class="filter-label form-check-label">Dial</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio"
+                               id="filter-type-radio-3"
+                               class="filter-input form-check-input"
+                               name="type"
+                               value="switch"
+                               v-model="filterValues.type"
+                               :disabled="isOptionDisabled('type', 'switch')">
+                        <label for="filter-type-radio-3" class="filter-label form-check-label">Switch</label>
                     </div>
                 </div>
                 <hr>

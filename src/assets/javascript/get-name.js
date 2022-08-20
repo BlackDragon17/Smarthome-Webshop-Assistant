@@ -1,8 +1,18 @@
 import { capitalize } from "vue";
 
 class GetName {
-    camelCase2TitleCase(text) {
+    camelCase2TitleText(text) {
+        if (!text) {
+            return "";
+        }
         return capitalize(text.replace(/([A-Z])/g, " $1"));
+    }
+
+    camelCase2Text(text) {
+        if (!text) {
+            return "";
+        }
+        return capitalize(text.replace(/([A-Z])/g, match => " " + match.toLowerCase()));
     }
 
     // Return category headings.
@@ -14,17 +24,6 @@ class GetName {
                 return capitalize(value) + "s";
             case "switch":
                 return "Buttons & Switches";
-        }
-    }
-
-    // Return the category of a singular product.
-    categoryProduct(product) {
-        const category = Array.isArray(product.category) ? product.category[0] : product.category;
-        switch (category) {
-            case "switch":
-                return this.typeProduct(product);
-            default:
-                return capitalize(category);
         }
     }
 
@@ -42,16 +41,12 @@ class GetName {
         }
     }
 
-    typeProduct(product) {
-        return this.camelCase2TitleCase(product.type);
-    }
-
     sense(value) {
         switch (value) {
             case "uv":
                 return "Ultra-violet"
             default:
-                return this.camelCase2TitleCase(value);
+                return this.camelCase2Text(value);
         }
     }
 
@@ -90,6 +85,25 @@ class GetName {
                 return "Vendor app";
             default:
                 return capitalize(value);
+        }
+    }
+
+    compatScore(score) {
+        switch (score) {
+            case 6:
+                return "Required";
+            case 5:
+                return "Great";
+            case 4:
+                return "Good";
+            case 3:
+                return "Fair";
+            case 2:
+                return "Indirect";
+            case 1:
+                return "Incompatible";
+            default:
+                return "Undetermined";
         }
     }
 }
