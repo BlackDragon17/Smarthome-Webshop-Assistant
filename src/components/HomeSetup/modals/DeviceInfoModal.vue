@@ -9,13 +9,13 @@
                     </div>
                     <div class="modal-body">
                         <div class="inline-icon material-symbols-rounded">
-                            {{ getIconName(product?.category) }}
+                            {{ $getName.categoryIcon(product?.category) }}
                         </div>
                         {{ product?.brand }} {{ product?.model }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="replaceDevice">Get compatible
-                            replacement
+                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="replaceDevice">
+                            Get compatible replacement
                         </button>
                         <button type="button" class="btn btn-success" v-if="device?.room === deviceTray" @click="moveDevice">Add to a room</button>
                         <button type="button" class="btn btn-secondary" v-else @click="moveDevice">Move to a new&nbsp;spot</button>

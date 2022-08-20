@@ -10,7 +10,7 @@
                             :key="device.localId"
                             @click="$eventBus.$emit('open-device-info', device)">
                         <span class="device-icon material-symbols-rounded">
-                            {{ getIconName(allProducts[device.productId].category) }}
+                            {{ $getName.categoryIcon(allProducts[device.productId].category) }}
                         </span>
                     </button>
                 </div>
@@ -31,7 +31,7 @@
                                     :key="device.localId + 'overflow'"
                                     @click="$eventBus.$emit('open-device-info', device)">
                                 <span class="device-icon material-symbols-rounded">
-                                    {{ getIconName(allProducts[device.productId].category) }}
+                                    {{ $getName.categoryIcon(allProducts[device.productId].category) }}
                                 </span>
                             </button>
                         </div>

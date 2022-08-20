@@ -35,7 +35,7 @@
                            :value="category"
                            v-model="filterValues.category"
                            :disabled="isOptionDisabled('category', category)">
-                    <label :for="`filter-category-radio-${index}`" class="filter-label form-check-label">{{ getPropertyName(category) }}</label>
+                    <label :for="`filter-category-radio-${index}`" class="filter-label form-check-label">{{ $getName.categoryHeading(category) }}</label>
                 </div>
                 <hr>
             </div>
@@ -168,7 +168,7 @@
                            v-model="filterValues.senses"
                            :disabled="isOptionDisabled('senses', sense)"
                            @change="switchAnyOption('senses', sense)">
-                    <label :for="`filter-sense-checkbox-${index}`" class="filter-label form-check-label">{{ getSenseName(sense) }}</label>
+                    <label :for="`filter-sense-checkbox-${index}`" class="filter-label form-check-label">{{ $getName.sense(sense) }}</label>
                 </div>
                 <hr>
             </div>

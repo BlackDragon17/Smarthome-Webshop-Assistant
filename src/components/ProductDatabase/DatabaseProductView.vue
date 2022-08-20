@@ -2,16 +2,17 @@
     <section ref="productView" class="product-view">
         <div class="grid-header">
             <h2 class="display-heading">{{ filteredProducts.length }} {{ compatFiltersEnabled ? "compatible" : "" }}
-                {{ currentCategory === "all" ? "products" : getPropertyName(currentCategory).toLowerCase() }}</h2>
+                {{ currentCategory === "all" ? "products" : $getName.categoryHeading(currentCategory).toLowerCase() }}</h2>
             <hr>
         </div>
 
         <div class="product-grid">
             <article class="product-card" v-for="product in filteredProducts">
                 <div class="product-icon material-symbols-rounded">
-                    {{ getIconName(product.category) }}
+                    {{ $getName.categoryIcon(product.category) }}
                 </div>
-                <p class="product-name">{{ product.brand }} {{ product.model }}</p>
+                <h3 class="product-name">{{ product.brand }} {{ product.model }}</h3>
+                <p>{{ $getName.categoryProduct(product) }}</p>
                 <button class="add-product-button btn btn-success relative-centering">Add to home setup</button>
             </article>
         </div>

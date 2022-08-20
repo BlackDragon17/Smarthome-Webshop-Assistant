@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import { capitalize } from "vue";
-
 import NavHeader from "./components/NavHeader.vue";
 import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
 import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
@@ -68,7 +66,7 @@ export default {
         devicesByCategory() {
             const byCategory = {};
             for (const device of this.currentSetup.devices) {
-                const category = capitalize(this.allProducts[device.productId].category) + "s";
+                const category = this.$getName.categoryHeading(this.allProducts[device.productId].category);
                 if (byCategory[category]) {
                     byCategory[category].push(device);
                 } else {
@@ -102,7 +100,7 @@ export default {
         // productsByCategory() {
         //     const byCategory = {};
         //     for (const device of this.currentSetup.devices) {
-        //         const category = capitalize(this.allProducts[device.productId].category) + "s";
+        //         const category = this.$getName.categoryHeading(this.allProducts[device.productId].category);
         //         if (byCategory[category]) {
         //             byCategory[category].push(this.allProducts[device.productId]);
         //         } else {

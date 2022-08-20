@@ -33,7 +33,7 @@
                 <p>{{ category }}</p>
                 <button class="device-card" v-for="device in devicesByCategory[category]" @click="$eventBus.$emit('open-device-info', device)">
                     <span class="inline-icon material-symbols-rounded">
-                        {{ getIconName(allProducts[device.productId].category) }}
+                        {{ $getName.categoryIcon(allProducts[device.productId].category) }}
                     </span>
                     {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
                 </button>
@@ -45,7 +45,7 @@
                 <p>{{ room }}</p>
                 <button class="device-card" v-for="device in devicesByRoom[room]" @click="$eventBus.$emit('open-device-info', device)">
                     <span class="inline-icon material-symbols-rounded">
-                        {{ getIconName(allProducts[device.productId].category) }}
+                        {{ $getName.categoryIcon(allProducts[device.productId].category) }}
                     </span>
                     {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
                 </button>

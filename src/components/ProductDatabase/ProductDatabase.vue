@@ -461,7 +461,7 @@ export default {
             lanProducts.filter(product => this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant)))
                 .map(product => {
                     product.compatScore = noHubs ? 5 : 4;
-                    product.compatMsg = `Can connect to ${this.getPropertyName(this.currentSetup.controls.assistants.find(assistant => product.control.includes(assistant)))} via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
+                    product.compatMsg = `Can connect to ${this.$getName.control(this.currentSetup.controls.assistants.find(assistant => product.control.includes(assistant)))} via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
                     return product;
                 }).forEach(product => productsMap.set(product.productId, product));
             // Vendor app-based control via Wi-Fi.
