@@ -327,7 +327,7 @@ export default {
          */
         findCompatibleHubs(setupProducts, productsMap) {
             // Get all hub products which support the user's preferred control method.
-            const hubs = Object.values(this.allProducts).filter(product => product.category === "hub" && (
+            let hubs = Object.values(this.allProducts).filter(product => product.category === "hub" && (
                 (this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
                     || (this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp")
                         && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
@@ -350,13 +350,16 @@ export default {
 
             const hubDependants = setupProducts.filter(product => product.network.thread || product.network.zigbee || product.network.zWave);
             const zigbeeProducts = hubDependants.filter(product => product.network.zigbee);
+            const zWaveProducts = hubDependants.filter(product => product.network.zWave);
             const zigbeeHueProducts = zigbeeProducts.filter(product => product.brand === "Philips Hue" || product.certs?.includes("friendsOfHue"));
 
+            // Philips Hue Bridge logic
             if (zigbeeProducts.length > 0) {
                 const hueBridgeHubs = hubs.filter(hub => hub.brand === "Philips Hue" && hub.category === "hub" && hub.network.zigbee);
                 // If we only use HomeKit, we can only use the Hue Bridge if we only have Philips Hue / Friends-of-Hue devices at home,
                 // since those are the only ones which the bridge exposes to HomeKit.
-                if (this.currentSetup.controls.assistants?.includes("homeKit") && this.currentSetup.controls.assistants.length === 1) {
+                if (this.currentSetup.controls.assistants?.includes("homeKit") && this.currentSetup.controls.assistants.length === 1
+                    && !this.currentSetup.controls.brandApps?.includes("Philips Hue")) {
                     if (zigbeeProducts.length === zigbeeHueProducts.length) {
                         hueBridgeHubs.map(hub => {
                             hub.compatScore = hubDependants.length === zigbeeProducts.length ? 5 : 4;
@@ -368,18 +371,45 @@ export default {
                     const zigbeeHueCompatProducts = zigbeeProducts.filter(product => product.category === "light"
                         || (product => product.brand === "Philips Hue" || product.certs?.includes("friendsOfHue")));
                     // We should only recommend the Philips Hue Bridge if it can actually control all the Setup's Zigbee devices.
-                    if (zigbeeProducts.length === zigbeeHueCompatProducts) {
+                    if (zigbeeProducts.length === zigbeeHueCompatProducts.length) {
                         hueBridgeHubs.map(hub => {
                             hub.compatScore = hubDependants.length === zigbeeProducts.length ? 5 : 4;
-                            hub.compatMsg = "Allows you to control all of your Zigbee devices";
+                            hub.compatMsg = "Allows you to control all of your Zigbee devices.";
                             return hub;
                         }).forEach(hub => productsMap.set(hub.productId, hub));
                     }
                 }
+                hubs = hubs.filter(hub => !hueBridgeHubs.find(hbh => hbh.productId === hub.productId));
             }
 
-            // TODO: Add general Zigbee/Z-Wave cases.
+            // General Zigbee & Z-Wave logic
+            // The only application-layer protocol for Thread which can currently be found in consumer smart home devices is HomeKit.
+            // Thus, below we only handle Zigbee & Z-Wave, with Thread handled in the HomeKit section.
+            const remainingHubs = hubs.filter(hub => !productsMap.has(hub.productId));
+            const hubDepsNonThread = hubDependants.filter(product => product.network.zigbee || product.network.zWave);
+            if (hubDepsNonThread.length > 0) {
+                if (zigbeeProducts.length === hubDepsNonThread.length) {
+                    remainingHubs.filter(hub => hub.network.zigbee).map(hub => {
+                        hub.compatScore = 5;
+                        hub.compatMsg = "Allows you to control all of your Zigbee devices.";
+                        return hub;
+                    }).forEach(hub => productsMap.set(hub.productId, hub));
+                } else if (zWaveProducts.length === hubDepsNonThread.length) {
+                    remainingHubs.filter(hub => hub.network.zWave).map(hub => {
+                        hub.compatScore = 5;
+                        hub.compatMsg = "Allows you to control all of your Z-Wave devices.";
+                        return hub;
+                    }).forEach(hub => productsMap.set(hub.productId, hub));
+                } else {
+                    remainingHubs.filter(hub => hub.network.zigbee || hub.network.zWave).map(hub => {
+                        hub.compatScore = (hub.network.zigbee && hub.network.zWave) ? 5 : 4;
+                        hub.compatMsg = `Allows you to control ${(hub.network.zigbee && hub.network.zWave) ? "all" : "some"} of your smart home devices.`;
+                        return hub;
+                    }).forEach(hub => productsMap.set(hub.productId, hub));
+                }
+            }
 
+            // HomeKit hubs logic
             if (this.currentSetup.controls.assistants?.includes("homeKit")) {
                 const homeKitProducts = setupProducts.filter(product => product.control.includes("homeKit"));
 
@@ -392,7 +422,7 @@ export default {
                         const relevantHubs = hubs.filter(hub => hub.brand === "Apple" && (hub.network.lan || hub.network.bluetooth));
                         relevantHubs.map(hub => {
                             hub.compatScore = 4;
-                            hub.compatMsg = "Can directly connect to and control your HomeKit devices.";
+                            hub.compatMsg = "Allows you to control your HomeKit devices from afar by acting as a HomeKit relay.";
                             return hub;
                         }).forEach(hub => productsMap.set(hub.productId, hub));
                     }
