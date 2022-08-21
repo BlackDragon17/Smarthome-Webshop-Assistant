@@ -1,6 +1,10 @@
 import { capitalize } from "vue";
 
 class GetName {
+    boolean2YesNo(value) {
+        return value ? "Yes" : "No";
+    }
+
     camelCase2TitleText(text) {
         if (!text) {
             return "";
@@ -44,7 +48,7 @@ class GetName {
     sense(value) {
         switch (value) {
             case "uv":
-                return "Ultra-violet"
+                return "Ultra-violet";
             default:
                 return this.camelCase2Text(value);
         }
@@ -85,6 +89,17 @@ class GetName {
                 return "Vendor app";
             default:
                 return capitalize(value);
+        }
+    }
+
+    powerSource(value) {
+        switch (value) {
+            case "wall":
+                return "Wall power";
+            case "battery":
+                return "Batteries";
+            case "self":
+                return "Self-generated";
         }
     }
 

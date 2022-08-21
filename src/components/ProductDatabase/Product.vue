@@ -4,9 +4,44 @@
             {{ $getName.categoryIcon(product.category) }}
         </div>
         <h3 class="product-name">{{ product.brand }} {{ product.model }}</h3>
-        <p v-for="text in categoryText">{{ text }}</p>
-        <p>Compatibility: {{ $getName.compatScore(product.compatScore) }}</p>
-        <button class="show-more-button btn btn-outline-secondary">Show more</button>
+        <p v-for="text in categoryText"><strong>{{ text }}</strong></p>
+        <hr v-if="compatFiltersEnabled || showMore" class="product-info-hr">
+        <p v-if="compatFiltersEnabled">Compatibility: <strong>{{ $getName.compatScore(product.compatScore) }}</strong></p>
+        <div v-if="showMore">
+            <p v-if="compatFiltersEnabled">{{ compatMsgText }}</p>
+            <hr v-if="compatFiltersEnabled" class="product-info-hr">
+            <div v-if="product.category === 'hub'">
+                <p>Supported assistants: <strong>{{ controlText }}</strong></p>
+                <hr class="product-info-hr">
+            </div>
+            <div v-else-if="product.category === 'light'">
+                <p>Brightness: <strong>{{ product.lumen }} lumen</strong></p>
+                <hr class="product-info-hr">
+                <p>Dimmable: <strong>{{ $getName.boolean2YesNo(product.varLumen) }}</strong></p>
+                <hr class="product-info-hr">
+                <p>Variable color temperature: <strong>{{ $getName.boolean2YesNo(product.varKelvin) }}</strong></p>
+                <hr class="product-info-hr">
+                <p>Multicolor (RGB): <strong>{{ $getName.boolean2YesNo(product.multicolor) }}</strong></p>
+                <hr class="product-info-hr">
+            </div>
+            <div v-else-if="product.category === 'sensor' || product.category.includes('sensor')">
+                <p>Senses: <strong>{{ senseText }}</strong></p>
+                <hr class="product-info-hr">
+            </div>
+            <p>Connectivity: <strong>{{ networkText }}</strong></p>
+            <hr class="product-info-hr">
+            <p>Power source: <strong>{{ powerSourceText }}</strong></p>
+            <div v-if="product.generation && product.generation !== 'N/A'">
+                <hr class="product-info-hr">
+                <p>Generation: <strong>{{ product.generation }}</strong></p>
+            </div>
+            <div v-if="product.revision && product.revision !== 'N/A'">
+                <hr v-if="!(product.generation && product.generation !== 'N/A')" class="product-info-hr">
+                <p>Revision: <strong>{{ product.revision }}</strong></p>
+            </div>
+        </div>
+
+        <button class="show-more-button btn btn-outline-secondary" @click="showMore = !showMore">Show {{ showMore ? "less" : "more" }}</button>
         <button class="add-product-button btn btn-success relative-centering">Add to home setup</button>
         <button class="spacer btn btn-success" disabled>Spacer</button>
     </article>
@@ -18,8 +53,15 @@ import { capitalize } from "vue";
 export default {
     name: "Product",
 
+    data() {
+        return {
+            showMore: false
+        };
+    },
+
     props: {
         product: Object,
+        compatFiltersEnabled: Boolean,
         currentCategory: String
     },
 
@@ -38,6 +80,28 @@ export default {
             } else {
                 return [this.categoryTextSwitch(this.product.category)];
             }
+        },
+
+        compatMsgText() {
+            return this.compatFiltersEnabled ? this.product.compatMsg.replace(/-/g, "‑") : "";
+        },
+
+        controlText() {
+            return this.product.control.map(control => this.$getName.control(control)).join(", ");
+        },
+
+        senseText() {
+            return this.product.senses?.map((sense, index) => this.product.powerSource.length > 1 && index !== 0
+                ? this.$getName.sense(sense).toLowerCase() : this.$getName.sense(sense)).join(", ");
+        },
+
+        powerSourceText() {
+            return this.product.powerSource.map((powerSource, index) => this.product.powerSource.length > 1 && index !== 0 ?
+                this.$getName.powerSource(powerSource).toLowerCase() : this.$getName.powerSource(powerSource)).join(", ");
+        },
+
+        networkText() {
+            return Object.keys(this.product.network).filter(network => network !== "lan").map(network => this.$getName.network(network)).join(", ");
         }
     },
 
@@ -66,13 +130,13 @@ export default {
     display: block;
     padding: 1rem;
     min-height: 16rem;
-    max-height: 35rem;
 
     border: 1px solid lightgray;
     border-radius: var(--button-border-radius);
     box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.12);
 
     position: relative;
+    transition: max-height 0.25s;
 }
 
 .product-card:hover, .product-card:focus {
@@ -90,7 +154,16 @@ export default {
 }
 
 .product-name {
+    margin-bottom: 0.6rem;
     font-size: 1.07rem;
+    font-weight: 600;
+}
+
+.product-info-hr {
+    margin: 0.5rem 0 0.3rem;
+}
+
+strong {
     font-weight: 600;
 }
 
@@ -99,7 +172,7 @@ export default {
 
 .show-more-button {
     display: block;
-    margin: 1rem auto;
+    margin: 0.8rem auto;
 
     border: 1px solid var(--bs-btn-border-color);
 }

@@ -7,7 +7,11 @@
         </div>
 
         <div class="product-grid">
-            <Product v-for="product in filteredProducts" :key="product.productId" :product="product" :current-category="currentCategory"/>
+            <Product v-for="product in filteredProducts"
+                     :key="product.productId"
+                     :product="product"
+                     :compat-filters-enabled="compatFiltersEnabled"
+                     :current-category="currentCategory"/>
         </div>
     </section>
 </template>
@@ -40,7 +44,7 @@ export default {
 
     computed: {
         headingText() {
-
+            // TODO
         },
 
         productsFlexBorder() {
