@@ -4,7 +4,7 @@
             {{ $getName.categoryIcon(product.category) }}
         </div>
         <h3 class="product-name">{{ product.brand }} {{ product.model }}</h3>
-        <p v-for="text in categoryText"><strong>{{ text }}</strong></p>
+        <p v-for="text in categoryText" class="product-category">{{ text }}</p>
         <hr v-if="compatFiltersEnabled || showMore" class="product-info-hr">
         <p v-if="compatFiltersEnabled">Compatibility: <strong>{{ $getName.compatScore(product.compatScore) }}</strong></p>
         <div v-if="showMore">
@@ -157,6 +157,11 @@ export default {
     margin-bottom: 0.6rem;
     font-size: 1.07rem;
     font-weight: 600;
+}
+
+.product-category {
+    font-size: 1.05rem;
+    font-weight: 500;
 }
 
 .product-info-hr {

@@ -1,15 +1,17 @@
 <template>
-    <NavHeader ref="header" :active-view="activeView" @header-click="headerAction"/>
+    <NavHeader ref="header" :active-view="activeView"/>
 
     <main ref="app">
         <HomeSetup v-if="activeView === 'HomeSetup'"
                    :current-setup="currentSetup"
                    :devices-by-category="devicesByCategory"
                    :devices-by-room="devicesByRoom"
-                   :device-queue="deviceQueue"/>
+                   :device-queue="deviceQueue"
+                   @change-view="changeView"/>
         <ProductDatabase v-else-if="activeView === 'ProductDatabase'"
                          :current-setup="currentSetup"
-                         :setup-products="setupProducts"/>
+                         :setup-products="setupProducts"
+                         @change-view="changeView"/>
     </main>
 </template>
 
@@ -47,7 +49,7 @@ export default {
 
     data() {
         return {
-            activeView: "ProductDatabase",
+            activeView: "HomeSetup",
             activeViewRoot: null,
 
             allProducts: allProducts.data,
@@ -151,9 +153,8 @@ export default {
             this.currentSetup = {controls, rooms, devices};
         },
 
-        headerAction(target) {
+        changeView(target) {
             this.activeView = target;
-            //this.$eventBus.$emit("focus-home-setup");
         }
     },
 

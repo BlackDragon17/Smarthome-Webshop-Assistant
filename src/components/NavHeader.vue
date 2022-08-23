@@ -46,7 +46,7 @@ export default {
 
     methods: {
         headerAction(target) {
-            this.$emit("header-click", target);
+            this.$eventBus.$emit("header-click", target);
         },
 
         // This can't be a computed property since those run pre-mount, and would thus return undefined.

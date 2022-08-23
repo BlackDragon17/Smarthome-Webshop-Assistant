@@ -56,6 +56,8 @@ export default {
         setupProducts: Array
     },
 
+    emits: ["change-view"],
+
     inject: ["allProducts"],
 
     computed: {
@@ -527,6 +529,19 @@ export default {
             } else {
                 this.filterValues = {...this.defaultFilterValues, category: this.filterValues.category};
             }
+        },
+
+
+        // Header action handling
+        headerAction(target) {
+            if (target === this.$options.name) {
+                return;
+            }
+
+            // TODO: do current action checking here
+            if (true) {
+                this.$emit("change-view", target);
+            }
         }
     },
 
@@ -551,6 +566,12 @@ export default {
 
     mounted() {
         this.$root.activeViewRoot = this.$el;
+
+        this.$eventBus.$on("header-click", this.headerAction);
+    },
+
+    beforeUnmount() {
+        this.$eventBus.$off("header-click", this.headerAction);
     }
 };
 </script>

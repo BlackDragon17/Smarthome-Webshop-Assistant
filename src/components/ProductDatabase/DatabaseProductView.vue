@@ -35,6 +35,7 @@ export default {
     },
 
     props: {
+        // TODO: Product sorting! (CompatScore then network count then alphabetic)
         filteredProducts: Array,
         compatFiltersEnabled: Boolean,
         currentCategory: String

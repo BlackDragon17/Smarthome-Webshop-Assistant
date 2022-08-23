@@ -1,5 +1,7 @@
 <template>
     <div class="main" tabindex="-1" @keydown.esc="emitEscAction">
+        <ConfirmCancelActionModal ref="confirmCancelActionModal" :current-view="$options.name"/>
+
         <DeviceInfoModal ref="deviceInfoModal"
                          :current-devices="currentSetup.devices"
                          :device-queue="deviceQueue"
@@ -14,6 +16,7 @@
 </template>
 
 <script>
+import ConfirmCancelActionModal from "@/components/ConfirmCancelActionModal.vue";
 import DeviceInfoModal from "./modals/DeviceInfoModal.vue";
 import HomeSidebar from "./HomeSidebar.vue";
 import HomeRoomView from "./HomeRoomView.vue";
@@ -22,6 +25,7 @@ export default {
     name: "HomeSetup",
 
     components: {
+        ConfirmCancelActionModal,
         DeviceInfoModal,
         HomeSidebar,
         HomeRoomView
@@ -41,7 +45,7 @@ export default {
         deviceQueue: Array
     },
 
-    emits: ["print-debug", "room-view-cancel", "popover-hide"],
+    emits: ["change-view", "print-debug", "room-view-cancel", "popover-hide"],
 
     computed: {
         homeSetupBorder() {
@@ -82,12 +86,26 @@ export default {
             if (event.keyCode === 68) {
                 this.$eventBus.$emit("print-debug");
             }
+        },
+
+        // Header action handling
+        headerAction(target) {
+            if (target === this.$options.name) {
+                return;
+            }
+
+            if (this.roomViewBusy) {
+                // TODO: Show cancel dialog
+            } else {
+                this.$emit("change-view", target);
+            }
         }
     },
 
     mounted() {
         this.$root.activeViewRoot = this.$el;
 
+        this.$eventBus.$on("header-click", this.headerAction);
         this.$eventBus.$on("focus-home-setup", this.focusThis);
         this.$eventBus.$on("open-device-info", this.openDeviceInfo);
         this.$eventBus.$on("room-view-busy", this.setRoomViewBusy);
@@ -97,6 +115,7 @@ export default {
     },
 
     beforeUnmount() {
+        this.$eventBus.$off("header-click", this.headerAction);
         this.$eventBus.$off("focus-home-setup", this.focusThis);
         this.$eventBus.$off("open-device-info", this.openDeviceInfo);
         this.$eventBus.$off("room-view-busy", this.setRoomViewBusy);
