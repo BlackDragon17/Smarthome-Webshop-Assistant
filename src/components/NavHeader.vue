@@ -1,7 +1,7 @@
 <template>
     <header class="header-background">
         <nav class="header">
-            <a href="#" class="header-logo" @click="headerAction('header-logo')">SH<span>WA</span></a>
+            <a href="#" class="header-logo">SH<span>WA</span></a>
             <ul class="header-nav">
                 <li><a href="#" ref="homeSetupItem" class="header-nav-item" @click="headerAction('HomeSetup')">Home Setup</a></li>
                 <li><a href="#" ref="productDatabaseItem" class="header-nav-item" @click="headerAction('ProductDatabase')">Product Database</a></li>
@@ -57,9 +57,6 @@ export default {
                     break;
                 case "ProductDatabase":
                     this.activeNavItem = this.$refs.productDatabaseItem;
-                    break;
-                default:
-                    this.activeNavItem = null;
                     break;
             }
         }

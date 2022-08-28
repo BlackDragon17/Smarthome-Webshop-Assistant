@@ -39,7 +39,7 @@
                 </Popover>
 
                 <button class="add-device-overlay"
-                        v-if="roomViewState === 'adding-device' || roomViewState === 'moving-device'"
+                        v-if="viewState === 'adding-device' || viewState === 'moving-device'"
                         :style="getBorderLines(i)"
                         @click="addDeviceAt(i)">
                     <span class="add-device-icon material-symbols-rounded">add_circle</span>
@@ -47,18 +47,19 @@
             </div>
         </div>
 
-        <button class="remove-room-overlay" v-if="roomViewState === 'removing-room'" @click="$emit('remove-room')">
+        <button class="remove-room-overlay" v-if="viewState === 'removing-room'" @click="$emit('remove-room')">
             <span class="remove-room-icon-bg">
                 <span class="remove-room-icon material-symbols-rounded">delete</span>
             </span>
         </button>
 
-        <div class="add-room-overlay" v-if="roomViewState === 'adding-room'"></div>
+        <div class="add-room-overlay" v-if="viewState === 'adding-room'"></div>
     </div>
 </template>
 
 <script>
 import { nextTick } from "vue";
+import Device from "@/assets/javascript/device";
 import Popover from "../Popover.vue";
 
 export default {
@@ -77,7 +78,7 @@ export default {
     },
 
     props: {
-        roomViewState: String,
+        viewState: String,
         room: Object,
         currentDevices: Array,
         deviceQueue: Array
@@ -208,12 +209,16 @@ export default {
             }
         },
 
-        // Grid button callback
+        /**
+         * Grid button callback.
+         * @param location {number} Where to place the device at.
+         */
         addDeviceAt(location) {
-            const device = this.deviceQueue.pop();
-            device.localId = device.localId ?? crypto.randomUUID();
-            device.room = this.room.name;
-            device.location = location;
+            const device = Device.createFromDTO(
+                this.deviceQueue.pop(),
+                this.room.name,
+                location
+            )
             this.currentDevices.push(device);
             this.$emit("added-device");
         },

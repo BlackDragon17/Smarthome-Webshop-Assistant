@@ -10,7 +10,7 @@
                 <Room v-for="room in currentSetup.rooms"
                       :key="room.name"
                       :style="positionRoom(room)"
-                      :room-view-state="viewState"
+                      :view-state="viewState"
                       :room="room"
                       :current-devices="currentSetup.devices"
                       :device-queue="deviceQueue"
@@ -251,6 +251,12 @@ export default {
             this.checkHeaderOverflow();
         },
 
+        addNewDevice() {
+            this.actionHeadingText = "Select a spot to place the new device at:";
+            this.$emit("change-state", "adding-device");
+            this.checkHeaderOverflow();
+        },
+
         // Cancel margin override if actionHeader would cover room-grid with it enabled
         async checkHeaderOverflow() {
             await nextTick();
@@ -272,7 +278,10 @@ export default {
                         this.currentSetup.devices.push(device);
                     }
                     break;
-                case "normal":
+                case "adding-device":
+                    this.deviceQueue.pop();
+                    break;
+                default:
                     return;
             }
 
@@ -304,6 +313,7 @@ export default {
     mounted() {
         this.$eventBus.$on("room-view-cancel", this.endAction);
         this.$eventBus.$on("move-device", this.moveDevice);
+        this.$eventBus.$on("add-new-device", this.addNewDevice);
 
         // Compute actionHeadingHeight and hide it
         const heading = document.querySelector(".action-heading");
@@ -321,6 +331,7 @@ export default {
     beforeUnmount() {
         this.$eventBus.$off("room-view-cancel", this.endAction);
         this.$eventBus.$off("move-device", this.moveDevice);
+        this.$eventBus.$off("add-new-device", this.addNewDevice);
     }
 };
 </script>

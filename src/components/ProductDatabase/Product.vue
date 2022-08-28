@@ -42,7 +42,7 @@
         </div>
 
         <button class="show-more-button btn btn-outline-secondary" @click="showMore = !showMore">Show {{ showMore ? "less" : "more" }}</button>
-        <button class="add-product-button btn btn-success relative-centering">Add to home setup</button>
+        <button class="add-product-button btn btn-success relative-centering" @click="getProduct">Add to home setup</button>
         <button class="spacer btn btn-success" disabled>Spacer</button>
     </article>
 </template>
@@ -64,6 +64,8 @@ export default {
         compatFiltersEnabled: Boolean,
         currentCategory: String
     },
+
+    emits: ["get-new-product"],
 
     computed: {
         categoryText() {
@@ -120,6 +122,10 @@ export default {
                 default:
                     return `${capitalize(category)} (${this.$getName.camelCase2Text(this.product.type).toLowerCase()})`;
             }
+        },
+
+        getProduct() {
+            this.$eventBus.$emit("get-new-product", this.product);
         }
     }
 };

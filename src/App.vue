@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { nextTick } from "vue";
+import Device from "@/assets/javascript/device";
 import NavHeader from "./components/NavHeader.vue";
 import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
 import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
@@ -49,7 +51,7 @@ export default {
 
     data() {
         return {
-            activeView: "HomeSetup",
+            activeView: "ProductDatabase",
             activeViewRoot: null,
 
             allProducts: allProducts.data,
@@ -63,6 +65,8 @@ export default {
             allProducts: this.allProducts
         };
     },
+
+    emits: ["add-new-device"],
 
     computed: {
         devicesByCategory() {
@@ -146,7 +150,7 @@ export default {
             for (const device of setup.devices) {
                 if (device.productId && device.localId && device.room && device.location
                     && (rooms.find(room => room.name === device.room) || device.room === this.deviceTray)) {
-                    devices.push(device);
+                    devices.push(Device.createFromJson(device));
                 }
             }
 
@@ -155,6 +159,13 @@ export default {
 
         changeView(target) {
             this.activeView = target;
+        },
+
+        async getNewProduct(product) {
+            this.deviceQueue = [product];
+            this.changeView("HomeSetup");
+            await nextTick();
+            this.$eventBus.$emit("add-new-device");
         }
     },
 
@@ -169,10 +180,12 @@ export default {
         this.$refs.app.style.maxHeight = `calc(100vh - ${headerHeight}px)`;
 
         this.$eventBus.$on("change-view", this.changeView);
+        this.$eventBus.$on("get-new-product", this.getNewProduct);
     },
 
     beforeUnmount() {
         this.$eventBus.$off("change-view", this.changeView);
+        this.$eventBus.$off("get-new-product", this.getNewProduct);
     }
 };
 </script>
