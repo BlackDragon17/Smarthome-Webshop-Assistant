@@ -1,6 +1,9 @@
 <template>
     <div class="main" tabindex="-1" @keydown.esc="emitEscAction">
-        <ConfirmCancelActionModal ref="confirmCancelActionModal" :current-view="$options.name" :view-state="viewState"/>
+        <ConfirmCancelActionModal ref="confirmCancelActionModal"
+                                  :current-view="$options.name"
+                                  :view-state="viewState"
+                                  @cancel-action="emitEscRoomViewAction"/>
 
         <DeviceInfoModal ref="deviceInfoModal"
                          :current-devices="currentSetup.devices"
@@ -69,8 +72,9 @@ export default {
         },
 
         openDeviceInfo(device) {
-            this.emitEscRoomViewAction();
-            this.$refs.deviceInfoModal.openModal(device);
+            if (this.viewState === "normal") {
+                this.$refs.deviceInfoModal.openModal(device);
+            }
         },
 
         emitEscAction() {
@@ -97,8 +101,8 @@ export default {
                 return;
             }
 
-            if (this.roomViewBusy) {
-                // TODO: Show cancel dialog
+            if (this.viewState !== "normal" && this.viewState !== "init") {
+                this.$refs.confirmCancelActionModal.openModal(target);
             } else {
                 this.$emit("change-view", target);
             }

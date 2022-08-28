@@ -167,6 +167,12 @@ export default {
         let headerHeight = this.$refs.header.$el.offsetHeight;
         this.$refs.app.style.height = `calc(100vh - ${headerHeight}px)`;
         this.$refs.app.style.maxHeight = `calc(100vh - ${headerHeight}px)`;
+
+        this.$eventBus.$on("change-view", this.changeView);
+    },
+
+    beforeUnmount() {
+        this.$eventBus.$off("change-view", this.changeView);
     }
 };
 </script>

@@ -4,19 +4,16 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" :id="modalId + '-label'">Confirm cancel</h5>
+                        <h5 class="modal-title" :id="modalId + '-label'">Cancel action?</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        aaa
+                        Leaving the {{ currentViewText }} page now will cancel your current action: <strong>{{ viewStateText }}</strong>.<br>
+                        Are you sure you want to continue?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="replaceDevice">
-                            Get compatible replacement
-                        </button>
-                        <button type="button" class="btn btn-success" v-if="device?.room === deviceTray" @click="moveDevice">Add to a room</button>
-                        <button type="button" class="btn btn-secondary" v-else @click="moveDevice">Move to a new&nbsp;spot</button>
-                        <button type="button" class="btn btn-danger" @click="removeDevice">Delete device</button>
+                        <button type="button" class="btn btn-secondary" @click="stayOnPage">Stay on page</button>
+                        <button type="button" class="btn btn-danger" @click="leavePage">Leave page</button>
                     </div>
                 </div>
             </div>
@@ -32,25 +29,36 @@ export default {
 
     data() {
         return {
-            bsModal: null
+            bsModal: null,
+            switchTarget: null
         };
     },
 
     props: {
         currentView: String,
-        viewState: String,
+        viewState: String
     },
+
+    emits: ["cancel-action", "change-view"],
 
     computed: {
         modalId() {
             return this.$options.name.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
         },
 
-        cancelMsgText() {
+        currentViewText() {
+            return this.currentView.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+        },
+
+        viewStateText() {
             if (this.currentView === "HomeSetup") {
                 switch (this.viewState) {
-                    case "":
-                        return "";
+                    case "adding-room":
+                        return "adding a new room";
+                    case "removing-room":
+                        return "removing a room";
+                    case "moving-device":
+                        return "moving one of your devices";
                 }
             } else if (this.currentView === "ProductDatabase") {
                 switch (this.viewState) {
@@ -62,14 +70,29 @@ export default {
     },
 
     methods: {
-        openModal() {
+        openModal(switchTarget) {
+            this.switchTarget = switchTarget;
             this.bsModal.show();
         },
 
         resetModal() {
+            this.switchTarget = null;
             if (this.currentView === "HomeSetup") {
                 this.$eventBus.$emit("focus-home-setup");
             }
+        },
+
+
+        // Button callbacks
+
+        stayOnPage() {
+            this.bsModal.hide();
+        },
+
+        leavePage() {
+            this.$emit("cancel-action");
+            this.$eventBus.$emit("change-view", this.switchTarget);
+            this.bsModal.hide();
         }
     },
 
@@ -88,5 +111,11 @@ export default {
 </script>
 
 <style scoped>
+strong {
+    font-weight: 600;
+}
 
+.modal-body {
+    text-align: center;
+}
 </style>
