@@ -38,7 +38,7 @@ export default {
 
     props: {
         currentView: String,
-        currentAction: String,
+        viewState: String,
     },
 
     computed: {
@@ -48,12 +48,12 @@ export default {
 
         cancelMsgText() {
             if (this.currentView === "HomeSetup") {
-                switch (this.currentAction) {
+                switch (this.viewState) {
                     case "":
                         return "";
                 }
             } else if (this.currentView === "ProductDatabase") {
-                switch (this.currentAction) {
+                switch (this.viewState) {
                     case "":
                         return "";
                 }

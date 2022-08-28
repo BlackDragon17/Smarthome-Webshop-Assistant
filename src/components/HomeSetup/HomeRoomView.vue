@@ -1,16 +1,16 @@
 <template>
     <section ref="roomView" class="room-view">
-        <AddRoomModal ref="addRoomModal" :room-view-state="roomViewState" :setup-rooms="currentSetup.rooms" @added-room="endAction"/>
-        <RemoveRoomModal ref="removeRoomModal" :room-view-state="roomViewState" :current-setup="currentSetup" @removed-room="endAction"/>
+        <AddRoomModal ref="addRoomModal" :room-view-state="viewState" :setup-rooms="currentSetup.rooms" @added-room="endAction"/>
+        <RemoveRoomModal ref="removeRoomModal" :room-view-state="viewState" :current-setup="currentSetup" @removed-room="endAction"/>
 
-        <h2 class="action-heading relative-centering" v-show="roomViewState !== 'normal'">{{ actionHeadingText }}</h2>
+        <h2 class="action-heading relative-centering" v-show="viewState !== 'normal'">{{ actionHeadingText }}</h2>
 
         <div class="room-grid-container">
-            <div class="room-grid" :class="{'top-margin-override': roomViewState !== 'normal' && allowMarginOverride}">
+            <div class="room-grid" :class="{'top-margin-override': viewState !== 'normal' && allowMarginOverride}">
                 <Room v-for="room in currentSetup.rooms"
                       :key="room.name"
                       :style="positionRoom(room)"
-                      :room-view-state="roomViewState"
+                      :room-view-state="viewState"
                       :room="room"
                       :current-devices="currentSetup.devices"
                       :device-queue="deviceQueue"
@@ -28,11 +28,11 @@
         </div>
         <button v-if="false" @click="printDebug">Debug</button>
 
-        <div v-if="roomViewState === 'normal'" class="room-button-group relative-centering">
+        <div v-if="viewState === 'normal'" class="room-button-group relative-centering">
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
             <button class="remove-room-button btn btn-secondary" @click="removeRoom">Remove a room</button>
         </div>
-        <button v-else-if="roomViewState !== 'init'"
+        <button v-else-if="viewState !== 'init'"
                 class="cancel-button btn btn-danger relative-centering"
                 @click="endAction">
             Cancel
@@ -72,10 +72,11 @@ export default {
 
     props: {
         currentSetup: Object,
+        viewState: String,
         deviceQueue: Array
     },
 
-    emits: ["room-view-busy", "room-view-free", "focus-home-setup"],
+    emits: ["change-state"],
 
     computed: {
         lowestCoords() {
@@ -226,36 +227,32 @@ export default {
 
         addNewRoom() {
             this.createAddRoomButtons();
+
             this.actionHeadingText = "Select a spot to add the new room at:";
-            this.roomViewState = "adding-room";
-            this.actionStart();
+            this.$emit("change-state", "adding-room");
+            this.checkHeaderOverflow();
         },
 
         removeRoom() {
             this.actionHeadingText = "Select a room to be removed:";
-            this.roomViewState = "removing-room";
-            this.actionStart();
+            this.$emit("change-state", "removing-room");
+            this.checkHeaderOverflow();
         },
 
         moveDevice() {
             const device = this.deviceQueue[0];
+
             if (device.room === this.deviceTray) {
                 this.actionHeadingText = "Select a spot to place the device at:";
             } else {
                 this.actionHeadingText = "Select a spot to move the device to:";
             }
-            this.roomViewState = "moving-device";
-            this.actionStart();
-        },
-
-        actionStart() {
-            this.$eventBus.$emit("room-view-busy", true);
-            this.$eventBus.$emit("focus-home-setup");
-            this.checkOverflow();
+            this.$emit("change-state", "moving-device");
+            this.checkHeaderOverflow();
         },
 
         // Cancel margin override if actionHeader would cover room-grid with it enabled
-        async checkOverflow() {
+        async checkHeaderOverflow() {
             await nextTick();
             if (this.actionHeadingHeight.borderBox - 8 >= parseInt(this.gridContainerCss.getPropertyValue("margin-top"), 10)) {
                 this.allowMarginOverride = false;
@@ -263,7 +260,7 @@ export default {
         },
 
         endAction() {
-            switch (this.roomViewState) {
+            switch (this.viewState) {
                 case "adding-room":
                     this.removeAddRoomButtons();
                     break;
@@ -279,10 +276,9 @@ export default {
                     return;
             }
 
-            this.roomViewState = "normal";
+            this.$emit("change-state", "normal");
             this.actionHeadingText = "";
             this.allowMarginOverride = true;
-            this.$eventBus.$emit("room-view-busy", false);
         },
 
 
@@ -312,7 +308,7 @@ export default {
         // Compute actionHeadingHeight and hide it
         const heading = document.querySelector(".action-heading");
         this.actionHeadingHeight.borderBox = heading.offsetHeight;
-        this.roomViewState = "normal";
+        this.$emit("change-state", "normal");
         this.actionHeadingText = "";
         this.actionHeadingHeight.total = this.actionHeadingHeight.borderBox + parseInt(window.getComputedStyle(heading).getPropertyValue("margin-top"), 10);
         this.actionHeadingHeight.total += parseInt(window.getComputedStyle(heading).getPropertyValue("margin-bottom"), 10);

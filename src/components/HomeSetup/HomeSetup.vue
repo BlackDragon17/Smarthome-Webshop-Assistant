@@ -1,6 +1,6 @@
 <template>
     <div class="main" tabindex="-1" @keydown.esc="emitEscAction">
-        <ConfirmCancelActionModal ref="confirmCancelActionModal" :current-view="$options.name"/>
+        <ConfirmCancelActionModal ref="confirmCancelActionModal" :current-view="$options.name" :view-state="viewState"/>
 
         <DeviceInfoModal ref="deviceInfoModal"
                          :current-devices="currentSetup.devices"
@@ -11,7 +11,10 @@
                      :devices-by-category="devicesByCategory"
                      :devices-by-room="devicesByRoom"/>
 
-        <HomeRoomView :current-setup="currentSetup" :device-queue="deviceQueue"/>
+        <HomeRoomView :current-setup="currentSetup"
+                      :view-state="viewState"
+                      :device-queue="deviceQueue"
+                      @change-state="changeState"/>
     </div>
 </template>
 
@@ -33,7 +36,7 @@ export default {
 
     data() {
         return {
-            roomViewBusy: false,
+            viewState: "init",
             popoverShown: false
         };
     },
@@ -57,11 +60,12 @@ export default {
         focusThis() {
             this.$el.focus();
         },
-        setRoomViewBusy(value) {
-            this.roomViewBusy = value;
-        },
         setPopoverShown(value) {
             this.popoverShown = value;
+        },
+        changeState(value) {
+            this.viewState = value;
+            this.focusThis();
         },
 
         openDeviceInfo(device) {
@@ -72,16 +76,15 @@ export default {
         emitEscAction() {
             if (this.popoverShown) {
                 this.$eventBus.$emit("popover-hide");
-            } else if (this.roomViewBusy) {
+            } else if (this.viewState !== "normal" && this.viewState !== "init") {
                 this.$eventBus.$emit("room-view-cancel");
             }
         },
         emitEscRoomViewAction() {
-            if (this.roomViewBusy) {
+            if (this.viewState !== "normal" && this.viewState !== "init") {
                 this.$eventBus.$emit("room-view-cancel");
             }
         },
-
         emitPrintDebug(event) {
             if (event.keyCode === 68) {
                 this.$eventBus.$emit("print-debug");
@@ -108,7 +111,6 @@ export default {
         this.$eventBus.$on("header-click", this.headerAction);
         this.$eventBus.$on("focus-home-setup", this.focusThis);
         this.$eventBus.$on("open-device-info", this.openDeviceInfo);
-        this.$eventBus.$on("room-view-busy", this.setRoomViewBusy);
         this.$eventBus.$on("popover-shown", this.setPopoverShown);
 
         window.addEventListener("keydown", this.emitPrintDebug);
@@ -118,7 +120,6 @@ export default {
         this.$eventBus.$off("header-click", this.headerAction);
         this.$eventBus.$off("focus-home-setup", this.focusThis);
         this.$eventBus.$off("open-device-info", this.openDeviceInfo);
-        this.$eventBus.$off("room-view-busy", this.setRoomViewBusy);
         this.$eventBus.$off("popover-shown", this.setPopoverShown);
 
         window.removeEventListener("keydown", this.emitPrintDebug);
