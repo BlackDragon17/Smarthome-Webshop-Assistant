@@ -36,7 +36,8 @@ export default {
 
     props: {
         currentView: String,
-        viewState: String
+        viewState: String,
+        replaceProduct: Object
     },
 
     emits: ["cancel-action", "change-view"],
@@ -61,10 +62,7 @@ export default {
                         return "moving one of your devices";
                 }
             } else if (this.currentView === "ProductDatabase") {
-                switch (this.viewState) {
-                    case "":
-                        return "";
-                }
+                return `choosing a replacement for your ${this.replaceProduct?.brand} ${this.replaceProduct?.model}`;
             }
         }
     },
@@ -90,8 +88,7 @@ export default {
         },
 
         leavePage() {
-            this.$emit("cancel-action");
-            this.$eventBus.$emit("change-view", this.switchTarget);
+            this.$emit("cancel-action", this.switchTarget);
             this.bsModal.hide();
         }
     },

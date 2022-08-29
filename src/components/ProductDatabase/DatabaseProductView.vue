@@ -1,8 +1,7 @@
 <template>
     <section ref="productView" class="product-view">
         <div class="grid-header">
-            <h2 class="display-heading">{{ filteredProducts.length }} {{ compatFiltersEnabled ? "compatible" : "" }}
-                {{ currentCategory === "all" ? "products" : $getName.categoryHeading(currentCategory).toLowerCase() }}</h2>
+            <h2 class="display-heading">{{ headingText }} <small>{{ subheadingText }}</small></h2>
             <hr>
         </div>
 
@@ -11,7 +10,8 @@
                      :key="product.productId"
                      :product="product"
                      :compat-filters-enabled="compatFiltersEnabled"
-                     :current-category="currentCategory"/>
+                     :current-category="currentCategory"
+                     :replace-id="replaceId"/>
         </div>
     </section>
 </template>
@@ -38,14 +38,29 @@ export default {
         // TODO: Product sorting! (CompatScore then network count then alphabetic)
         filteredProducts: Array,
         compatFiltersEnabled: Boolean,
-        currentCategory: String
+        currentCategory: String,
+        replaceId: String
     },
 
     inject: ["allProducts"],
 
     computed: {
         headingText() {
-            // TODO
+            if (this.filteredProducts.length === 1) {
+                return this.filteredProducts.length + " " + this.$getName.categoryHeadingSingular(this.currentCategory).toLowerCase();
+            }
+            return this.filteredProducts.length + " " + this.$getName.categoryHeading(this.currentCategory).toLowerCase();
+        },
+        subheadingText() {
+            if (!this.compatFiltersEnabled) {
+                return "";
+            }
+
+            if (this.replaceId) {
+                return `able to replace your ${this.allProducts[this.replaceId].brand} ${this.allProducts[this.replaceId].model}`;
+            }
+
+            return "compatible with your home setup";
         },
 
         productsFlexBorder() {
@@ -94,6 +109,10 @@ export default {
 .display-heading {
     margin-left: 0.4rem;
     font-size: 1.5rem;
+}
+
+.display-heading > small {
+    font-size: 0.86em;
 }
 
 .grid-header > hr {

@@ -1,6 +1,6 @@
 <template>
     <aside class="sidebar">
-        <button class="add-device-button btn btn-success">Add new device</button>
+        <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
 
         <div class="sort-group">
             <span class="sort-label">Sort devices by</span>
@@ -70,13 +70,19 @@ export default {
         devicesByRoom: Object
     },
 
-    emits: ["open-device-info"],
+    emits: ["open-device-info", "header-click"],
 
     inject: ["allProducts"],
 
     computed: {
         productsListBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgoldenrod";
+        }
+    },
+
+    methods: {
+        addNewDevice() {
+            this.$eventBus.$emit("header-click", "ProductDatabase");
         }
     }
 };

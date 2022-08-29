@@ -7,6 +7,8 @@ class FilterRule {
         // All required values will be both disabled and pre-selected.
         // Used for all-of options and radios.
         this.required = [];
+        // Allows pre-selecting values without disabling any.
+        this.selected = [];
     }
 
     addAllowed(prop) {

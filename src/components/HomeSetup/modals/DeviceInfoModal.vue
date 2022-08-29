@@ -14,7 +14,7 @@
                         {{ product?.brand }} {{ product?.model }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="replaceDevice">
+                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="getReplacement">
                             Get compatible replacement
                         </button>
                         <button type="button" class="btn btn-success" v-if="device?.room === deviceTray" @click="moveDevice">Add to a room</button>
@@ -73,8 +73,8 @@ export default {
 
         // Button callbacks
 
-        replaceDevice() {
-            //this.$eventBus.$emit("replace-device", this.device);
+        getReplacement() {
+            this.$eventBus.$emit("get-replacement", this.device);
             this.bsModal.hide();
         },
 

@@ -8,9 +8,11 @@
                    :devices-by-room="devicesByRoom"
                    :device-queue="deviceQueue"
                    @change-view="changeView"/>
+
         <ProductDatabase v-else-if="activeView === 'ProductDatabase'"
                          :current-setup="currentSetup"
                          :setup-products="setupProducts"
+                         :replace-id="replaceId"
                          @change-view="changeView"/>
     </main>
 </template>
@@ -56,7 +58,8 @@ export default {
 
             allProducts: allProducts.data,
             currentSetup: null,
-            deviceQueue: []
+            deviceQueue: [],
+            replaceId: null
         };
     },
 
@@ -161,11 +164,41 @@ export default {
             this.activeView = target;
         },
 
+
+        // Inter-view action handlers
+
         async getNewProduct(product) {
             this.deviceQueue = [product];
             this.changeView("HomeSetup");
             await nextTick();
             this.$eventBus.$emit("add-new-device");
+        },
+
+        async getReplacement(device) {
+            const deviceIndex = this.currentSetup.devices.findIndex(setupDevice => setupDevice.localId === device.localId);
+            this.currentSetup.devices.splice(deviceIndex, 1);
+            this.deviceQueue = [device];
+            this.replaceId = device.productId;
+
+            this.changeView("ProductDatabase");
+            await nextTick();
+            this.$eventBus.$emit("replace-product");
+        },
+
+        async replaceDevice(product) {
+            if (!product) {
+                this.currentSetup.devices.push(this.deviceQueue.pop());
+                this.replaceId = null;
+
+                this.changeView("HomeSetup");
+            } else {
+                const oldDevice = this.deviceQueue.pop();
+                const newDevice = Device.createFromDTO(product, oldDevice.room, oldDevice.location);
+                this.currentSetup.devices.push(newDevice);
+                this.replaceId = null;
+
+                this.changeView("HomeSetup");
+            }
         }
     },
 
@@ -181,11 +214,15 @@ export default {
 
         this.$eventBus.$on("change-view", this.changeView);
         this.$eventBus.$on("get-new-product", this.getNewProduct);
+        this.$eventBus.$on("get-replacement", this.getReplacement);
+        this.$eventBus.$on("replace-device", this.replaceDevice);
     },
 
     beforeUnmount() {
         this.$eventBus.$off("change-view", this.changeView);
         this.$eventBus.$off("get-new-product", this.getNewProduct);
+        this.$eventBus.$off("get-replacement", this.getReplacement);
+        this.$eventBus.$off("replace-device", this.replaceDevice);
     }
 };
 </script>

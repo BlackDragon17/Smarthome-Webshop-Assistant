@@ -1,5 +1,10 @@
 <template>
     <div class="main">
+        <ConfirmCancelActionModal ref="confirmCancelActionModal"
+                                  :current-view="$options.name"
+                                  :replace-product="replaceProduct"
+                                  @cancel-action="confirmCancel"/>
+
         <DatabaseSidebar :filter-values="filterValues"
                          :default-filter-values="defaultFilterValues"
                          :filter-rules="filterRules"
@@ -9,19 +14,22 @@
 
         <DatabaseProductView :filtered-products="filteredProducts"
                              :compat-filters-enabled="compatFiltersEnabled"
-                             :current-category="filterValues.category"/>
+                             :current-category="filterValues.category"
+                             :replace-id="replaceId"/>
     </div>
 </template>
 
 <script>
+import FilterRules from "../../assets/javascript/filter-rules";
+import ConfirmCancelActionModal from "@/components/ConfirmCancelActionModal.vue";
 import DatabaseSidebar from "./DatabaseSidebar.vue";
 import DatabaseProductView from "./DatabaseProductView.vue";
-import FilterRules from "../../assets/javascript/filter-rules";
 
 export default {
     name: "ProductDatabase",
 
     components: {
+        ConfirmCancelActionModal,
         DatabaseSidebar,
         DatabaseProductView
     },
@@ -45,15 +53,14 @@ export default {
             filterValues: null,
             filterRules: null,
 
-            productsMap: null,
-
-            replaceId: null
+            productsMap: null
         };
     },
 
     props: {
         currentSetup: Object,
-        setupProducts: Array
+        setupProducts: Array,
+        replaceId: String
     },
 
     emits: ["change-view"],
@@ -104,6 +111,10 @@ export default {
                 allSenses: this.allSenses,
                 allBrands: this.allBrands
             };
+        },
+
+        replaceProduct() {
+            return this.replaceId != null ? this.allProducts[this.replaceId] : null;
         },
 
         /**
@@ -440,6 +451,10 @@ export default {
                     }
                 }
             }
+
+            if (this.replaceId) {
+                this.setFilterRulesForReplacement();
+            }
         },
 
         /**
@@ -475,6 +490,45 @@ export default {
                 }).forEach(product => productsMap.set(product.productId, product));
         },
 
+        // TODO: Finish this and also everything else (modal, cancel, replace) etc.
+        setFilterRulesForReplacement() {
+            const product = this.allProducts[this.replaceId];
+
+            if (Array.isArray(product.category)) {
+                this.filterRules.category.allowed = [...product.category];
+            } else {
+                this.filterRules.category.allowed = [product.category];
+                this.filterRules.category.required = [product.category];
+            }
+
+            if (product.type && product.category !== "hub") {
+                this.filterRules.type.allowed = [product.type];
+                this.filterRules.type.required = [product.type];
+            }
+
+            if (product.formFactor) {
+                this.filterRules.formFactor.allowed = [product.formFactor];
+                this.filterRules.formFactor.required = [product.formFactor];
+            }
+            if (product.socket) {
+                this.filterRules.formFactor.allowed = [product.socket];
+                this.filterRules.formFactor.required = [product.socket];
+            }
+
+            if (product.senses) {
+                this.filterRules.senses.selected = [...product.senses];
+            }
+
+            if (product.category === "light") {
+                this.filterRules.features.selected = ["varLumen", "varKelvin", "multicolor"].filter(feature => product[feature]);
+            }
+
+            if (Array.isArray(this.filterRules.networks.allowed)) {
+                const filteredNetworks = this.filterRules.networks.allowed.filter(network => Object.keys(product.network).includes(network));
+                this.filterRules.networks.allowed = filteredNetworks.length > 0 ? filteredNetworks : this.filterRules.networks.allowed;
+            }
+        },
+
         /**
          * Computes pre-selections of the sidebar filter checkboxes (modelled via filterValues)
          * based on the FilterRules created by {@link createCompatFilters}.
@@ -486,6 +540,8 @@ export default {
             // Category (radio)
             if (this.filterRules.category.required.length > 0) {
                 baseFilters.category = this.filterRules.category.required[0];
+            } else if (Array.isArray(this.filterRules.category.allowed) && this.filterRules.category.allowed.length > 0) {
+                baseFilters.category = this.filterRules.category.allowed[0];
             }
 
             // Type (radio)
@@ -499,11 +555,11 @@ export default {
             }
 
             // Features (checkbox, all-of)
-            baseFilters.features = this.filterRules.features.required;
+            baseFilters.features = this.filterRules.features.required.length > 0 ? this.filterRules.features.required : this.filterRules.features.selected;
 
             // Senses (checkbox, all-of)
             baseFilters.anySense = this.filterRules.senses.required.length <= 0;
-            baseFilters.senses = this.filterRules.senses.required;
+            baseFilters.senses = this.filterRules.senses.required.length > 0 ? this.filterRules.senses.required : this.filterRules.senses.selected;
 
             // Networks (checkbox, category !== hub ? any-of : all-of)
             if (baseFilters.category !== "hub" && Array.isArray(this.filterRules.networks.allowed) && this.filterRules.networks.allowed.length > 0) {
@@ -531,6 +587,10 @@ export default {
             }
         },
 
+        // ConfirmCancelActionModal callback
+        confirmCancel() {
+            this.$eventBus.$emit("replace-device", null);
+        },
 
         // Header action handling
         headerAction(target) {
@@ -538,8 +598,9 @@ export default {
                 return;
             }
 
-            // TODO: do current action checking here
-            if (true) {
+            if (this.replaceId) {
+                this.$refs.confirmCancelActionModal.openModal(target);
+            } else {
                 this.$emit("change-view", target);
             }
         }
@@ -568,10 +629,12 @@ export default {
         this.$root.activeViewRoot = this.$el;
 
         this.$eventBus.$on("header-click", this.headerAction);
+        // this.$eventBus.$on("replace-product", this.);
     },
 
     beforeUnmount() {
         this.$eventBus.$off("header-click", this.headerAction);
+        // this.$eventBus.$off("replace-product", this.);
     }
 };
 </script>

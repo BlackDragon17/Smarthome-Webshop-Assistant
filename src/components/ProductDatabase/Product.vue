@@ -41,8 +41,12 @@
             </div>
         </div>
 
-        <button class="show-more-button btn btn-outline-secondary" @click="showMore = !showMore">Show {{ showMore ? "less" : "more" }}</button>
-        <button class="add-product-button btn btn-success relative-centering" @click="getProduct">Add to home setup</button>
+        <button class="show-more-button btn btn-outline-secondary" @click="showMore = !showMore">
+            Show {{ showMore ? "less" : "more" }}
+        </button>
+        <button class="add-product-button btn btn-success relative-centering" @click="getNewProduct">
+            {{ replaceId ? "Choose product" : "Add to home setup" }}
+        </button>
         <button class="spacer btn btn-success" disabled>Spacer</button>
     </article>
 </template>
@@ -62,7 +66,8 @@ export default {
     props: {
         product: Object,
         compatFiltersEnabled: Boolean,
-        currentCategory: String
+        currentCategory: String,
+        replaceId: String
     },
 
     emits: ["get-new-product"],
@@ -124,8 +129,12 @@ export default {
             }
         },
 
-        getProduct() {
-            this.$eventBus.$emit("get-new-product", this.product);
+        getNewProduct() {
+            if (this.replaceId) {
+                this.$eventBus.$emit("replace-device", this.product);
+            } else {
+                this.$eventBus.$emit("get-new-product", this.product);
+            }
         }
     }
 };

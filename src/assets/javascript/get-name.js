@@ -28,6 +28,20 @@ class GetName {
                 return capitalize(value) + "s";
             case "switch":
                 return "Buttons & Switches";
+            default:
+                return "Products";
+        }
+    }
+    categoryHeadingSingular(value) {
+        switch (value) {
+            case "hub":
+            case "light":
+            case "sensor":
+                return capitalize(value);
+            case "switch":
+                return "Button / Switch";
+            default:
+                return "Product";
         }
     }
 

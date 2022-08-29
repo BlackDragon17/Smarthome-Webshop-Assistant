@@ -3,7 +3,7 @@
         <ConfirmCancelActionModal ref="confirmCancelActionModal"
                                   :current-view="$options.name"
                                   :view-state="viewState"
-                                  @cancel-action="emitEscRoomViewAction"/>
+                                  @cancel-action="confirmCancel"/>
 
         <DeviceInfoModal ref="deviceInfoModal"
                          :current-devices="currentSetup.devices"
@@ -93,6 +93,12 @@ export default {
             if (event.keyCode === 68) {
                 this.$eventBus.$emit("print-debug");
             }
+        },
+
+        // ConfirmCancelActionModal callback
+        confirmCancel(switchTarget) {
+            this.emitEscRoomViewAction();
+            this.$emit("change-view", switchTarget);
         },
 
         // Header action handling
