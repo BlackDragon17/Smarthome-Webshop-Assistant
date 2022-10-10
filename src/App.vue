@@ -32,14 +32,14 @@ import allProducts from "/resources/products/packed/PackedJSONs.json";
 import exampleSetup from "/src/assets/default_setups/example1.json";
 
 // TODO:
-// - add product sorting to DatabaseProductView
 // - add bars-like compatScore display to Product
 // - add loading setup JSONs via URL parameters
 // - add control-selection UI to HomeSetup
 // - add action completion toast for at least device replacement
-// - translate App
 // - add more products
 // - add purchase buttons to products
+// - translate App
+// - add user-customizable product sorting to DatabaseProductView
 
 export default {
     name: "App",
