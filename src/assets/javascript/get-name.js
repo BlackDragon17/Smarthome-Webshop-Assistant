@@ -32,6 +32,7 @@ class GetName {
                 return "Products";
         }
     }
+
     categoryHeadingSingular(value) {
         switch (value) {
             case "hub":

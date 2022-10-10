@@ -1,6 +1,8 @@
 {
   "controls": {
-    "assistants": ["homeKit"]
+    "assistants": [
+      "homeKit"
+    ]
   },
   "rooms": [
     {

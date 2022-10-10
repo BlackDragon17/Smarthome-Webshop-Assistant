@@ -27,9 +27,9 @@
                                        checked>
                                 <label class="devices-button radio-btn btn btn-outline-primary" for="devices-radio-1">
                                     <span class="radio-label-header">Remove devices</span>
-                                    <span class="radio-label-body">Remove the {{
-                                            removingRoom.name
-                                        }} together with its devices from your home setup</span>
+                                    <span class="radio-label-body">
+                                        Remove the {{ removingRoom.name }} together with its devices from your home setup
+                                    </span>
                                 </label>
 
                                 <input type="radio"
@@ -41,7 +41,9 @@
                                        autocomplete="off">
                                 <label class="devices-button radio-btn btn btn-outline-primary" for="devices-radio-2">
                                     <span class="radio-label-header">Keep devices</span>
-                                    <span class="radio-label-body">Remove the {{ removingRoom.name }} but keep its devices and store them in the Devices Tray</span>
+                                    <span class="radio-label-body">
+                                        Remove the {{ removingRoom.name }} but keep its devices and store them in the Devices Tray
+                                    </span>
                                 </label>
                             </div>
                         </div>

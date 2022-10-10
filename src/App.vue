@@ -29,12 +29,14 @@ import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
 //     device: a device within a user's home setup.
 //             In a setup there can be multiple devices which are the same product (same productId but different localId).
 import allProducts from "/resources/products/packed/PackedJSONs.json";
+
 import example1 from "/src/assets/default_setups/example1.json";
 import dfki from "/src/assets/default_setups/dfki.json";
-
+import empty from "/src/assets/default_setups/empty.json";
 const defaultSetups = {
     example1,
-    dfki
+    dfki,
+    empty
 };
 
 // TODO:
