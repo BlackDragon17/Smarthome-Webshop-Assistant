@@ -6,7 +6,9 @@
   "category": "light",
   "type": "bulb",
   "network": {
-    "zigbee": []
+    "zigbee": [
+      "gen3"
+    ]
   },
   "control": [],
   "powerSource": [

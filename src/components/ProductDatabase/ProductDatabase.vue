@@ -134,7 +134,7 @@ export default {
                     filteredProducts.push(this.allProducts[productId]);
                 }
             }
-            console.log("products before:", filteredProducts.length);
+            console.log("products before:", filteredProducts);
 
             // Category
             if (this.filterValues.category !== this.defaultFilterValues.category) {
@@ -174,7 +174,7 @@ export default {
             if (!this.filterValues.anyBrand) {
                 filteredProducts = filteredProducts.filter(product => this.filterValues.brands.includes(product.brand));
             }
-            console.log("products after:", filteredProducts.length);
+            console.log("products after:", filteredProducts);
 
             return filteredProducts;
         },
@@ -302,7 +302,7 @@ export default {
                         // An exception is made for Philips Hue, where other vendors can implement the Friends Of Hue protocol.
                         if (setupProduct.brand === "Philips Hue") {
                             if (!setupProduct.network.bluetooth) continue;
-                            switches.filter(swtch => (swtch.brand === setupProduct.brand || swtch.certs.includes("friendsOfHue")) && swtch.network.bluetooth)
+                            switches.filter(swtch => (swtch.brand === setupProduct.brand || swtch.certs?.includes("friendsOfHue")) && swtch.network.bluetooth)
                                 .map(swtch => {
                                     swtch.compatScore = 5;
                                     swtch.compatMsg = `Can directly control your Philips Hue devices.`;
