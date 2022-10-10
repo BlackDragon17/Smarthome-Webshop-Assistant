@@ -218,7 +218,7 @@ export default {
                 this.deviceQueue.pop(),
                 this.room.name,
                 location
-            )
+            );
             this.currentDevices.push(device);
             this.$emit("added-device");
         },

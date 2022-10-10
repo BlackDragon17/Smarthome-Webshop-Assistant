@@ -31,16 +31,15 @@ import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
 import allProducts from "/resources/products/packed/PackedJSONs.json";
 import exampleSetup from "/src/assets/default_setups/example1.json";
 
-// TODO: Notes:
-// - when initially loading a setup, App.vue should generate appropriate filters
-//     - these would be the basic always-on filters regarding the whole setup
-// - when selecting a device to replace, an event with the productId shall be sent.
-//   App.vue will create the appropriate filters and switch to the database
-// - the filters should additionally contain the ID in a "replacementFor" field, which's existence will alter UI behavior
-//     - if the user tries to switch back to home setup before a replacement is chosen, a cancel-confirmation modal shall pop up
-// - when a device requires a hub add-on (regardless of mode), a modal with that info shall pop up
-//     - entering hub selection mode shall be implemented in the same way as device replacement, including UI behavior
-// - we will need to update HomeRoomView.vue et al to add a device and its hub as if it were one from the queue
+// TODO:
+// - add product sorting to DatabaseProductView
+// - add bars-like compatScore display to Product
+// - add loading setup JSONs via URL parameters
+// - add control-selection UI to HomeSetup
+// - add action completion toast for at least device replacement
+// - translate App
+// - add more products
+// - add purchase buttons to products
 
 export default {
     name: "App",
@@ -167,6 +166,9 @@ export default {
 
         // Inter-view action handlers
 
+        /**
+         * Called by ProductDatabase, adds the given product to the HomeSetup.
+         */
         async getNewProduct(product) {
             this.deviceQueue = [product];
             this.changeView("HomeSetup");
@@ -174,6 +176,9 @@ export default {
             this.$eventBus.$emit("add-new-device");
         },
 
+        /**
+         * Called by HomeSetup, begins the process of finding a replacement for the given device in the ProductDatabase.
+         */
         async getReplacement(device) {
             const deviceIndex = this.currentSetup.devices.findIndex(setupDevice => setupDevice.localId === device.localId);
             this.currentSetup.devices.splice(deviceIndex, 1);
@@ -185,6 +190,9 @@ export default {
             this.$eventBus.$emit("replace-product");
         },
 
+        /**
+         * Called by ProductDatabase, adds the chosen product as a replacement for the previous device to the HomeSetup.
+         */
         async replaceDevice(product) {
             if (!product) {
                 this.currentSetup.devices.push(this.deviceQueue.pop());

@@ -35,11 +35,12 @@ export default {
     },
 
     props: {
-        // TODO: Product sorting! (CompatScore then network count then alphabetic)
+        // TODO: Product sorting! ([replacement device then] compatScore then network count then alphabetic)
         filteredProducts: Array,
         compatFiltersEnabled: Boolean,
         currentCategory: String,
-        replaceId: String
+        replaceId: String,
+        replaceProduct: Object
     },
 
     inject: ["allProducts"],
@@ -61,6 +62,13 @@ export default {
             }
 
             return "compatible with your home setup";
+        },
+
+        sortedProducts() {
+            const sorted = [];
+            if (this.replaceId && this.replaceProduct && this.filteredProducts.find(product => product.productId === this.replaceProduct.productId)) {
+
+            }
         },
 
         productsFlexBorder() {

@@ -490,7 +490,6 @@ export default {
                 }).forEach(product => productsMap.set(product.productId, product));
         },
 
-        // TODO: Finish this and also everything else (modal, cancel, replace) etc.
         setFilterRulesForReplacement() {
             const product = this.allProducts[this.replaceId];
 

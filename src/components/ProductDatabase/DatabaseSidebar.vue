@@ -1,5 +1,7 @@
 <template>
     <aside class="sidebar">
+        <button v-if="replaceId" class="cancel-replace-button btn btn-danger" @click="cancelReplacement">Cancel replacement</button>
+
         <h3 class="sidebar-heading">Filter products</h3>
         <div class="compatibility-switch form-check form-switch">
             <input type="checkbox"
@@ -13,6 +15,7 @@
             <label for="compatibility-switch" class="filter-label form-check-label">Compatibility filters</label>
         </div>
         <hr>
+
         <div class="filter-list">
             <!-- Category -->
             <div class="filter-group" @change="categoryChanged">
@@ -35,7 +38,9 @@
                            :value="category"
                            v-model="filterValues.category"
                            :disabled="isOptionDisabled('category', category)">
-                    <label :for="`filter-category-radio-${index}`" class="filter-label form-check-label">{{ $getName.categoryHeading(category) }}</label>
+                    <label :for="`filter-category-radio-${index}`" class="filter-label form-check-label">
+                        {{ $getName.categoryHeading(category) }}
+                    </label>
                 </div>
                 <hr>
             </div>
@@ -354,7 +359,7 @@ export default {
         replaceId: String
     },
 
-    emits: ["compat-filters-toggled"],
+    emits: ["compat-filters-toggled", "replace-device"],
 
     computed: {
         activeFilterRules() {
@@ -367,6 +372,11 @@ export default {
     },
 
     methods: {
+        // Cancel button callback
+        cancelReplacement() {
+            this.$eventBus.$emit("replace-device", null);
+        },
+
         // Checkbox callbacks
 
         // Reset dependant filterValues on selection change
@@ -441,6 +451,10 @@ export default {
 
 
 /* Sidebar content styles */
+
+.cancel-replace-button {
+    padding: 0.5rem;
+}
 
 .sidebar-heading {
     font-size: 1.4rem;
