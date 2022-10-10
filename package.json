@@ -10,7 +10,8 @@
   "dependencies": {
     "@floating-ui/dom": "^1.0.2",
     "bootstrap": "^5.2.2",
-    "vue": "latest"
+    "vue": "latest",
+    "vue-select": "^4.0.0-beta.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.2",

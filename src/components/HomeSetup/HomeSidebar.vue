@@ -1,6 +1,8 @@
 <template>
+    <ModifyControlsModal ref="modifyControlsModal"/>
     <aside class="sidebar">
         <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
+        <button class="modify-controls-button btn btn-secondary" @click="openControlsModal">Modify your controls</button>
 
         <div class="sort-group">
             <span class="sort-label">Sort devices by</span>
@@ -55,8 +57,14 @@
 </template>
 
 <script>
+import ModifyControlsModal from "./modals/ModifyControlsModal.vue";
+
 export default {
     name: "HomeSidebar",
+
+    components: {
+        ModifyControlsModal
+    },
 
     data() {
         return {
@@ -67,7 +75,8 @@ export default {
     props: {
         currentSetup: Object,
         devicesByCategory: Object,
-        devicesByRoom: Object
+        devicesByRoom: Object,
+        viewState: String
     },
 
     emits: ["open-device-info", "header-click"],
@@ -83,6 +92,12 @@ export default {
     methods: {
         addNewDevice() {
             this.$eventBus.$emit("header-click", "ProductDatabase");
+        },
+
+        openControlsModal() {
+            if (this.viewState === "normal") {
+                this.$refs.modifyControlsModal.openModal();
+            }
         }
     }
 };
@@ -121,6 +136,11 @@ export default {
     --bs-btn-active-bg: var(--green-devices-main-darker2);
 }
 
+.modify-controls-button {
+    margin-top: 0.2rem;
+    padding: 0.5rem;
+}
+
 .sort-group {
     margin-bottom: 0;
     display: flex;
@@ -137,6 +157,7 @@ export default {
 }
 
 .sort-button {
+    padding-top: 5px;
     --bs-btn-color: var(--bs-gray);
     --bs-btn-hover-color: var(--bs-gray);
     --bs-btn-hover-bg: var(--gray-button-hover);

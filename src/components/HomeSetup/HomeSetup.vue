@@ -12,7 +12,8 @@
 
         <HomeSidebar :current-setup="currentSetup"
                      :devices-by-category="devicesByCategory"
-                     :devices-by-room="devicesByRoom"/>
+                     :devices-by-room="devicesByRoom"
+                     :view-state="viewState"/>
 
         <HomeRoomView :current-setup="currentSetup"
                       :view-state="viewState"
