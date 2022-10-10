@@ -29,11 +29,16 @@ import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
 //     device: a device within a user's home setup.
 //             In a setup there can be multiple devices which are the same product (same productId but different localId).
 import allProducts from "/resources/products/packed/PackedJSONs.json";
-import exampleSetup from "/src/assets/default_setups/example1.json";
+import example1 from "/src/assets/default_setups/example1.json";
+import dfki from "/src/assets/default_setups/dfki.json";
+
+const defaultSetups = {
+    example1,
+    dfki
+};
 
 // TODO:
 // - add bars-like compatScore display to Product
-// - add loading setup JSONs via URL parameters
 // - add control-selection UI to HomeSetup
 // - add action completion toast for at least device replacement
 // - add more products
@@ -131,7 +136,26 @@ export default {
     },
 
     methods: {
-        // Check integrity of given setup and load it
+        /**
+         * If URL contains a "setup" search param, tries to load that setup.
+         * Otherwise, loads "example1.json" default setup.
+         * This method only initiates the loading process defined in {@link checkAndLoadSetup}.
+         */
+        parseUrlQuery() {
+            const searchParams = new URLSearchParams(window.location.search);
+            const setupParam = searchParams.get("setup");
+            if (setupParam && Object.keys(defaultSetups).includes(setupParam)) {
+                this.checkAndLoadSetup(defaultSetups[setupParam]);
+            } else {
+                this.checkAndLoadSetup(example1);
+            }
+
+        },
+
+        /**
+         * Checks integrity of given setup and loads it.
+         * @param setup {Object} setup to load.
+         */
         checkAndLoadSetup(setup) {
             const controls = {};
             if (setup.controls.brandApps?.length > 0) {
@@ -211,7 +235,7 @@ export default {
     },
 
     beforeMount() {
-        this.checkAndLoadSetup(exampleSetup);
+        this.parseUrlQuery();
     },
 
     mounted() {
