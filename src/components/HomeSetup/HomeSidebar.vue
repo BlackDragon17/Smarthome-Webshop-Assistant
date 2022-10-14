@@ -1,5 +1,5 @@
 <template>
-    <ModifyControlsModal ref="modifyControlsModal"/>
+    <ModifyControlsModal ref="modifyControlsModal" :setup-controls="currentSetup.controls"/>
     <aside class="sidebar">
         <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
         <button class="modify-controls-button btn btn-secondary" @click="openControlsModal">Modify your controls</button>
@@ -112,8 +112,10 @@ export default {
     padding: 0.5rem;
     background-color: #F8F8F8;
 
+    flex-shrink: 0.2;
     position: relative;
     z-index: 3;
+
     display: flex;
     flex-direction: column;
 }

@@ -13,12 +13,14 @@
                          :current-setup="currentSetup"
                          :setup-products="setupProducts"
                          :replace-id="replaceId"
+                         :all-brands="allBrands"
                          @change-view="changeView"/>
     </main>
 </template>
 
 <script>
 import { nextTick } from "vue";
+import GetName from "@/assets/javascript/get-name";
 import Device from "@/assets/javascript/device";
 import NavHeader from "./components/NavHeader.vue";
 import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
@@ -33,6 +35,7 @@ import allProducts from "/resources/products/packed/PackedJSONs.json";
 import example1 from "/src/assets/default_setups/example1.json";
 import dfki from "/src/assets/default_setups/dfki.json";
 import empty from "/src/assets/default_setups/empty.json";
+
 const defaultSetups = {
     example1,
     dfki,
@@ -41,7 +44,6 @@ const defaultSetups = {
 
 // TODO:
 // - add bars-like compatScore display to Product
-// - add control-selection UI to HomeSetup
 // - add action completion toast for at least device replacement
 // - add more products
 // - add purchase buttons to products
@@ -71,7 +73,8 @@ export default {
 
     provide() {
         return {
-            allProducts: this.allProducts
+            allProducts: this.allProducts,
+            allBrands: this.allBrands
         };
     },
 
@@ -110,7 +113,7 @@ export default {
                 }
             }
             return products;
-        }
+        },
 
         // productsByCategory() {
         //     const byCategory = {};
@@ -135,6 +138,16 @@ export default {
         //     }
         //     return byRoom;
         // }
+
+        allBrands() {
+            const brands = [];
+            for (const productId in this.allProducts) {
+                if (!brands.includes(this.allProducts[productId].brand)) {
+                    brands.push(this.allProducts[productId].brand);
+                }
+            }
+            return brands.sort();
+        }
     },
 
     methods: {
@@ -160,11 +173,13 @@ export default {
          */
         checkAndLoadSetup(setup) {
             const controls = {};
-            if (setup.controls.brandApps?.length > 0) {
-                controls.brandApps = setup.controls.brandApps;
+            controls.assistants = [];
+            controls.brandApps = [];
+            if (Array.isArray(setup.controls.assistants) && setup.controls.assistants.length > 0) {
+                controls.assistants = setup.controls.assistants.filter(assistant => Object.keys(GetName.allControls).includes(assistant));
             }
-            if (setup.controls.assistants?.length > 0) {
-                controls.assistants = setup.controls.assistants;
+            if (Array.isArray(setup.controls.brandApps) && setup.controls.brandApps.length > 0) {
+                controls.brandApps = setup.controls.brandApps.filter(brandApp => brandApp && typeof brandApp === "string");
             }
 
             const rooms = [];

@@ -1,6 +1,6 @@
 import { capitalize } from "vue";
 
-class GetName {
+export default class GetName {
     boolean2YesNo(value) {
         return value ? "Yes" : "No";
     }
@@ -90,21 +90,19 @@ class GetName {
         }
     }
 
+    static allControls = {
+        alexa: "Alexa",
+        googleAssistant: "Google Assistant",
+        homeKit: "Apple HomeKit",
+        smartThings: "Samsung SmartThings",
+        brandApp: "Vendor app"
+    };
+
     control(value) {
-        switch (value) {
-            case "alexa":
-                return "Alexa";
-            case "googleAssistant":
-                return "Google Assistant";
-            case "homeKit":
-                return "Apple HomeKit";
-            case "smartThings":
-                return "Samsung SmartThings";
-            case "brandApp":
-                return "Vendor app";
-            default:
-                return capitalize(value);
+        if (!GetName.allControls[value]) {
+            return capitalize(value);
         }
+        return GetName.allControls[value];
     }
 
     powerSource(value) {
@@ -137,5 +135,3 @@ class GetName {
         }
     }
 }
-
-export default new GetName();

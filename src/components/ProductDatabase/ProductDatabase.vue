@@ -60,7 +60,8 @@ export default {
     props: {
         currentSetup: Object,
         setupProducts: Array,
-        replaceId: String
+        replaceId: String,
+        allBrands: Array
     },
 
     emits: ["change-view"],
@@ -95,15 +96,6 @@ export default {
                 }
             }
             return senses.sort();
-        },
-        allBrands() {
-            const brands = [];
-            for (const productId in this.allProducts) {
-                if (!brands.includes(this.allProducts[productId].brand)) {
-                    brands.push(this.allProducts[productId].brand);
-                }
-            }
-            return brands.sort();
         },
         optionsAllValues() {
             return {
@@ -195,8 +187,8 @@ export default {
 
             // Find setup hubs which support user's preferred control method.
             const setupHubs = this.setupProducts.filter(product => product.category === "hub" && (
-                (this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
-                    || (this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
+                (this.currentSetup.controls.assistants.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
+                    || (this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
             ));
 
             // Get all non-hub products.
@@ -231,8 +223,8 @@ export default {
                     }
 
                     // For lights, the Hue Bridge will connect to any Zigbee LL/Gen3 device. For other device types same restrictions as for HomeKit apply.
-                    if (["alexa", "googleAssistant", "cortana"].some(assistant => this.currentSetup.controls.assistants?.includes(assistant))
-                        || this.currentSetup.controls.brandApps?.includes(hub.brand)) {
+                    if (["alexa", "googleAssistant", "cortana"].some(assistant => this.currentSetup.controls.assistants.includes(assistant))
+                        || this.currentSetup.controls.brandApps.includes(hub.brand)) {
                         relevantProducts.filter(product => (product.category === "light" && product.network.zigbee?.find(type => type === "gen3" || type === "ll"))
                             || product.brand === hub.brand || product.certs?.includes("friendsOfHue")).map(product => {
                             product.compatScore = 5;
@@ -341,8 +333,8 @@ export default {
         findCompatibleHubs(setupProducts, productsMap) {
             // Get all hub products which support the user's preferred control method.
             let hubs = Object.values(this.allProducts).filter(product => product.category === "hub" && (
-                (this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
-                    || (this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp")
+                (this.currentSetup.controls.assistants.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
+                    || (this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp")
                         && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
             ));
 
@@ -371,8 +363,8 @@ export default {
                 const hueBridgeHubs = hubs.filter(hub => hub.brand === "Philips Hue" && hub.category === "hub" && hub.network.zigbee);
                 // If we only use HomeKit, we can only use the Hue Bridge if we only have Philips Hue / Friends-of-Hue devices at home,
                 // since those are the only ones which the bridge exposes to HomeKit.
-                if (this.currentSetup.controls.assistants?.includes("homeKit") && this.currentSetup.controls.assistants.length === 1
-                    && !this.currentSetup.controls.brandApps?.includes("Philips Hue")) {
+                if (this.currentSetup.controls.assistants.includes("homeKit") && this.currentSetup.controls.assistants.length === 1
+                    && !this.currentSetup.controls.brandApps.includes("Philips Hue")) {
                     if (zigbeeProducts.length === zigbeeHueProducts.length) {
                         hueBridgeHubs.map(hub => {
                             hub.compatScore = hubDependants.length === zigbeeProducts.length ? 5 : 4;
@@ -423,7 +415,7 @@ export default {
             }
 
             // HomeKit hubs logic
-            if (this.currentSetup.controls.assistants?.includes("homeKit")) {
+            if (this.currentSetup.controls.assistants.includes("homeKit")) {
                 const homeKitProducts = setupProducts.filter(product => product.control.includes("homeKit"));
 
                 // For HomeKit setups, direct HomeKit devices will have to connect to a HomeKit endpoint one way or another.
@@ -466,7 +458,7 @@ export default {
         filterLanAndBluetoothProducts(products, noHubs, productsMap) {
             const bluetoothProducts = products.filter(product => product.network.bluetooth);
             // Vendor app-based control via Bluetooth.
-            bluetoothProducts.filter(product => this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
+            bluetoothProducts.filter(product => this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
                 .map(product => {
                     product.compatScore = noHubs ? 4 : 3;
                     product.compatMsg = `Can connect to the ${product.brand} app via Bluetooth. Note: due to Bluetooth, you must be in the same physical space as this device to control it.`;
@@ -475,14 +467,14 @@ export default {
 
             const lanProducts = products.filter(product => product.network.lan);
             // Assistant-based control via Wi-Fi.
-            lanProducts.filter(product => this.currentSetup.controls.assistants?.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant)))
+            lanProducts.filter(product => this.currentSetup.controls.assistants.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant)))
                 .map(product => {
                     product.compatScore = noHubs ? 5 : 4;
                     product.compatMsg = `Can connect to ${this.$getName.control(this.currentSetup.controls.assistants.find(assistant => product.control.includes(assistant)))} via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
                     return product;
                 }).forEach(product => productsMap.set(product.productId, product));
             // Vendor app-based control via Wi-Fi.
-            lanProducts.filter(product => this.currentSetup.controls.brandApps?.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
+            lanProducts.filter(product => this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
                 .map(product => {
                     product.compatScore = noHubs ? 5 : 4;
                     product.compatMsg = `Can connect to the ${product.brand} app via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
