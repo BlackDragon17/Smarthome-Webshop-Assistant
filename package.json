@@ -8,9 +8,9 @@
     "deploy": "node resources/scripts/gh-pages-deploy.js"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.0.2",
+    "@floating-ui/dom": "^1.0.3",
     "bootstrap": "^5.2.2",
-    "vue": "latest",
+    "vue": "^3.2.41",
     "vue-select": "^4.0.0-beta.5"
   },
   "devDependencies": {
