@@ -155,14 +155,15 @@ export default {
                 setupParam = "example1";
             }
             const setup = await import(`./assets/default_setups/${setupParam}.json`);
-            this.checkAndLoadSetup(setup);
+            this.checkAndLoadSetup(setup, setupParam);
         },
 
         /**
          * Checks integrity of given setup and loads it.
-         * @param setup {Object} setup to load.
+         * @param {Object} setup setup to load.
+         * @param {string} name name to attach to loaded setup.
          */
-        checkAndLoadSetup(setup) {
+        checkAndLoadSetup(setup, name) {
             const controls = {};
             controls.assistants = [];
             controls.brandApps = [];
@@ -188,7 +189,11 @@ export default {
                 }
             }
 
-            this.currentSetup = {controls, rooms, devices};
+            this.currentSetup = {controls, rooms, devices, name};
+            if (["study-task1", "study-task2", "study-task4"].some(studySetup => name === studySetup)) {
+                this.currentSetup.studyStatic = true;
+            }
+
             this.activeView = "HomeSetup";
         },
 

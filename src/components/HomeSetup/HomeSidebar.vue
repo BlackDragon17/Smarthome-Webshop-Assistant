@@ -1,5 +1,5 @@
 <template>
-    <ModifyControlsModal ref="modifyControlsModal" :setup-controls="currentSetup.controls"/>
+    <ModifyControlsModal ref="modifyControlsModal" :setup-controls="currentSetup.controls" :study-static-setup="currentSetup.studyStatic"/>
     <aside class="sidebar">
         <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
         <button class="modify-controls-button btn btn-secondary" @click="openControlsModal">Modify your controls</button>

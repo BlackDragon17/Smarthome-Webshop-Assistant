@@ -7,6 +7,7 @@
 
         <DeviceInfoModal ref="deviceInfoModal"
                          :current-devices="currentSetup.devices"
+                         :study-static-setup="currentSetup.studyStatic"
                          :device-queue="deviceQueue"
                          @device-removed="emitEscRoomViewAction"/>
 
@@ -104,7 +105,7 @@ export default {
 
         // Header action handling
         headerAction(target) {
-            if (target === this.$options.name) {
+            if (target === this.$options.name || this.currentSetup.name.includes("study-task1")) {
                 return;
             }
 

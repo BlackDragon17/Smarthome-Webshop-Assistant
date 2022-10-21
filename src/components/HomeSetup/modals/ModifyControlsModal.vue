@@ -69,7 +69,8 @@ export default {
     },
 
     props: {
-        setupControls: Object
+        setupControls: Object,
+        studyStaticSetup: Boolean
     },
 
     inject: ["allBrands"],
@@ -120,6 +121,10 @@ export default {
         },
 
         saveSelections() {
+            if (this.studyStaticSetup) {
+                return;
+            }
+
             if (this.selectedAssistants.length <= 0 && this.selectedBrandApps <= 0) {
                 this.showError = true;
                 return;

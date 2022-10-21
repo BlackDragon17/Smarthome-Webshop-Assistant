@@ -30,6 +30,8 @@
 <script>
 import Modal from "bootstrap/js/dist/modal";
 
+const deviceToReplace = "abf33fec-1753-41f3-bec6-12a7de40a918";
+
 export default {
     name: "DeviceInfoModal",
 
@@ -44,6 +46,7 @@ export default {
 
     props: {
         currentDevices: Array,
+        studyStaticSetup: Boolean,
         deviceQueue: Array
     },
 
@@ -74,11 +77,19 @@ export default {
         // Button callbacks
 
         getReplacement() {
+            if (this.studyStaticSetup && this.device.localId !== deviceToReplace) {
+                return;
+            }
+
             this.$eventBus.$emit("get-replacement", this.device);
             this.bsModal.hide();
         },
 
         moveDevice() {
+            if (this.studyStaticSetup) {
+                return;
+            }
+
             const deviceIndex = this.currentDevices.findIndex(device => device.localId === this.device.localId);
             this.currentDevices.splice(deviceIndex, 1);
             this.deviceQueue.push(this.device);
@@ -87,6 +98,10 @@ export default {
         },
 
         removeDevice() {
+            if (this.studyStaticSetup) {
+                return;
+            }
+
             const deviceIndex = this.currentDevices.findIndex(device => device.localId === this.device.localId);
             this.currentDevices.splice(deviceIndex, 1);
             this.$emit("device-removed");

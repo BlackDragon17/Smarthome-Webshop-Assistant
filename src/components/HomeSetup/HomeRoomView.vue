@@ -234,6 +234,10 @@ export default {
         },
 
         removeRoom() {
+            if (this.currentSetup.studyStatic) {
+                return;
+            }
+
             this.actionHeadingText = "Select a room to be removed:";
             this.$emit("change-state", "removing-room");
             this.checkHeaderOverflow();
