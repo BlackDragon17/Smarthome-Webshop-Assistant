@@ -24,8 +24,8 @@ import Product from "@/components/ProductDatabase/Product.vue";
  * Order of comparison: compatScore > network count > alphabetic.
  * Note that the first two comparison points are evaluated in "reverse":
  * a negative integer is returned if a is bigger than b.
- * @param a {Object} first product in comparison.
- * @param b {Object} second product in comparison.
+ * @param {Object} a first product in comparison.
+ * @param {Object} b second product in comparison.
  * @returns {number} a positive, negative, or zero integer.
  */
 function productComparator(a, b) {

@@ -327,8 +327,8 @@ export default {
         /**
          * Finds compatible hubs based on the given setup products and adds them to the productsMap.
          * Can be used both for either finding hubs generally compatible to the whole setup, or compatible to one specific device.
-         * @param setupProducts {product[]} Array of product(s) to base the filtering off of.
-         * @param productsMap {Map} A productsMap to add the results to.
+         * @param {product[]} setupProducts Array of product(s) to base the filtering off of.
+         * @param {Map} productsMap A productsMap to add the results to.
          */
         findCompatibleHubs(setupProducts, productsMap) {
             // Get all hub products which support the user's preferred control method.
@@ -451,9 +451,9 @@ export default {
 
         /**
          * Avoids code repetition in main filters method by taking care of Wi-Fi/ethernet and Bluetooth devices.
-         * @param products {Array} The base product Array to filter from.
-         * @param noHubs {boolean} Upgrades the compatScore if we have no hubs.
-         * @param productsMap {Map} The Map to add filtered products to.
+         * @param {Array} products The base product Array to filter from.
+         * @param {boolean} noHubs Upgrades the compatScore if we have no hubs.
+         * @param {Map} productsMap The Map to add filtered products to.
          */
         filterLanAndBluetoothProducts(products, noHubs, productsMap) {
             const bluetoothProducts = products.filter(product => product.network.bluetooth);
@@ -523,7 +523,7 @@ export default {
         /**
          * Computes pre-selections of the sidebar filter checkboxes (modelled via filterValues)
          * based on the FilterRules created by {@link createCompatFilters}.
-         * @param filterValues {Object} Optional filterValues instance to base the new filterValues off of.
+         * @param {Object} [filterValues] filterValues instance to base the new filterValues off of.
          */
         createFilterValues(filterValues) {
             const baseFilters = filterValues ? filterValues : {...this.defaultFilterValues};

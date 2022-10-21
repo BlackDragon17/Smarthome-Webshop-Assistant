@@ -4,10 +4,10 @@
 export default class Device {
     /**
      * Creates a new device DTO from scratch.
-     * @param room {string} The setup room in which the device is located (can also be deviceTray).
-     * @param location {number} Represents the location inside the room: 1 = top left, 9 = bottom right.
-     * @param productId {string} ID of the product associated with this device.
-     * @param localId {string|null|undefined} Unique device ID. Will be auto-generated if left null.
+     * @param {string} room The setup room in which the device is located (can also be deviceTray).
+     * @param {number} location Represents the location inside the room: 1 = top left, 9 = bottom right.
+     * @param {string} productId ID of the product associated with this device.
+     * @param {string} [localId] Unique device ID. Will be auto-generated if undefined.
      */
     constructor(room, location, productId, localId) {
         if (!room || !location || !productId) {
@@ -22,9 +22,9 @@ export default class Device {
     /**
      * Creates a new device DTO from a given device or product.
      * Will reuse the available localId if a device object is passed.
-     * @param obj {Device|Object} A device or product object.
-     * @param room {string} The setup room in which the device is located (can also be deviceTray).
-     * @param location {number} Represents the location inside the room: 1 = top left, 9 = bottom right.
+     * @param {Device|Object} obj A device or product object.
+     * @param {string} room The setup room in which the device is located (can also be deviceTray).
+     * @param {number} location Represents the location inside the room: 1 = top left, 9 = bottom right.
      */
     static createFromDTO(obj, room, location) {
         if (obj instanceof Device) {

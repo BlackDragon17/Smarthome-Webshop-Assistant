@@ -211,7 +211,7 @@ export default {
 
         /**
          * Grid button callback.
-         * @param location {number} Where to place the device at.
+         * @param {number} location Where to place the device at.
          */
         addDeviceAt(location) {
             const device = Device.createFromDTO(
