@@ -32,15 +32,7 @@ import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
 //             In a setup there can be multiple devices which are the same product (same productId but different localId).
 import allProducts from "/resources/products/packed/PackedJSONs.json";
 
-import example1 from "/src/assets/default_setups/example1.json";
-import dfki from "/src/assets/default_setups/dfki.json";
-import empty from "/src/assets/default_setups/empty.json";
-
-const defaultSetups = {
-    example1,
-    dfki,
-    empty
-};
+const defaultSetups = ["empty", "example1", "dfki", "study-task1"];
 
 // TODO:
 // - add bars-like compatScore display to Product
@@ -61,7 +53,7 @@ export default {
 
     data() {
         return {
-            activeView: "HomeSetup",
+            activeView: null,
             activeViewRoot: null,
 
             allProducts: allProducts.data,
@@ -156,15 +148,14 @@ export default {
          * Otherwise, loads "example1.json" default setup.
          * This method only initiates the loading process defined in {@link checkAndLoadSetup}.
          */
-        parseUrlQuery() {
+        async parseUrlQuery() {
             const searchParams = new URLSearchParams(window.location.search);
-            const setupParam = searchParams.get("setup");
-            if (setupParam && Object.keys(defaultSetups).includes(setupParam)) {
-                this.checkAndLoadSetup(defaultSetups[setupParam]);
-            } else {
-                this.checkAndLoadSetup(example1);
+            let setupParam = searchParams.get("setup");
+            if (!setupParam || !defaultSetups.includes(setupParam)) {
+                setupParam = "example1";
             }
-
+            const setup = await import(`./assets/default_setups/${setupParam}.json`);
+            this.checkAndLoadSetup(setup);
         },
 
         /**
@@ -198,6 +189,7 @@ export default {
             }
 
             this.currentSetup = {controls, rooms, devices};
+            this.activeView = "HomeSetup";
         },
 
         changeView(target) {
