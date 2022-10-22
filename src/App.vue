@@ -1,6 +1,8 @@
 <template>
     <NavHeader ref="header" :active-view="activeView"/>
 
+    <TaskCompleteModal ref="taskCompleteModal"/>
+
     <main ref="app">
         <HomeSetup v-if="activeView === 'HomeSetup'"
                    :current-setup="currentSetup"
@@ -25,6 +27,7 @@ import Device from "@/assets/javascript/device";
 import NavHeader from "./components/NavHeader.vue";
 import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
 import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
+import TaskCompleteModal from "@/components/TaskCompleteModal.vue";
 
 // Data naming convention:
 //     product: a unique smart home product model released by a company.
@@ -48,7 +51,8 @@ export default {
     components: {
         NavHeader,
         HomeSetup,
-        ProductDatabase
+        ProductDatabase,
+        TaskCompleteModal
     },
 
     data() {
@@ -245,6 +249,12 @@ export default {
 
                 this.changeView("HomeSetup");
             }
+        },
+
+        openTaskCompleteModal() {
+            if (this.currentSetup.studyStatic) {
+                this.$refs.taskCompleteModal.openModal();
+            }
         }
     },
 
@@ -262,6 +272,7 @@ export default {
         this.$eventBus.$on("get-new-product", this.getNewProduct);
         this.$eventBus.$on("get-replacement", this.getReplacement);
         this.$eventBus.$on("replace-device", this.replaceDevice);
+        this.$eventBus.$on("task-completed", this.openTaskCompleteModal);
     },
 
     beforeUnmount() {
@@ -269,6 +280,7 @@ export default {
         this.$eventBus.$off("get-new-product", this.getNewProduct);
         this.$eventBus.$off("get-replacement", this.getReplacement);
         this.$eventBus.$off("replace-device", this.replaceDevice);
+        this.$eventBus.$off("task-completed", this.openTaskCompleteModal);
     }
 };
 </script>
