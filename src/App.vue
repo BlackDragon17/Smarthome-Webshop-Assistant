@@ -35,8 +35,6 @@ import TaskCompleteModal from "@/components/TaskCompleteModal.vue";
 //             In a setup there can be multiple devices which are the same product (same productId but different localId).
 import allProducts from "/resources/products/packed/PackedJSONs.json";
 
-const defaultSetups = ["empty", "example1", "dfki", "study-task1"];
-
 // TODO:
 // - add bars-like compatScore display to Product
 // - add action completion toast for at least device replacement
@@ -154,11 +152,14 @@ export default {
          */
         async parseUrlQuery() {
             const searchParams = new URLSearchParams(window.location.search);
-            let setupParam = searchParams.get("setup");
-            if (!setupParam || !defaultSetups.includes(setupParam)) {
+            let setupParam = searchParams.get("setup") || "example1";
+            let setup = null;
+            try {
+                setup = await import(`./assets/default_setups/${setupParam}.json`);
+            } catch (e) {
                 setupParam = "example1";
+                setup = await import(`./assets/default_setups/${setupParam}.json`);
             }
-            const setup = await import(`./assets/default_setups/${setupParam}.json`);
             this.checkAndLoadSetup(setup, setupParam);
         },
 
@@ -194,8 +195,13 @@ export default {
             }
 
             this.currentSetup = {controls, rooms, devices, name};
-            if (["study-task1", "study-task2", "study-task4"].some(studySetup => name === studySetup)) {
-                this.currentSetup.studyStatic = true;
+
+            if (name.includes("study-task")) {
+                this.currentSetup.studySetup = true;
+
+                if (["1", "2", "4"].some(staticTasks => name.includes(staticTasks))) {
+                    this.currentSetup.studyStatic = true;
+                }
             }
 
             this.activeView = "HomeSetup";
@@ -251,15 +257,31 @@ export default {
             }
         },
 
-        openTaskCompleteModal() {
-            if (this.currentSetup.studyStatic) {
-                this.$refs.taskCompleteModal.openModal();
+        /**
+         * @param {boolean} postMsg whether to post a message to `window.parent` on modal open.
+         */
+        openTaskCompleteModal(postMsg = true) {
+            if (this.currentSetup.studySetup) {
+                this.$refs.taskCompleteModal.openModal(postMsg);
             }
         }
     },
 
-    beforeMount() {
-        this.parseUrlQuery();
+    async beforeMount() {
+        await this.parseUrlQuery();
+
+        if (this.currentSetup.studySetup && window !== window.parent) {
+            window.addEventListener("message", (event) => {
+                if (event.origin !== "https://umtlstudies.dfki.de") {
+                    return;
+                }
+                if (event.data === "task-failed") {
+                    this.openTaskCompleteModal(false);
+                } else if (event.data === "reset-state") {
+                    location.reload();
+                }
+            });
+        }
     },
 
     mounted() {

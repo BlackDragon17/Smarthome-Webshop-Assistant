@@ -36,9 +36,11 @@ export default {
     },
 
     methods: {
-        openModal() {
+        openModal(postMsg) {
             this.bsModal.show();
-            window.parent.postMessage("task-complete", "https://umtlstudies.dfki.de/limesurvey/");
+            if (postMsg && window !== window.parent) {
+                window.parent.postMessage("task-complete", "https://umtlstudies.dfki.de/limesurvey/");
+            }
         }
     },
 
