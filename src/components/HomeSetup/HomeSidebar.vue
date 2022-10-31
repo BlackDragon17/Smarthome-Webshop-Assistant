@@ -1,9 +1,8 @@
 <template>
-    <ModifyControlsModal ref="modifyControlsModal" :setup-controls="currentSetup.controls" :study-static-setup="currentSetup.studyStatic"/>
+    <ModifyControlsModal ref="modifyControlsModal" :setup-controls="currentSetup.controls"/>
     <aside class="sidebar">
         <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
         <button class="modify-controls-button btn btn-secondary" @click="openControlsModal">Modify your controls</button>
-        <button @click="openTaskComplete">Open task complete</button>
 
         <div class="sort-group">
             <span class="sort-label">Sort devices by</span>
@@ -99,10 +98,6 @@ export default {
             if (this.viewState === "normal") {
                 this.$refs.modifyControlsModal.openModal();
             }
-        },
-
-        openTaskComplete() {
-            this.$eventBus.$emit("task-completed");
         }
     }
 };

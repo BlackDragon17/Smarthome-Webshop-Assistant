@@ -1,10 +1,11 @@
 <template>
     <NavHeader ref="header" :active-view="activeView"/>
 
-    <TaskCompleteModal ref="taskCompleteModal"/>
+    <TaskCompleteModal ref="taskCompleteModal" v-if="currentSetup?.studySetup"/>
 
     <main ref="app">
         <HomeSetup v-if="activeView === 'HomeSetup'"
+                   ref="homeSetup"
                    :current-setup="currentSetup"
                    :devices-by-category="devicesByCategory"
                    :devices-by-room="devicesByRoom"
@@ -146,7 +147,7 @@ export default {
 
     methods: {
         /**
-         * If URL contains a "setup" search param, tries to load that setup.
+         * If URL contains a valid "setup" search param, tries to load that setup.
          * Otherwise, loads "example1.json" default setup.
          * This method only initiates the loading process defined in {@link checkAndLoadSetup}.
          */
@@ -164,14 +165,15 @@ export default {
         },
 
         /**
-         * Checks integrity of given setup and loads it.
+         * Checks integrity of given setup and saves it to the shared variable.
          * @param {Object} setup setup to load.
          * @param {string} name name to attach to loaded setup.
          */
         checkAndLoadSetup(setup, name) {
-            const controls = {};
-            controls.assistants = [];
-            controls.brandApps = [];
+            const controls = {
+                assistants: [],
+                brandApps: []
+            };
             if (Array.isArray(setup.controls.assistants) && setup.controls.assistants.length > 0) {
                 controls.assistants = setup.controls.assistants.filter(assistant => Object.keys(GetName.allControls).includes(assistant));
             }
@@ -195,13 +197,8 @@ export default {
             }
 
             this.currentSetup = {controls, rooms, devices, name};
-
             if (name.includes("study-task")) {
                 this.currentSetup.studySetup = true;
-
-                if (["1", "2", "4"].some(staticTasks => name.includes(staticTasks))) {
-                    this.currentSetup.studyStatic = true;
-                }
             }
 
             this.activeView = "HomeSetup";
@@ -258,11 +255,45 @@ export default {
         },
 
         /**
-         * @param {boolean} postMsg whether to post a message to `window.parent` on modal open.
+         * Opens the TaskCompleteModal, built for the online survey.
+         * @param {string} [postMsg] the message to post to a parent window. No message is posted if left undefined or there's no parent window.
          */
-        openTaskCompleteModal(postMsg = true) {
+        openTaskCompleteModal(postMsg) {
             if (this.currentSetup.studySetup) {
                 this.$refs.taskCompleteModal.openModal(postMsg);
+            }
+        },
+
+        async checkSetupState(currentSetup) {
+            await nextTick();
+            if (this.activeView !== "HomeSetup" || this.$refs.homeSetup?.viewState !== "normal") {
+                return;
+            }
+            console.log("App: setup changed");
+
+            if (currentSetup.name.includes("1")) {
+                this.checkSetupStateTask1(currentSetup);
+            } else if (currentSetup.name.includes("2")) {
+
+            }
+        },
+
+        checkSetupStateTask1(currentSetup) {
+            if (!currentSetup.controls.assistants.includes("alexa")
+                || !["Living Room", "Bedroom"].every(room => currentSetup.rooms.find(setupRoom => setupRoom.name === room))
+                || currentSetup.devices.length !== 5
+                || !currentSetup.devices.find(device => device.localId === "c0bad215-c7d5-41f7-8ef5-3ab127350694"
+                    && device.room === "Bedroom" && device.location === 9)
+                || !currentSetup.devices.find(device => device.room === "Bedroom" && device.location === 1
+                    && this.allProducts[device.productId].category === "light")
+            ) {
+                console.log("task 1 failed");
+                this.openTaskCompleteModal("task-failed");
+            } else if (currentSetup.devices.find(device => device.room === "Bedroom" && device.location === 1
+                && device.localId !== "abf33fec-1753-41f3-bec6-12a7de40a918"
+                && this.allProducts[device.productId].category === "light")) {
+                console.log("task 1 successful");
+                this.openTaskCompleteModal("task-successful");
             }
         }
     },
@@ -270,18 +301,25 @@ export default {
     async beforeMount() {
         await this.parseUrlQuery();
 
-        if (this.currentSetup.studySetup && window !== window.parent) {
-            window.addEventListener("message", (event) => {
-                if (event.origin !== "https://umtlstudies.dfki.de") {
-                    return;
-                }
-                if (event.data === "task-failed") {
-                    this.openTaskCompleteModal(false);
-                } else if (event.data === "reset-state") {
-                    location.reload();
-                }
-            });
+        // Online study-specific code
+        if (!this.currentSetup.studySetup) {
+            return;
         }
+        this.$watch("currentSetup", this.checkSetupState, {deep: true, flush: "post"});
+
+        if (!(window !== window.parent)) {
+            return;
+        }
+        window.addEventListener("message", (event) => {
+            if (event.origin !== "https://umtlstudies.dfki.de") {
+                return;
+            }
+            if (event.data === "task-failed") {
+                this.openTaskCompleteModal();
+            } else if (event.data === "reset-state") {
+                location.reload();
+            }
+        });
     },
 
     mounted() {
@@ -294,7 +332,6 @@ export default {
         this.$eventBus.$on("get-new-product", this.getNewProduct);
         this.$eventBus.$on("get-replacement", this.getReplacement);
         this.$eventBus.$on("replace-device", this.replaceDevice);
-        this.$eventBus.$on("task-completed", this.openTaskCompleteModal);
     },
 
     beforeUnmount() {
@@ -302,7 +339,6 @@ export default {
         this.$eventBus.$off("get-new-product", this.getNewProduct);
         this.$eventBus.$off("get-replacement", this.getReplacement);
         this.$eventBus.$off("replace-device", this.replaceDevice);
-        this.$eventBus.$off("task-completed", this.openTaskCompleteModal);
     }
 };
 </script>

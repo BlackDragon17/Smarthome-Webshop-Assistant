@@ -4,12 +4,12 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" :id="modalId + '-label'">Task complete</h5>
+                        <h5 class="modal-title" :id="modalId + '-label'">Step complete</h5>
                     </div>
                     <div class="modal-body">
                         <div class="checkmark-icon material-symbols-rounded">check_circle</div>
-                        <p class="completion-text">Task completed successfully! 😀</p>
-                        <p class="completion-text">You can now proceed to the next page of the survey<br>using the "Next" button below.</p>
+                        <p class="completion-text">You have completed this step of the survey!</p>
+                        <p class="completion-text">Please proceed to the next step by using the "Next" button at the bottom of this page.</p>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@ export default {
         openModal(postMsg) {
             this.bsModal.show();
             if (postMsg && window !== window.parent) {
-                window.parent.postMessage("task-complete", "https://umtlstudies.dfki.de/limesurvey/");
+                window.parent.postMessage(postMsg, "https://umtlstudies.dfki.de/limesurvey/");
             }
         }
     },
@@ -64,9 +64,9 @@ export default {
 <style scoped>
 .checkmark-icon {
     display: block;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.7rem;
 
-    color: var(--bs-green);
+    color: #333;
     text-align: center;
     font-size: 5.5rem;
     font-weight: 350;
