@@ -41,8 +41,7 @@ export default {
     data() {
         return {
             viewState: "init",
-            popoverShown: false,
-            tutorialShown: false
+            popoverShown: false
         };
     },
 
@@ -58,10 +57,6 @@ export default {
     computed: {
         homeSetupBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkred";
-        },
-
-        showTutorial() {
-            return this.currentSetup?.studySetup && this.currentSetup?.name.includes("0") && this.$root.tutorialShown && !this.tutorialShown;
         }
     },
 
