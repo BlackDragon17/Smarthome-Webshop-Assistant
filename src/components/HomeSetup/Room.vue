@@ -403,6 +403,7 @@ export default {
     border-radius: 0.2rem;
     background-color: var(--blue-rooms-devices);
     color: white;
+    outline: none;
 
     display: flex;
     justify-content: center;

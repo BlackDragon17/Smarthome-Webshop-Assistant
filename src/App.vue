@@ -19,6 +19,21 @@
                          :all-brands="allBrands"
                          @change-view="changeView"/>
     </main>
+
+    <div v-if="showTutorial" class="tutorial-curtain">
+        <div class="tutorial-tooltip">
+            <h5 class="tooltip-heading">
+                Welcome to SHWA!
+            </h5>
+            <p class="tooltip-text">
+                This short tutorial will show you the most import sections of the app.
+            </p>
+            <div class="tooltip-footer">
+                <button class="tooltip-button btn btn-success" @click="tutorialShown = true">Next</button>
+                <span class="tooltip-counter">1 / 4</span>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -62,7 +77,9 @@ export default {
             allProducts: allProducts.data,
             currentSetup: null,
             deviceQueue: [],
-            replaceId: null
+            replaceId: null,
+
+            tutorialShown: false
         };
     },
 
@@ -142,6 +159,10 @@ export default {
                 }
             }
             return brands.sort();
+        },
+
+        showTutorial() {
+            return this.currentSetup?.studySetup && this.currentSetup?.name.includes("0") && !this.tutorialShown;
         }
     },
 
@@ -305,7 +326,10 @@ export default {
         if (!this.currentSetup.studySetup) {
             return;
         }
-        this.$watch("currentSetup", this.checkSetupState, {deep: true, flush: "post"});
+        if (!this.currentSetup.name.includes("0"))
+        {
+            this.$watch("currentSetup", this.checkSetupState, {deep: true, flush: "post"});
+        }
 
         if (!(window !== window.parent)) {
             return;
@@ -390,8 +414,11 @@ p {
     --green-devices-main: #4CAF50;
     --green-devices-main-darker1: #439846; /* lightness -6 */
     --green-devices-main-darker2: #38803A; /* lightness -13 */
+    --green-devices-main-darker3: #285C2A; /* lightness -23 */
+    --green-devices-main-darker4: #1C401D; /* lightness -31 */
 
     --green-devices-overlay: #44A148;
+    --green-tooltip-bg: #4EB151;
 
     --gray-button-hover: #DFDFDF;
 
@@ -432,5 +459,65 @@ p {
 
 .hidden {
     visibility: hidden;
+}
+
+
+
+/* Tutorial styling */
+
+.tutorial-curtain {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+}
+
+.tutorial-tooltip {
+    width: 20rem;
+    padding: 15px;
+
+    border-radius: 0.5rem;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.45);
+    background-color: var(--green-tooltip-bg);
+    color: white;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0 -50% -50% 0;
+    transform: translate(-50%, -50%);
+}
+
+.tooltip-heading {
+    margin-bottom: 0.8rem;
+    font-size: 1.3rem;
+}
+
+.tooltip-text {
+    margin-bottom: 0.7rem;
+    font-family: Jost, sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.3;
+}
+
+.tooltip-footer {
+    display: flex;
+}
+
+.tooltip-button {
+    --bs-btn-bg: var(--green-devices-main-darker2);
+    --bs-btn-hover-bg: var(--green-devices-main-darker3);
+    --bs-btn-active-bg: var(--green-devices-main-darker4);
+}
+
+.tooltip-counter {
+    margin-left: auto;
+    padding-top: 0.2rem;
+    display: inline-flex;
+    align-items: center;
 }
 </style>
