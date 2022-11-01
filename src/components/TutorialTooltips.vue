@@ -1,5 +1,5 @@
 <template>
-    <div v-if="tutorialStep === 0" class="tutorial-curtain curtain-dark-bg">
+    <div v-if="tutorialStep === 1" class="tutorial-curtain curtain-dark-bg">
         <div class="tutorial-tooltip">
             <h5 class="tooltip-heading">
                 Welcome to SHWA!
@@ -8,12 +8,12 @@
                 This short tutorial will show you the most import sections of the app.
             </p>
             <div class="tooltip-footer">
-                <button class="tooltip-button btn btn-success" @click="nextTooltip">Next</button>
+                <button class="tooltip-button btn btn-success" @click="prepareNextTooltip">Next</button>
                 <span class="tooltip-counter">1 / 4</span>
             </div>
         </div>
     </div>
-    <div v-else-if="tutorialStep === 1" class="tutorial-curtain">
+    <div v-else-if="tutorialStep === 2" class="tutorial-curtain" tabindex="-1">
         <div class="tutorial-tooltip">
             <p class="tooltip-text">
                 The main page of the app displays a blueprint-like view of a user's home.
@@ -22,7 +22,7 @@
                 It shows the rooms of the house as well as the smart devices within them.
             </p>
             <div class="tooltip-footer">
-                <button class="tooltip-button btn btn-success" @click="nextTooltip">Next</button>
+                <button class="tooltip-button btn btn-success" @click="prepareNextTooltip">Next</button>
                 <span class="tooltip-counter">2 / 4</span>
             </div>
         </div>
@@ -30,30 +30,57 @@
 </template>
 
 <script>
+import { nextTick } from "vue";
+import FocusTrap from "bootstrap/js/dist/util/focustrap";
+
 export default {
     name: "TutorialTooltips",
 
     data() {
         return {
-            tutorialStep: 0
+            tutorialStep: 0,
+            currentFocustrap: null,
+            floatCleanup: null
         };
     },
 
     methods: {
-        nextTooltip() {
-            const roomView = document.querySelector("section.room-view");
+        async prepareNextTooltip() {
+            this.tutorialStep++;
+            await nextTick();
 
-            switch (this.tutorialStep) {
-                case 0:
-                    roomView.classList.add("tutorial-element-highlight");
-                    break;
-                case 1:
-                    roomView.classList.remove("tutorial-element-highlight");
-                    break;
+            let highlightedEl = null;
+            const currentTooltip = document.querySelector("div.tutorial-tooltip");
+            if (this.currentFocustrap) {
+                this.currentFocustrap.deactivate();
+            }
+            if (currentTooltip) {
+                this.currentFocustrap = new FocusTrap({trapElement: currentTooltip});
+                this.currentFocustrap.activate();
             }
 
-            this.tutorialStep++;
+            switch (this.tutorialStep) {
+                case 1:
+                    // step needs no prep
+                    break;
+                case 2:
+                    highlightedEl = document.querySelector("section.room-view");
+                    highlightedEl.classList.add("tutorial-element-highlight");
+                    break;
+                case 3:
+                    highlightedEl = document.querySelector("section.room-view");
+                    highlightedEl.classList.remove("tutorial-element-highlight");
+                    break;
+            }
+        },
+
+        floatTooltip(targetEl) {
+            // https://github.com/floating-ui/floating-ui/issues/1769
         }
+    },
+
+    mounted() {
+        this.prepareNextTooltip();
     }
 };
 </script>
