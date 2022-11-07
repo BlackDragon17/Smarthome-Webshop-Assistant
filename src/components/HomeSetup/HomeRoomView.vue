@@ -1,5 +1,5 @@
 <template>
-    <section ref="roomView" class="room-view">
+    <section v-if="currentSetup.rooms.length > 0" ref="roomView" class="room-view">
         <AddRoomModal ref="addRoomModal" :room-view-state="viewState" :setup-rooms="currentSetup.rooms" @added-room="endAction"/>
         <RemoveRoomModal ref="removeRoomModal" :room-view-state="viewState" :current-setup="currentSetup" @removed-room="endAction"/>
 
@@ -37,6 +37,15 @@
             Cancel
         </button>
     </section>
+
+    <section v-else ref="roomView" class="room-view room-view-empty">
+        <AddRoomModal ref="addRoomModal" :room-view-state="viewState" :setup-rooms="currentSetup.rooms" @added-room="endAction"/>
+
+        <h2 class="no-rooms-heading">Your home doesn't have any rooms yet!</h2>
+        <p class="no-rooms-text">Add your initial room using the button below:</p>
+        <div class="button-spacer"></div>
+        <button class="add-first-room-button add-room-button btn btn-primary" @click="addFirstRoom">Add a new room</button>
+    </section>
 </template>
 
 <script>
@@ -57,8 +66,6 @@ export default {
 
     data() {
         return {
-            roomViewState: "init",
-
             gridStartCoord: 1,
             gridContainerCss: null,
             addRoomButtons: [],
@@ -122,7 +129,7 @@ export default {
                 : `repeat(${this.gridHeight + 2}, minmax(10rem, 20rem))`;
         },
         cssGridMinHeight() {
-            let height = this.roomViewState === "adding-room" ? this.gridHeight + 2 : this.gridHeight;
+            let height = this.viewState === "adding-room" ? this.gridHeight + 2 : this.gridHeight;
             // rows + row gaps + margins
             return height * 10 + (height - 1) + 4 + "rem";
         },
@@ -232,6 +239,12 @@ export default {
             this.checkHeaderOverflow();
         },
 
+        addFirstRoom() {
+            this.$emit("change-state", "adding-first-room");
+            const locationObject = {location: {x: 0, y: 0}};
+            this.$refs.addRoomModal.openModal(locationObject);
+        },
+
         removeRoom() {
             this.actionHeadingText = "Select a room to be removed:";
             this.$emit("change-state", "removing-room");
@@ -264,10 +277,14 @@ export default {
             }
         },
 
-        endAction() {
+        async endAction() {
             switch (this.viewState) {
                 case "adding-room":
                     this.removeAddRoomButtons();
+                    break;
+                case "adding-first-room":
+                    await nextTick();
+                    this.initialCalculations();
                     break;
                 case "removing-room":
                     break;
@@ -287,13 +304,33 @@ export default {
             this.$emit("change-state", "normal");
             this.actionHeadingText = "";
             this.allowMarginOverride = true;
+        },
+
+
+        initialCalculations() {
+            if (this.gridContainerCss || this.currentSetup.rooms.length <= 0) {
+                return;
+            }
+
+            // Compute actionHeadingHeight and hide it
+            const heading = document.querySelector(".action-heading");
+            this.actionHeadingHeight.borderBox = heading.offsetHeight;
+            this.actionHeadingText = "";
+            this.actionHeadingHeight.total = this.actionHeadingHeight.borderBox + parseInt(window.getComputedStyle(heading).getPropertyValue("margin-top"), 10);
+            this.actionHeadingHeight.total += parseInt(window.getComputedStyle(heading).getPropertyValue("margin-bottom"), 10);
+            this.actionHeadingHeight.total += "px";
+
+            const gridContainer = document.querySelector(".room-grid-container");
+            this.gridContainerCss = window.getComputedStyle(gridContainer);
         }
     },
 
     watch: {
         "currentSetup.rooms": {
-            handler() {
-                this.shiftRoomCoords();
+            handler(roomsNew) {
+                if (roomsNew?.length > 0) {
+                    this.shiftRoomCoords();
+                }
             },
             deep: true,
             immediate: true
@@ -305,17 +342,8 @@ export default {
         this.$eventBus.$on("move-device", this.moveDevice);
         this.$eventBus.$on("add-new-device", this.addNewDevice);
 
-        // Compute actionHeadingHeight and hide it
-        const heading = document.querySelector(".action-heading");
-        this.actionHeadingHeight.borderBox = heading.offsetHeight;
+        this.initialCalculations();
         this.$emit("change-state", "normal");
-        this.actionHeadingText = "";
-        this.actionHeadingHeight.total = this.actionHeadingHeight.borderBox + parseInt(window.getComputedStyle(heading).getPropertyValue("margin-top"), 10);
-        this.actionHeadingHeight.total += parseInt(window.getComputedStyle(heading).getPropertyValue("margin-bottom"), 10);
-        this.actionHeadingHeight.total += "px";
-
-        const gridContainer = document.querySelector(".room-grid-container");
-        this.gridContainerCss = window.getComputedStyle(gridContainer);
     },
 
     beforeUnmount() {
@@ -354,7 +382,6 @@ export default {
 }
 
 
-
 /* Room grid styling */
 .room-grid {
     margin: 2rem;
@@ -368,7 +395,6 @@ export default {
     column-gap: 1rem;
     row-gap: 1rem;
 }
-
 
 
 /* Room grid buttons -- add room */
@@ -388,7 +414,6 @@ export default {
     background-color: #96c8ef;
     border: 1px solid #0c88ed;
 }
-
 
 
 /* Control buttons */
@@ -424,9 +449,6 @@ button.cancel-button {
     bottom: 2rem;
 }
 
-
-
-/* Action heading */
 .action-heading {
     padding: 0.8rem 1.5rem 1rem;
     max-width: max-content;
@@ -442,5 +464,35 @@ button.cancel-button {
     z-index: 1;
     position: sticky;
     top: 1rem;
+}
+
+
+/* No rooms screen */
+
+.room-view-empty {
+    padding: 1rem;
+}
+
+.no-rooms-heading {
+    margin: 4.5vh auto 2vh;
+    font-weight: 350;
+}
+
+.no-rooms-text {
+    margin: 1rem auto;
+    font-size: 1.15rem;
+}
+
+.add-first-room-button {
+    margin: 0 auto;
+
+    width: 30rem;
+    max-width: 100%;
+    height: 7rem;
+}
+
+.button-spacer {
+    flex-grow: 1;
+    max-height: 26%;
 }
 </style>
