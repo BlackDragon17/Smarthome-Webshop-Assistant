@@ -14,11 +14,15 @@
                         {{ product?.brand }} {{ product?.model }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" v-if="device?.room !== deviceTray" @click="getReplacement">
+                        <button type="button" v-if="showReplaceAndMoveButtons" class="btn btn-success" @click="getReplacement">
                             Get compatible replacement
                         </button>
-                        <button type="button" class="btn btn-success" v-if="device?.room === deviceTray" @click="moveDevice">Add to a room</button>
-                        <button type="button" class="btn btn-secondary" v-else @click="moveDevice">Move to a new&nbsp;spot</button>
+                        <button type="button" v-if="showAddToRoomButton" class="btn btn-success" @click="moveDevice">
+                            Add to a room
+                        </button>
+                        <button type="button" v-if="showReplaceAndMoveButtons" class="btn btn-secondary" @click="moveDevice">
+                            Move to a new&nbsp;spot
+                        </button>
                         <button type="button" class="btn btn-danger" @click="removeDevice">Delete device</button>
                     </div>
                 </div>
@@ -44,7 +48,8 @@ export default {
 
     props: {
         currentDevices: Array,
-        deviceQueue: Array
+        deviceQueue: Array,
+        setupHasRooms: Boolean
     },
 
     emits: ["move-device", "device-removed", "focus-home-setup"],
@@ -52,6 +57,13 @@ export default {
     inject: ["allProducts"],
 
     computed: {
+        showAddToRoomButton() {
+            return this.device?.room === this.deviceTray && this.setupHasRooms;
+        },
+        showReplaceAndMoveButtons() {
+            return this.device?.room !== this.deviceTray && this.setupHasRooms;
+        },
+
         modalId() {
             return this.$options.name.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
         }

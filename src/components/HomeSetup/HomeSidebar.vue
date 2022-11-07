@@ -1,7 +1,7 @@
 <template>
     <ModifyControlsModal ref="modifyControlsModal" :setup-controls="currentSetup.controls"/>
     <aside class="sidebar">
-        <button class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
+        <button v-if="setupHasRooms" class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
         <button class="modify-controls-button btn btn-secondary" @click="openControlsModal">Modify your controls</button>
 
         <div class="sort-group">
@@ -76,7 +76,8 @@ export default {
         currentSetup: Object,
         devicesByCategory: Object,
         devicesByRoom: Object,
-        viewState: String
+        viewState: String,
+        setupHasRooms: Boolean
     },
 
     emits: ["open-device-info", "header-click"],

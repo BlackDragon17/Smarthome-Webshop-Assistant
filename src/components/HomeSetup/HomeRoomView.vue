@@ -474,7 +474,7 @@ button.cancel-button {
 }
 
 .no-rooms-heading {
-    margin: 4.5vh auto 2vh;
+    margin: 5vh auto 2vh;
     font-weight: 350;
 }
 

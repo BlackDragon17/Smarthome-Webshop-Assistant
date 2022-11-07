@@ -8,12 +8,15 @@
         <DeviceInfoModal ref="deviceInfoModal"
                          :current-devices="currentSetup.devices"
                          :device-queue="deviceQueue"
+                         :setup-has-rooms="setupHasRooms"
                          @device-removed="emitEscRoomViewAction"/>
 
-        <HomeSidebar :current-setup="currentSetup"
+        <HomeSidebar v-if="showSidebar"
+                     :current-setup="currentSetup"
                      :devices-by-category="devicesByCategory"
                      :devices-by-room="devicesByRoom"
-                     :view-state="viewState"/>
+                     :view-state="viewState"
+                     :setup-has-rooms="setupHasRooms"/>
 
         <HomeRoomView :current-setup="currentSetup"
                       :view-state="viewState"
@@ -55,6 +58,13 @@ export default {
     emits: ["change-view", "print-debug", "room-view-cancel", "popover-hide"],
 
     computed: {
+        showSidebar() {
+            return this.currentSetup.rooms.length > 0 || this.currentSetup.devices.length > 0;
+        },
+        setupHasRooms() {
+            return this.currentSetup.rooms.length > 0;
+        },
+
         homeSetupBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkred";
         }
