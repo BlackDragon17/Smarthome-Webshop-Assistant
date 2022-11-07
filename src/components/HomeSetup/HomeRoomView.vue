@@ -26,7 +26,6 @@
                 </button>
             </div>
         </div>
-        <button v-if="false" @click="printDebug">Debug</button>
 
         <div v-if="viewState === 'normal'" class="room-button-group relative-centering">
             <button class="add-room-button btn btn-primary" @click="addNewRoom">Add a new room</button>
@@ -107,10 +106,10 @@ export default {
         },
 
         gridWidth() {
-            return Math.abs(this.lowestCoords.x - this.highestCoords.x) + 1;
+            return this.lowestCoords.x === Infinity ? 0 : Math.abs(this.lowestCoords.x - this.highestCoords.x) + 1;
         },
         gridHeight() {
-            return Math.abs(this.lowestCoords.y - this.highestCoords.y) + 1;
+            return this.lowestCoords.y === Infinity ? 0 : Math.abs(this.lowestCoords.y - this.highestCoords.y) + 1;
         },
 
 
@@ -288,15 +287,6 @@ export default {
             this.$emit("change-state", "normal");
             this.actionHeadingText = "";
             this.allowMarginOverride = true;
-        },
-
-
-        printDebug() {
-            console.log("grid dim:", this.gridWidth, this.gridHeight);
-            console.log("lowest coords:", this.lowestCoords);
-            console.log("highest coords:", this.highestCoords);
-            console.log("grid start:", this.gridStartCoord);
-            console.log("css col:", this.cssGridColumns);
         }
     },
 
