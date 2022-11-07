@@ -1,5 +1,5 @@
 <template>
-    <div v-if="tutorialStep > 0" class="tutorial-curtain" :class="{'curtain-dark-bg': tooltipContent.fixedCenter}">
+    <div v-if="displayTooltip" class="tutorial-curtain" :class="{'curtain-dark-bg': tooltipContent.fixedCenter}">
         <div ref="tooltipBody" class="tutorial-tooltip" :class="{'tooltip-fixed-center': tooltipContent.fixedCenter}">
             <h5 class="tooltip-heading" v-if="tooltipContent.heading">
                 {{ tooltipContent.heading }}
@@ -8,8 +8,9 @@
                 {{ parahraph }}
             </p>
             <div class="tooltip-footer">
-                <button class="tooltip-button btn btn-success" @click="prepareNextTooltip">Next</button>
-                <span class="tooltip-counter">{{ tutorialStep }} / 4</span>
+                <button class="tooltip-button btn btn-success" @click="nextTooltip">Next</button>
+                <span class="tooltip-counter">{{ tooltipStep }} / {{ tooltipTotalSteps }}</span>
+                <div ref="tooltipArrow" v-if="tooltipContent.showArrow" class="tooltip-arrow"></div>
             </div>
         </div>
     </div>
@@ -25,36 +26,93 @@ export default {
 
     data() {
         return {
-            tutorialStep: 0,
-            tooltipContent: {heading: null, paragraphs: [], fixedCenter: false},
+            tooltipContent: {heading: null, paragraphs: [], fixedCenter: false, showArrow: false},
+
+            tutorialStepHomeSetup: 0,
+            homeSetupTotalSteps: 4,
+            tutorialStepProductDatabase: 0,
+            productDatabaseTotalSteps: 2,
 
             currentFocustrap: null,
             floatCleanup: null
         };
     },
 
-    methods: {
-        async prepareNextTooltip() {
-            this.tutorialStep++;
-            await nextTick();
+    props: {
+        activeView: String
+    },
 
+    computed: {
+        /**
+         * @returns {boolean}
+         */
+        displayTooltip() {
+            switch (this.activeView) {
+                case "HomeSetup":
+                    return this.tutorialStepHomeSetup > 0 && this.tutorialStepHomeSetup <= this.homeSetupTotalSteps;
+                case "ProductDatabase":
+                    return this.tutorialStepProductDatabase > 0 && this.tutorialStepProductDatabase <= this.productDatabaseTotalSteps;
+                default:
+                    return false;
+            }
+        },
+
+        /**
+         * @returns {number}
+         */
+        tooltipStep() {
+            switch (this.activeView) {
+                case "HomeSetup":
+                    return this.tutorialStepHomeSetup;
+                case "ProductDatabase":
+                    return this.tutorialStepProductDatabase;
+            }
+        },
+        /**
+         * @returns {number}
+         */
+        tooltipTotalSteps() {
+            switch (this.activeView) {
+                case "HomeSetup":
+                    return this.homeSetupTotalSteps;
+                case "ProductDatabase":
+                    return this.productDatabaseTotalSteps;
+            }
+        }
+    },
+
+    methods: {
+        async nextTooltip() {
+            this.tooltipContent = {heading: null, paragraphs: [], fixedCenter: false, showArrow: false};
             if (this.floatCleanup) {
                 this.floatCleanup();
                 this.floatCleanup = null;
             }
-
-            if (this.currentFocustrap) {
-                this.currentFocustrap.deactivate();
+            if (this.$refs.tooltipBody) {
+                this.$refs.tooltipBody.style.transform = "";
             }
-            this.currentFocustrap = new FocusTrap({trapElement: this.$refs.tooltipBody});
-            this.currentFocustrap.activate();
+
+            if (this.activeView === "HomeSetup") {
+                this.nextTooltipHomeSetup();
+            } else if (this.activeView === "ProductDatabase") {
+                this.nextTooltipProductDatabase();
+            }
+        },
+
+        async nextTooltipHomeSetup() {
+            if (this.tutorialStepHomeSetup > this.homeSetupTotalSteps) {
+                return;
+            }
+
+            this.tutorialStepHomeSetup++;
+            await nextTick();
 
             let highlightedEl = null;
-            this.tooltipContent = {heading: null, paragraphs: [], fixedCenter: false};
-            this.$refs.tooltipBody.style.transform = "";
-
-            switch (this.tutorialStep) {
+            switch (this.tutorialStepHomeSetup) {
                 case 1:
+                    this.currentFocustrap = new FocusTrap({trapElement: this.$refs.tooltipBody});
+                    this.currentFocustrap.activate();
+
                     this.tooltipContent = {
                         heading: "Welcome to SHWA!",
                         paragraphs: ["This short tutorial will show you the most import sections of the app."],
@@ -72,13 +130,14 @@ export default {
                     highlightedEl.classList.add("tutorial-element-highlight");
 
                     const floatTarget = document.querySelector("div.room[style=\"grid-area: 1 / 2 / span 1 / span 1;\"]");
-                    this.floatTooltip(floatTarget, this.$refs.tooltipBody, "bottom");
+                    this.floatTooltip(floatTarget, this.$refs.tooltipBody, "bottom", true);
                     break;
 
                 case 3:
                     this.tooltipContent.paragraphs = [
                         "To the left you'll find a sidebar, which additionally displays these devices as a list."
                     ];
+                    this.tooltipContent.showArrow = true;
 
                     highlightedEl = document.querySelector("section.room-view");
                     highlightedEl.classList.remove("tutorial-element-highlight");
@@ -99,21 +158,91 @@ export default {
                     break;
 
                 case 5:
-                    this.tutorialStep = 0;
+                    this.currentFocustrap.deactivate();
+                    break;
             }
         },
 
-        floatTooltip(targetEl, currentTooltip, placement) {
+        async nextTooltipProductDatabase() {
+            if (this.tutorialStepProductDatabase > this.productDatabaseTotalSteps) {
+                return;
+            }
+
+            this.tutorialStepProductDatabase++;
+            await nextTick();
+
+            let highlightedEl = null;
+            switch (this.tutorialStepProductDatabase) {
+                case 1:
+                    this.currentFocustrap = new FocusTrap({trapElement: this.$refs.tooltipBody});
+                    this.currentFocustrap.activate();
+
+                    this.tooltipContent = {
+                        heading: "Product Database view",
+                        paragraphs: ["This page of the app is used to find new devices for your setup."],
+                        fixedCenter: true
+                    };
+                    break;
+
+                case 2:
+                    this.tooltipContent.paragraphs = [
+                        "The sidebar lets you filter products to find what you need.",
+                        "Some filter are pre-applied to only show compatible products."
+                    ];
+                    this.tooltipContent.showArrow = true;
+
+                    highlightedEl = document.querySelector("aside.sidebar");
+                    highlightedEl.classList.add("tutorial-element-highlight");
+                    this.floatTooltip(highlightedEl, this.$refs.tooltipBody, "right");
+                    break;
+
+                case 3:
+                    this.currentFocustrap.deactivate();
+                    highlightedEl = document.querySelector("aside.sidebar");
+                    highlightedEl.classList.remove("tutorial-element-highlight");
+                    break;
+            }
+        },
+
+        async floatTooltip(targetEl, currentTooltip, placement, doOffset = false) {
+            const middleware = [];
+
+            if (doOffset) {
+                middleware.push(offset(({rects}) => -rects.floating.height / 2));
+            } else if (this.tooltipContent.showArrow) {
+                await nextTick();
+                middleware.push(offset(this.$refs.tooltipArrow.offsetHeight / 1.4));
+                middleware.push(arrow({element: this.$refs.tooltipArrow}));
+            }
+            console.log("le", this.$refs.tooltipArrow);
+
             this.floatCleanup = autoUpdate(targetEl, currentTooltip, () => {
                 computePosition(targetEl, currentTooltip, {
-                    middleware: [
-                        // https://github.com/floating-ui/floating-ui/issues/1769
-                        offset(({rects}) => -rects.floating.height / 2)
-                    ],
+                    middleware,
                     placement
-                }).then(({x, y}) => {
+                }).then(({x, y, placement, middlewareData}) => {
                     Object.assign(currentTooltip.style, {
                         transform: `translate(${Math.round(x)}px, ${Math.round(y)}px)`
+                    });
+
+                    if (!this.tooltipContent.showArrow) {
+                        return;
+                    }
+
+                    // Position arrow
+                    const oppositeSide = {
+                        top: "bottom",
+                        right: "left",
+                        bottom: "top",
+                        left: "right"
+                    }[placement.split("-")[0]];
+                    this.arrowSide = oppositeSide;
+
+                    const {x: arrowX, y: arrowY} = middlewareData.arrow;
+                    Object.assign(this.$refs.tooltipArrow.style, {
+                        left: arrowX != null ? `${arrowX}px` : "",
+                        top: arrowY != null ? `${arrowY}px` : "",
+                        [oppositeSide]: `-${(this.$refs.tooltipArrow.offsetHeight / 2) + 0.5}px`
                     });
                 });
             }, {
@@ -123,7 +252,13 @@ export default {
     },
 
     mounted() {
-        this.prepareNextTooltip();
+        this.$eventBus.$on("view-changed", this.nextTooltip);
+
+        this.nextTooltip();
+    },
+
+    beforeUnmount() {
+        this.$eventBus.$off("view-changed", this.nextTooltip);
     }
 };
 </script>
@@ -199,5 +334,16 @@ export default {
     padding-top: 0.2rem;
     display: inline-flex;
     align-items: center;
+}
+
+
+.tooltip-arrow {
+    width: 20px;
+    height: 20px;
+
+    background-color: var(--green-tooltip-bg);
+
+    position: absolute;
+    transform: rotate(45deg);
 }
 </style>

@@ -20,7 +20,7 @@
                          @change-view="changeView"/>
     </main>
 
-    <TutorialTooltips v-if="showTutorial"/>
+    <TutorialTooltips v-if="showTutorial" :active-view="activeView"/>
 </template>
 
 <script>
@@ -79,7 +79,7 @@ export default {
         };
     },
 
-    emits: ["add-new-device"],
+    emits: ["add-new-device", "view-changed"],
 
     computed: {
         devicesByCategory() {
@@ -214,8 +214,10 @@ export default {
             this.activeView = "HomeSetup";
         },
 
-        changeView(target) {
+        async changeView(target) {
             this.activeView = target;
+            await nextTick();
+            this.$eventBus.$emit("view-changed", target);
         },
 
 
@@ -226,8 +228,7 @@ export default {
          */
         async getNewProduct(product) {
             this.deviceQueue = [product];
-            this.changeView("HomeSetup");
-            await nextTick();
+            await this.changeView("HomeSetup");
             this.$eventBus.$emit("add-new-device");
         },
 
@@ -240,8 +241,7 @@ export default {
             this.deviceQueue = [device];
             this.replaceId = device.productId;
 
-            this.changeView("ProductDatabase");
-            await nextTick();
+            await this.changeView("ProductDatabase");
             this.$eventBus.$emit("replace-product");
         },
 
@@ -253,14 +253,14 @@ export default {
                 this.currentSetup.devices.push(this.deviceQueue.pop());
                 this.replaceId = null;
 
-                this.changeView("HomeSetup");
+                await this.changeView("HomeSetup");
             } else {
                 const oldDevice = this.deviceQueue.pop();
                 const newDevice = Device.createFromDTO(product, oldDevice.room, oldDevice.location);
                 this.currentSetup.devices.push(newDevice);
                 this.replaceId = null;
 
-                this.changeView("HomeSetup");
+                await this.changeView("HomeSetup");
             }
         },
 

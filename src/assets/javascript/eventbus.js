@@ -3,6 +3,10 @@ class EventBus {
         this.events = {};
     }
 
+    /**
+     * @param {string} eventName
+     * @param {Function} fn
+     */
     $on(eventName, fn) {
         if (!eventName) {
             throw new Error(`Invalid eventName given: ${eventName}`);
@@ -15,6 +19,10 @@ class EventBus {
         this.events[eventName].push(fn);
     }
 
+    /**
+     * @param {string} eventName
+     * @param {Function} fn
+     */
     $off(eventName, fn) {
         if (!eventName) {
             throw new Error(`Invalid eventName given: ${eventName}`);
@@ -33,6 +41,10 @@ class EventBus {
         }
     }
 
+    /**
+     * @param {string} eventName
+     * @param {any} [data]
+     */
     $emit(eventName, data) {
         if (!eventName) {
             throw new Error(`Invalid eventName given: ${eventName}`);
