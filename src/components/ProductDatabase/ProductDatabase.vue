@@ -186,6 +186,14 @@ export default {
         createCompatFilters() {
             this.filterRules = new FilterRules();
 
+            // If the user has specified no control methods, add allAssistants to controls,
+            // except for Apple HomeKit, as that comes with many restrictions.
+            let mockedAssistants = false;
+            if (this.currentSetup.controls.assistants.length <= 0 && this.currentSetup.controls.brandApps.length <= 0) {
+                mockedAssistants = true;
+                this.currentSetup.controls.assistants = Object.keys(this.$getName.allAssistants).filter(assistant => assistant !== "homeKit");
+            }
+
             // Find setup hubs which support user's preferred control method.
             const setupHubs = this.setupProducts.filter(product => product.category === "hub" && (
                 (this.currentSetup.controls.assistants.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
@@ -321,6 +329,11 @@ export default {
 
             const setupProducts = this.setupProducts.filter(product => product.category !== "hub");
             this.findCompatibleHubs(setupProducts, productsMap);
+
+            // Reverse the mocking of assistants described above, if it had been done
+            if (mockedAssistants) {
+                this.currentSetup.controls.assistants = [];
+            }
 
             this.productsMap = productsMap;
         },

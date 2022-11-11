@@ -25,7 +25,6 @@
 
 <script>
 import { nextTick } from "vue";
-import GetName from "@/assets/javascript/get-name";
 import Device from "@/assets/javascript/device";
 import NavHeader from "./components/NavHeader.vue";
 import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
@@ -189,7 +188,7 @@ export default {
                 brandApps: []
             };
             if (Array.isArray(setup.controls.assistants) && setup.controls.assistants.length > 0) {
-                controls.assistants = setup.controls.assistants.filter(assistant => Object.keys(GetName.allControls).includes(assistant));
+                controls.assistants = setup.controls.assistants.filter(assistant => Object.keys(this.$getName.allAssistants).includes(assistant));
             }
             if (Array.isArray(setup.controls.brandApps) && setup.controls.brandApps.length > 0) {
                 controls.brandApps = setup.controls.brandApps.filter(brandApp => brandApp && typeof brandApp === "string");

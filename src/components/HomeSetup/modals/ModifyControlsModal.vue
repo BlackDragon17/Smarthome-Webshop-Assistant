@@ -50,7 +50,6 @@
 import Modal from "bootstrap/js/dist/modal";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import GetName from "@/assets/javascript/get-name";
 
 export default {
     name: "ModifyControlsModal",
@@ -81,13 +80,10 @@ export default {
 
         assistantOptions() {
             const options = [];
-            for (const control of Object.keys(GetName.allControls)) {
-                if (control === "brandApp") {
-                    continue;
-                }
+            for (const assistant of Object.keys(this.$getName.allAssistants)) {
                 options.push({
-                    label: GetName.allControls[control],
-                    key: control
+                    label: this.$getName.allAssistants[assistant],
+                    key: assistant
                 });
             }
             return options.sort((a, b) => {

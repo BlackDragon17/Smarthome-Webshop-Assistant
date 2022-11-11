@@ -90,19 +90,23 @@ export default class GetName {
         }
     }
 
-    static allControls = {
+    allAssistants = {
         alexa: "Alexa",
         googleAssistant: "Google Assistant",
         homeKit: "Apple HomeKit",
         smartThings: "Samsung SmartThings",
+    }
+
+    allControls = {
+        ...this.allAssistants,
         brandApp: "Vendor app"
     };
 
     control(value) {
-        if (!GetName.allControls[value]) {
+        if (!this.allControls[value]) {
             return capitalize(value);
         }
-        return GetName.allControls[value];
+        return this.allControls[value];
     }
 
     powerSource(value) {
