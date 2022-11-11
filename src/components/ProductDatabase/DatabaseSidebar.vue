@@ -9,9 +9,8 @@
                    id="compatibility-switch"
                    class="filter-input form-check-input"
                    name="compatibility"
-                   v-model="compatFiltersEnabled"
-                   :disabled="replaceId"
-                   @change="$emit('compat-filters-toggled', compatFiltersEnabled)">
+                   v-model="compatFiltersControl.value"
+                   :disabled="compatFiltersControl.disabled">
             <label for="compatibility-switch" class="filter-label form-check-label">Compatibility filters</label>
         </div>
         <hr>
@@ -345,25 +344,20 @@ import FilterValues from "@/assets/javascript/filter-values";
 export default {
     name: "DatabaseSidebar",
 
-    data() {
-        return {
-            compatFiltersEnabled: true
-        };
-    },
-
     props: {
+        compatFiltersControl: Object,
         filterValues: FilterValues,
         filterRules: FilterRules,
-        optionsAllValues: Object,
 
+        optionsAllValues: Object,
         replaceId: String
     },
 
-    emits: ["compat-filters-toggled", "replace-device"],
+    emits: ["replace-device"],
 
     computed: {
         activeFilterRules() {
-            return this.compatFiltersEnabled ? this.filterRules : new FilterRules();
+            return this.compatFiltersControl.value ? this.filterRules : new FilterRules();
         },
 
         filterListBorder() {
@@ -408,14 +402,14 @@ export default {
 
         // Check disabled status
         isOptionDisabled(option, value) {
-            if (!this.compatFiltersEnabled || (option === "networks" && this.filterValues.category === "hub")) {
+            if (!this.compatFiltersControl.value || (option === "networks" && this.filterValues.category === "hub")) {
                 return false;
             }
             return (this.activeFilterRules[option].allowed !== "all" && !this.activeFilterRules[option].allowed.includes(value))
                 || this.activeFilterRules[option].required.includes(value);
         },
         isOptionAnyDisabled(option) {
-            if (!this.compatFiltersEnabled || (option === "networks" && this.filterValues.category === "hub")) {
+            if (!this.compatFiltersControl.value || (option === "networks" && this.filterValues.category === "hub")) {
                 return false;
             }
             return this.activeFilterRules[option].allowed !== "all" || this.activeFilterRules[option].required.length > 0;

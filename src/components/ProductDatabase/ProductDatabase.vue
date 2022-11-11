@@ -5,14 +5,14 @@
                                   :replace-product="replaceProduct"
                                   @cancel-action="confirmCancel"/>
 
-        <DatabaseSidebar :filter-values="filterValues"
+        <DatabaseSidebar :compat-filters-control="compatFiltersControl"
+                         :filter-values="filterValues"
                          :filter-rules="filterRules"
                          :options-all-values="optionsAllValues"
-                         :replace-id="replaceId"
-                         @compat-filters-toggled="toggleCompatFilters"/>
+                         :replace-id="replaceId"/>
 
         <DatabaseProductView :filtered-products="filteredProducts"
-                             :compat-filters-enabled="compatFiltersEnabled"
+                             :compat-filters-enabled="compatFiltersControl.value"
                              :current-category="filterValues.category"
                              :replace-id="replaceId"/>
     </div>
@@ -36,7 +36,10 @@ export default {
 
     data() {
         return {
-            compatFiltersEnabled: true,
+            compatFiltersControl: {
+                value: true,
+                disabled: false
+            },
 
             defaultFilterValues: new FilterValues(),
             filterValues: new FilterValues(),
@@ -106,7 +109,7 @@ export default {
         filteredProducts() {
             console.log("applying filterValues:", {...this.filterValues});
             let filteredProducts = [];
-            if (this.compatFiltersEnabled) {
+            if (this.compatFiltersControl.value) {
                 for (const product of this.productsMap.values()) {
                     filteredProducts.push(product);
                 }
@@ -158,11 +161,6 @@ export default {
             console.log("products after:", filteredProducts);
 
             return filteredProducts;
-        },
-
-        // Force off for this but force on for replaceId
-        enableCompatibilityFilters() {
-            return this.currentSetup.rooms.length > 0 && this.currentSetup.devices.length > 0;
         },
 
         productDatabaseBorder() {
@@ -561,17 +559,6 @@ export default {
             this.filterValues = baseFilters;
         },
 
-        // We only want pre-selections to apply when the "compatibility filters" switch is on.
-        // Conditional usage of the productsMap based on the switch for filtering products is realized inside the filteredProducts function.
-        toggleCompatFilters(value) {
-            this.compatFiltersEnabled = value;
-            this.filterValues.resetAllProperties("category");
-            if (!value) {
-                return;
-            }
-            this.createFilterValues(this.filterValues);
-        },
-
         // ConfirmCancelActionModal callback
         confirmCancel() {
             this.$eventBus.$emit("replace-device", null);
@@ -594,8 +581,19 @@ export default {
     watch: {
         "filterValues.category": {
             handler(newCategory, oldCategory) {
-                if (this.compatFiltersEnabled && (newCategory === "hub" || oldCategory === "hub")) {
+                if (this.compatFiltersControl.value && (newCategory === "hub" || oldCategory === "hub")) {
                     this.filterValues.resetProperties("anyNetwork", "networks");
+                    this.createFilterValues(this.filterValues);
+                }
+            }
+        },
+
+        "compatFiltersControl.value": {
+            // We only want pre-selections to apply when the "compatibility filters" switch is on.
+            // Conditional usage of the productsMap based on the switch for filtering products is realized inside the filteredProducts function.
+            handler(newValue) {
+                this.filterValues.resetAllProperties("category");
+                if (newValue) {
                     this.createFilterValues(this.filterValues);
                 }
             }
@@ -603,6 +601,21 @@ export default {
     },
 
     beforeMount() {
+        if (this.currentSetup.rooms.length <= 0 || this.currentSetup.devices.length <= 0) {
+            this.compatFiltersControl = {
+                value: false,
+                disabled: true
+            };
+            return;
+        }
+
+        if (this.replaceId) {
+            this.compatFiltersControl = {
+                value: true,
+                disabled: true
+            };
+        }
+
         this.createCompatFilters();
         this.createFilterValues();
     },
@@ -611,12 +624,10 @@ export default {
         this.$root.activeViewRoot = this.$el;
 
         this.$eventBus.$on("header-click", this.headerAction);
-        // this.$eventBus.$on("replace-product", this.);
     },
 
     beforeUnmount() {
         this.$eventBus.$off("header-click", this.headerAction);
-        // this.$eventBus.$off("replace-product", this.);
     }
 };
 </script>
