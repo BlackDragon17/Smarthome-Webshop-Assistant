@@ -44,8 +44,12 @@ import allProducts from "/resources/products/packed/PackedJSONs.json";
 // - add action completion toast for at least device replacement
 // - add more products
 // - add purchase buttons to products
-// - translate App
+// - add translation (i18n)
 // - add user-customizable product sorting to DatabaseProductView
+// - add Vue Router
+// - move event names etc. to enums
+
+const defaultView = "ProductDatabase";
 
 export default {
     name: "App",
@@ -211,7 +215,7 @@ export default {
                 this.currentSetup.studySetup = true;
             }
 
-            this.activeView = "HomeSetup";
+            this.activeView = defaultView;
         },
 
         async changeView(target) {

@@ -171,6 +171,11 @@ export default {
             return filteredProducts;
         },
 
+        // Force off for this but force on for replaceId
+        enableCompatibilityFilters() {
+            return this.currentSetup.rooms.length > 0 && this.currentSetup.devices.length > 0;
+        },
+
         productDatabaseBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkred";
         }
