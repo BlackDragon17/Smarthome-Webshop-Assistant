@@ -26,9 +26,9 @@
 <script>
 import { nextTick } from "vue";
 import Device from "@/assets/javascript/device";
-import NavHeader from "./components/NavHeader.vue";
-import HomeSetup from "./components/HomeSetup/HomeSetup.vue";
-import ProductDatabase from "./components/ProductDatabase/ProductDatabase.vue";
+import NavHeader from "@/components/NavHeader.vue";
+import HomeSetup from "@/components/HomeSetup/HomeSetup.vue";
+import ProductDatabase from "@/components/ProductDatabase/ProductDatabase.vue";
 import TaskCompleteModal from "@/components/TaskCompleteModal.vue";
 import TutorialTooltips from "@/components/TutorialTooltips.vue";
 
@@ -48,7 +48,7 @@ import allProducts from "/resources/products/packed/PackedJSONs.json";
 // - add Vue Router
 // - move event names etc. to enums
 
-const defaultView = "ProductDatabase";
+const defaultView = "HomeSetup";
 
 export default {
     name: "App",

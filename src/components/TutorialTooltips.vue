@@ -214,7 +214,6 @@ export default {
                 middleware.push(offset(this.$refs.tooltipArrow.offsetHeight / 1.4));
                 middleware.push(arrow({element: this.$refs.tooltipArrow}));
             }
-            console.log("le", this.$refs.tooltipArrow);
 
             this.floatCleanup = autoUpdate(targetEl, currentTooltip, () => {
                 computePosition(targetEl, currentTooltip, {
