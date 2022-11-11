@@ -339,7 +339,8 @@
 
 <script>
 import { capitalize } from "vue";
-import FilterRules from "../../assets/javascript/filter-rules";
+import FilterRules from "@/assets/javascript/filter-rules";
+import FilterValues from "@/assets/javascript/filter-values";
 
 export default {
     name: "DatabaseSidebar",
@@ -351,9 +352,8 @@ export default {
     },
 
     props: {
-        filterValues: Object,
-        defaultFilterValues: Object,
-        filterRules: Object,
+        filterValues: FilterValues,
+        filterRules: FilterRules,
         optionsAllValues: Object,
 
         replaceId: String
@@ -381,12 +381,10 @@ export default {
 
         // Reset dependant filterValues on selection change
         categoryChanged() {
-            this.filterValues.type = this.defaultFilterValues.type;
-            this.filterValues.formFactor = this.defaultFilterValues.formFactor;
-            this.filterValues.features = this.defaultFilterValues.features;
+            this.filterValues.resetProperties("type", "formFactor", "features");
         },
         typeChanged() {
-            this.filterValues.formFactor = this.defaultFilterValues.formFactor;
+            this.filterValues.resetProperties("formFactor");
         },
 
 

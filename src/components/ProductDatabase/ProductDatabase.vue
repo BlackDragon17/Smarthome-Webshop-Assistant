@@ -6,7 +6,6 @@
                                   @cancel-action="confirmCancel"/>
 
         <DatabaseSidebar :filter-values="filterValues"
-                         :default-filter-values="defaultFilterValues"
                          :filter-rules="filterRules"
                          :options-all-values="optionsAllValues"
                          :replace-id="replaceId"
@@ -20,7 +19,8 @@
 </template>
 
 <script>
-import FilterRules from "../../assets/javascript/filter-rules";
+import FilterRules from "@/assets/javascript/filter-rules";
+import FilterValues from "@/assets/javascript/filter-values";
 import ConfirmCancelActionModal from "@/components/ConfirmCancelActionModal.vue";
 import DatabaseSidebar from "./DatabaseSidebar.vue";
 import DatabaseProductView from "./DatabaseProductView.vue";
@@ -38,20 +38,9 @@ export default {
         return {
             compatFiltersEnabled: true,
 
-            defaultFilterValues: {
-                category: "all",
-                type: "any",
-                formFactor: "any",
-                anySense: true,
-                senses: [],
-                features: [],
-                anyNetwork: true,
-                networks: [],
-                anyBrand: true,
-                brands: []
-            },
-            filterValues: null,
-            filterRules: null,
+            defaultFilterValues: new FilterValues(),
+            filterValues: new FilterValues(),
+            filterRules: new FilterRules(),
 
             productsMap: null
         };
@@ -531,7 +520,7 @@ export default {
          * @param {Object} [filterValues] filterValues instance to base the new filterValues off of.
          */
         createFilterValues(filterValues) {
-            const baseFilters = filterValues ? filterValues : {...this.defaultFilterValues};
+            const baseFilters = filterValues ? filterValues : new FilterValues();
 
             // Category (radio)
             if (this.filterRules.category.required.length > 0) {
@@ -576,11 +565,11 @@ export default {
         // Conditional usage of the productsMap based on the switch for filtering products is realized inside the filteredProducts function.
         toggleCompatFilters(value) {
             this.compatFiltersEnabled = value;
-            if (value) {
-                this.createFilterValues({...this.defaultFilterValues, category: this.filterValues.category});
-            } else {
-                this.filterValues = {...this.defaultFilterValues, category: this.filterValues.category};
+            this.filterValues.resetAllProperties("category");
+            if (!value) {
+                return;
             }
+            this.createFilterValues(this.filterValues);
         },
 
         // ConfirmCancelActionModal callback
@@ -606,11 +595,8 @@ export default {
         "filterValues.category": {
             handler(newCategory, oldCategory) {
                 if (this.compatFiltersEnabled && (newCategory === "hub" || oldCategory === "hub")) {
-                    this.createFilterValues({
-                        ...this.filterValues,
-                        anyNetwork: this.defaultFilterValues.anyNetwork,
-                        networks: this.defaultFilterValues.networks
-                    });
+                    this.filterValues.resetProperties("anyNetwork", "networks");
+                    this.createFilterValues(this.filterValues);
                 }
             }
         }
