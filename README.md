@@ -2,13 +2,13 @@
 
 *A webshop-like assistant for choosing compatible smart home products.*
 
-**SHWA** constitutes the practical part of my bachelor’s thesis. Built upon Vue, Bootstrap, and standard web technologies, it is my first real venture into web development.
+**SHWA** constitutes the practical part of my bachelor’s thesis. Built upon Vue, Vite, Bootstrap, and standard web technologies, it is my first real venture into web development.
 
-The developed website will indefinitely be hosted on GitHub Pages under https://blackdragon17.github.io/Smarthome-Webshop-Assistant/
+The developed webapp will indefinitely be hosted on GitHub Pages under https://blackdragon17.github.io/Smarthome-Webshop-Assistant/
 
 ### Repository structure
 
-This repository follows the standard Vite or Vue CLI pattern.
+This repository follows the standard Vite structure.
 
 ```
 root
@@ -25,7 +25,7 @@ root
   │  │  └─javascript         JavaScript modules
   │  ├─components            Vue single-file-components
   │  ├─App.vue               Webapp root
-  │  └─main.js               Webapp entry point
+  │  └─main.js               Webapp logic entry point
   ├─index.html               The main HTML file hosting the Vue webapp
   ├─package-lock.json        Auto-generated list of all dependencies (ensures same package versions)
   ├─package.json             Direct project dependencies
