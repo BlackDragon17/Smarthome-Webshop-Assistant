@@ -14,7 +14,8 @@
         <DatabaseProductView :filtered-products="filteredProducts"
                              :compat-filters-enabled="compatFiltersControl.value"
                              :current-category="filterValues.category"
-                             :replace-id="replaceId"/>
+                             :replace-id="replaceId"
+                             :home-setup-no-rooms="homeSetupNoRooms"/>
     </div>
 </template>
 
@@ -161,6 +162,14 @@ export default {
             console.log("products after:", filteredProducts);
 
             return filteredProducts;
+        },
+
+        homeSetupEmpty() {
+            return this.currentSetup.rooms.length <= 0 || this.currentSetup.devices.length <= 0;
+        },
+
+        homeSetupNoRooms() {
+            return this.currentSetup.rooms.length <= 0;
         },
 
         productDatabaseBorder() {
@@ -601,7 +610,7 @@ export default {
     },
 
     beforeMount() {
-        if (this.currentSetup.rooms.length <= 0 || this.currentSetup.devices.length <= 0) {
+        if (this.homeSetupEmpty) {
             this.compatFiltersControl = {
                 value: false,
                 disabled: true

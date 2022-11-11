@@ -11,7 +11,8 @@
                      :product="product"
                      :compat-filters-enabled="compatFiltersEnabled"
                      :current-category="currentCategory"
-                     :replace-id="replaceId"/>
+                     :replace-id="replaceId"
+                     :home-setup-no-rooms="homeSetupNoRooms"/>
         </div>
     </section>
 </template>
@@ -57,8 +58,7 @@ export default {
     data() {
         return {
             remInPx: 16,
-            gridColumns: 1,
-            resizeObserver: null
+            gridColumns: 1
         };
     },
 
@@ -66,7 +66,8 @@ export default {
         filteredProducts: Array,
         compatFiltersEnabled: Boolean,
         currentCategory: String,
-        replaceId: String
+        replaceId: String,
+        homeSetupNoRooms: Boolean
     },
 
     inject: ["allProducts"],
@@ -127,8 +128,8 @@ export default {
         // Get current rem in px value
         this.remInPx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("font-size"));
 
-        this.resizeObserver = new ResizeObserver(this.setGridColumns);
-        this.resizeObserver.observe(this.$refs.productView);
+        const resizeObserver = new ResizeObserver(this.setGridColumns);
+        resizeObserver.observe(this.$refs.productView);
     }
 };
 </script>
