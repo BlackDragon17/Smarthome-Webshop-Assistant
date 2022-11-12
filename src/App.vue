@@ -21,6 +21,7 @@
     </main>
 
     <TutorialTooltips v-if="showTutorial" :active-view="activeView"/>
+    <TutorialTooltip/>
 </template>
 
 <script>
@@ -31,6 +32,7 @@ import HomeSetup from "@/components/HomeSetup/HomeSetup.vue";
 import ProductDatabase from "@/components/ProductDatabase/ProductDatabase.vue";
 import TaskCompleteModal from "@/components/TaskCompleteModal.vue";
 import TutorialTooltips from "@/components/TutorialTooltips.vue";
+import TutorialTooltip from "@/components/TutorialTooltip.vue";
 
 // Data naming convention:
 //     product: a unique smart home product model released by a company.
@@ -58,7 +60,8 @@ export default {
         HomeSetup,
         ProductDatabase,
         TaskCompleteModal,
-        TutorialTooltips
+        TutorialTooltips,
+        TutorialTooltip
     },
 
     data() {
@@ -71,6 +74,7 @@ export default {
             deviceQueue: [],
             replaceId: null,
 
+            initialControlsTooltipShown: false,
             tutorialShown: false
         };
     },
@@ -410,7 +414,9 @@ p {
     --green-devices-main-darker4: #1C401D; /* lightness -31 */
 
     --green-devices-overlay: #44A148;
+
     --green-tooltip-bg: #4EB151;
+    --green-tooltip-border: #46A049;
 
     --gray-button-hover: #DFDFDF;
 

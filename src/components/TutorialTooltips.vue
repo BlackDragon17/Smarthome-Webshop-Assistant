@@ -4,8 +4,8 @@
             <h5 class="tooltip-heading" v-if="tooltipContent.heading">
                 {{ tooltipContent.heading }}
             </h5>
-            <p class="tooltip-text" v-for="parahraph in tooltipContent.paragraphs">
-                {{ parahraph }}
+            <p class="tooltip-text" v-for="paragraph in tooltipContent.paragraphs">
+                {{ paragraph }}
             </p>
             <div class="tooltip-footer">
                 <button class="tooltip-button btn btn-success" @click="nextTooltip">Next</button>
@@ -235,7 +235,6 @@ export default {
                         bottom: "top",
                         left: "right"
                     }[placement.split("-")[0]];
-                    this.arrowSide = oppositeSide;
 
                     const {x: arrowX, y: arrowY} = middlewareData.arrow;
                     Object.assign(this.$refs.tooltipArrow.style, {

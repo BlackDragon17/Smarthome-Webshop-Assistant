@@ -54,6 +54,7 @@ import { nextTick } from "vue";
 import AddRoomModal from "./modals/AddRoomModal.vue";
 import RemoveRoomModal from "./modals/RemoveRoomModal.vue";
 import Room from "./Room.vue";
+import TooltipContent from "@/assets/javascript/tooltip-content";
 
 export default {
     name: "HomeRoomView",
@@ -285,6 +286,7 @@ export default {
                 case "adding-first-room":
                     await nextTick();
                     this.initialCalculations();
+                    this.showInitialControlsTooltip();
                     break;
                 case "removing-room":
                     break;
@@ -306,6 +308,22 @@ export default {
             this.allowMarginOverride = true;
         },
 
+
+        showInitialControlsTooltip() {
+            if (this.$root.initialControlsTooltipShown
+                || this.currentSetup.controls.assistants.length > 0
+                || this.currentSetup.controls.brandApps.length > 0) {
+                return;
+            }
+
+            this.$root.initialControlsTooltipShown = true;
+            const modifyControlsButton = document.querySelector("button.modify-controls-button");
+            const tooltipText = [
+                "Don't forget to set your preferred methods of controlling your smart home"
+            ];
+            this.$eventBus.$emit("show-tooltip",
+                new TooltipContent(null, tooltipText, modifyControlsButton, "right", true));
+        },
 
         initialCalculations() {
             if (this.gridContainerCss || this.currentSetup.rooms.length <= 0) {
