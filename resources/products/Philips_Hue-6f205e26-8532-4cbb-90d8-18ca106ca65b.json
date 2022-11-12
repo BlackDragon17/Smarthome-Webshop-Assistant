@@ -1,0 +1,22 @@
+{
+  "brand": "Philips Hue",
+  "model": "Tap Dial Switch",
+  "generation": "N/A",
+  "revision": "2022",
+  "category": "switch",
+  "type": "dial",
+  "subtype": "lightSwitch",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ]
+  },
+  "powerSource": [
+    "battery"
+  ],
+  "amazonDP": {
+    "eu": "B0B2PQLWD9",
+    "com": "B0B6LLKHTM"
+  },
+  "productId": "6f205e26-8532-4cbb-90d8-18ca106ca65b"
+}

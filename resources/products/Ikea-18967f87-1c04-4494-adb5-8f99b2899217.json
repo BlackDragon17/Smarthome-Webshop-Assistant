@@ -1,0 +1,34 @@
+{
+  "brand": "Ikea",
+  "model": "Dirigera",
+  "generation": "N/A",
+  "revision": "2022",
+  "category": "hub",
+  "type": "open",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ],
+    "thread": [
+      "borderRouter",
+      "matter"
+    ],
+    "lan": [
+      "ethernet"
+    ],
+    "ethernet": []
+  },
+  "control": [
+    "brandApp",
+    "alexa",
+    "googleAssistant",
+    "homeKit"
+  ],
+  "homeKitHubType": "bridge",
+  "powerSource": [
+    "wall"
+  ],
+  "purchaseLink": "https://www.ikea.com/de/de/p/dirigera-hub-fuer-smarte-produkte-weiss-smart-10503406/",
+  "expandable": false,
+  "productId": "18967f87-1c04-4494-adb5-8f99b2899217"
+}

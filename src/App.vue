@@ -281,6 +281,7 @@ export default {
             }
         },
 
+
         async checkSetupState(currentSetup) {
             await nextTick();
             if (this.activeView !== "HomeSetup" || this.$refs.homeSetup?.viewState !== "normal") {
@@ -291,7 +292,7 @@ export default {
             if (currentSetup.name.includes("1")) {
                 this.checkSetupStateTask1(currentSetup);
             } else if (currentSetup.name.includes("2")) {
-
+                this.checkSetupStateTask2(currentSetup);
             }
         },
 
@@ -312,6 +313,15 @@ export default {
                 console.log("task 1 successful");
                 this.openTaskCompleteModal("task-successful");
             }
+        },
+
+        checkSetupStateTask2(currentSetup) {
+            if (!currentSetup.controls.assistants.includes("alexa")
+                || !["Living Room", "Bedroom", "Foyer"].every(room => currentSetup.rooms.find(setupRoom => setupRoom.name === room))
+            ) {
+                console.log("task 1 failed");
+                this.openTaskCompleteModal("task-failed");
+            }
         }
     },
 
@@ -322,8 +332,7 @@ export default {
         if (!this.currentSetup.studySetup) {
             return;
         }
-        if (!this.currentSetup.name.includes("0"))
-        {
+        if (!this.currentSetup.name.includes("0")) {
             this.$watch("currentSetup", this.checkSetupState, {deep: true, flush: "post"});
         }
 

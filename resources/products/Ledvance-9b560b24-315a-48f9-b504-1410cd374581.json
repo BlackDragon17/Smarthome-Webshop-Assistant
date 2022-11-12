@@ -1,0 +1,29 @@
+{
+  "brand": "Ledvance",
+  "model": "Smart+ Motion Sensor",
+  "generation": "N/A",
+  "revision": "2022",
+  "category": "sensor",
+  "senses": [
+    "motion"
+  ],
+  "network": {
+    "lan": [
+      "wifi"
+    ],
+    "wifi": [
+      "2.4GHz"
+    ]
+  },
+  "control": [
+    "brandApp",
+    "alexa"
+  ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "eu": "B09Z6WDGSG"
+  },
+  "productId": "9b560b24-315a-48f9-b504-1410cd374581"
+}

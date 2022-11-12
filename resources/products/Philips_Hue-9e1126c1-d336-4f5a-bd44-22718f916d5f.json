@@ -1,0 +1,23 @@
+{
+  "brand": "Philips Hue",
+  "model": "Wireless Dimmer Switch",
+  "generation": 2,
+  "revision": "N/A",
+  "category": "switch",
+  "type": "switch",
+  "subtype": "lightSwitch",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ],
+    "bluetooth": []
+  },
+  "powerSource": [
+    "battery"
+  ],
+  "amazonDP": {
+    "eu": "B08PKMT2DV"
+  },
+  "purchaseLink": "https://www.philips-hue.com/de-de/p/hue-hue-dimmschalter--neuestes-modell-/8719514274617",
+  "productId": "9e1126c1-d336-4f5a-bd44-22718f916d5f"
+}

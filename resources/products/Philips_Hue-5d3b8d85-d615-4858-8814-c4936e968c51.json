@@ -1,0 +1,22 @@
+{
+  "brand": "Philips Hue",
+  "model": "Smart Button",
+  "generation": "N/A",
+  "revision": "2021",
+  "category": "switch",
+  "type": "button",
+  "subtype": "lightSwitch",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ]
+  },
+  "powerSource": [
+    "battery"
+  ],
+  "amazonDP": {
+    "eu": "B09C3MJR24",
+    "com": "B07XV1HRVZ"
+  },
+  "productId": "5d3b8d85-d615-4858-8814-c4936e968c51"
+}

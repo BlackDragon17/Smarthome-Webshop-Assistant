@@ -1,0 +1,21 @@
+{
+  "brand": "Ikea",
+  "model": "Trådfri",
+  "generation": "N/A",
+  "revision": "2020",
+  "category": "sensor",
+  "senses": [
+    "motion"
+  ],
+  "network": {
+    "zigbee": [
+      "gen3"
+    ]
+  },
+  "control": [],
+  "powerSource": [
+    "battery"
+  ],
+  "purchaseLink": "https://www.ikea.com/de/de/p/tradfri-funk-bewegungsmelder-smart-weiss-70429913/",
+  "productId": "d48dc897-ee6c-4576-ab0c-518cb4e15e46"
+}

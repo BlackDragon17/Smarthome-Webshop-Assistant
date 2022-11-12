@@ -1,0 +1,24 @@
+{
+  "brand": "Philips Hue",
+  "model": "Motion Sensor",
+  "generation": "N/A",
+  "revision": "2021",
+  "category": "sensor",
+  "senses": [
+    "motion"
+  ],
+  "network": {
+    "zigbee": [
+      "gen3"
+    ]
+  },
+  "control": [],
+  "powerSource": [
+    "battery"
+  ],
+  "amazonDP": {
+    "eu": "B09CV78GV1",
+    "com": "B076MGK22M"
+  },
+  "productId": "30f60724-3466-4198-a6c7-19b97a0ebceb"
+}

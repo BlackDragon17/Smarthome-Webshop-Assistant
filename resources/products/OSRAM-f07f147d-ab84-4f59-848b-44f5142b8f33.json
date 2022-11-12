@@ -1,0 +1,24 @@
+{
+  "brand": "OSRAM",
+  "model": "Smart+ Motion Sensor",
+  "generation": "N/A",
+  "revision": "N/A",
+  "category": "sensor",
+  "senses": [
+    "motion",
+    "temperature"
+  ],
+  "network": {
+    "zigbee": []
+  },
+  "control": [
+    "alexa"
+  ],
+  "powerSource": [
+    "battery"
+  ],
+  "amazonDP": {
+    "eu": "B074KHZZ6B"
+  },
+  "productId": "f07f147d-ab84-4f59-848b-44f5142b8f33"
+}

@@ -1,0 +1,30 @@
+{
+  "brand": "Google",
+  "model": "Nest Mini",
+  "generation": 2,
+  "revision": "N/A",
+  "category": "hub",
+  "type": "proprietary",
+  "network": {
+    "lan": [
+      "wifi"
+    ],
+    "wifi": [
+      "2.4GHz",
+      "5GHz",
+      "AC"
+    ],
+    "bluetooth": [
+      "5.0"
+    ]
+  },
+  "control": [
+    "googleAssistant"
+  ],
+  "powerSource": [
+    "wall"
+  ],
+  "purchaseLink": "https://store.google.com/product/google_nest_mini",
+  "expandable": false,
+  "productId": "16bb59bf-43f3-49e6-ab1c-462c5171a78c"
+}
