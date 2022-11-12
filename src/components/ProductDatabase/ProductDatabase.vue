@@ -194,6 +194,7 @@ export default {
                 this.currentSetup.controls.assistants = Object.keys(this.$getName.allAssistants).filter(assistant => assistant !== "homeKit");
             }
 
+
             // Find setup hubs which support user's preferred control method.
             const setupHubs = this.setupProducts.filter(product => product.category === "hub" && (
                 (this.currentSetup.controls.assistants.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
@@ -213,6 +214,7 @@ export default {
                 this.filterRules.networks.addAllowed("bluetooth");
                 this.filterLanAndBluetoothProducts(products, false, productsMap);
             }
+
 
             // Compatibility filtering is based on the user's hub(s) and on user's controls as a secondary factor.
             for (const hub of setupHubs) {
@@ -282,6 +284,7 @@ export default {
                 }
             }
 
+
             // In the absence of hubs (with the required control options), Wi-Fi and Bluetooth are instead scored higher at 5 and 4, respectively.
             // Also, switches are handled separately, since direct connectivity to other products must be ensured.
             if (setupHubs.length <= 0) {
@@ -322,19 +325,36 @@ export default {
                 }
             }
 
+
+            const setupProducts = this.setupProducts.filter(product => product.category !== "hub");
+
+            // Special Ikea rule
+            // Unlike with most Zigbee products, Ikea's implementation of Zigbee allows their devices to communicate with each other,
+            // even without a network-orchestrating hub. This mode does limit the network to 10 Ikea devices, but it still works.
+            // (In essence, this extends the non-Philips case of the switches-logic, but for all categories of Ikea products.)
+            if (setupProducts.find(product => product.brand === "Ikea" && product.network.zigbee)) {
+                products.filter(product => product.brand === "Ikea" && product.network.zigbee)
+                    .map(product => {
+                        product.compatScore = 5;
+                        product.compatMsg = "Can directly connect to your other Ikea smart devices.";
+                        return product;
+                    }).forEach(product => productsMap.set(product.productId, product));
+            }
+
+
             // Hubs filtering
             // Unlike with the filtering of other devices, the general compatibility filtering of hubs will not be adding any network entries to FilterRules.
             // This is because we cannot make any pre-selections in an all-of filter, as that could cause us to not display any compatible products.
             // Leaving networks filtering at any-of for hubs isn't an option either, since the user would then have no way of e.g. enforcing the hubs to have Bluetooth.
             // The option of mixing all-of and any-of with visual annotation is overly complex both for the usability and program logic. Thus, no pre-selections.
-
-            const setupProducts = this.setupProducts.filter(product => product.category !== "hub");
             this.findCompatibleHubs(setupProducts, productsMap);
+
 
             // Reverse the mocking of assistants described above, if it had been done
             if (mockedAssistants) {
                 this.currentSetup.controls.assistants = [];
             }
+
 
             this.productsMap = productsMap;
         },
