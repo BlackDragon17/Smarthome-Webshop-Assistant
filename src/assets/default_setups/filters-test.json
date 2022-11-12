@@ -1,0 +1,22 @@
+{
+  "controls": {
+    "brandApps": ["Ikea"]
+  },
+  "rooms": [
+    {
+      "name": "Main Room",
+      "location": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  ],
+  "devices": [
+    {
+      "productId": "3f57663c-39f0-452e-ab4c-c749ff4b017d",
+      "localId": "c0bad215-c7d5-41f7-8ef5-3ab127350694",
+      "room": "Main Room",
+      "location": 1
+    }
+  ]
+}

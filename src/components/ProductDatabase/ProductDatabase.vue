@@ -299,10 +299,11 @@ export default {
                     const switches = products.filter(product => product.category === "switch" || product.category.includes("switch"));
                     // Outside hub-based networks, switches will generally only work with products of the same vendor.
                     for (const setupProduct of relevantSetupProducts) {
-                        const setupProductNetworks = Object.values(setupProduct.network);
                         // An exception is made for Philips Hue, where other vendors can implement the Friends Of Hue protocol.
                         if (setupProduct.brand === "Philips Hue") {
-                            if (!setupProduct.network.bluetooth) continue;
+                            if (!setupProduct.network.bluetooth) {
+                                continue;
+                            }
                             switches.filter(swtch => (swtch.brand === setupProduct.brand || swtch.certs?.includes("friendsOfHue")) && swtch.network.bluetooth)
                                 .map(swtch => {
                                     swtch.compatScore = 5;
@@ -310,7 +311,7 @@ export default {
                                     return swtch;
                                 }).forEach(swtch => productsMap.set(swtch.productId, swtch));
                         } else {
-                            switches.filter(swtch => swtch.brand === setupProduct.brand && Object.values(swtch.network).some(network => setupProductNetworks.includes(network)))
+                            switches.filter(swtch => swtch.brand === setupProduct.brand && Object.keys(swtch.network).some(network => Object.keys(setupProduct.network).includes(network)))
                                 .map(swtch => {
                                     swtch.compatScore = 5;
                                     swtch.compatMsg = `Can directly control your ${setupProduct.brand} devices.`;

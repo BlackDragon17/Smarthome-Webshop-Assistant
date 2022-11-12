@@ -1,0 +1,17 @@
+{
+  "brand": "Ikea",
+  "model": "Styrbar",
+  "generation": "N/A",
+  "revision": "2020",
+  "category": "switch",
+  "type": "switch",
+  "subtype": "lightSwitch",
+  "network": {
+    "zigbee": []
+  },
+  "powerSource": [
+    "battery"
+  ],
+  "purchaseLink": "https://www.ikea.com/de/de/p/styrbar-fernbedienung-smart-weiss-30488363/",
+  "productId": "8fdebdcd-e271-4ffd-9b22-2c3936073ccb"
+}

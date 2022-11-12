@@ -8,9 +8,7 @@
     "motion"
   ],
   "network": {
-    "zigbee": [
-      "gen3"
-    ]
+    "zigbee": []
   },
   "control": [],
   "powerSource": [
