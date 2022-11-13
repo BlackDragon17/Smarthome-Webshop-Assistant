@@ -509,28 +509,34 @@ export default {
         filterLanAndBluetoothProducts(products, noHubs, productsMap) {
             const bluetoothProducts = products.filter(product => product.network.bluetooth);
             // Vendor app-based control via Bluetooth.
-            bluetoothProducts.filter(product => this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
-                .map(product => {
-                    product.compatScore = noHubs ? 4 : 3;
-                    product.compatMsg = `Can connect to the ${product.brand} app via Bluetooth. Note: due to Bluetooth, you must be in the same physical space as this device to control it.`;
-                    return product;
-                }).forEach(product => productsMap.set(product.productId, product));
+            if (this.currentSetup.controls.brandApps.length > 0) {
+                bluetoothProducts.filter(product => this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
+                    .map(product => {
+                        product.compatScore = noHubs ? 4 : 3;
+                        product.compatMsg = `Can connect to the ${product.brand} app via Bluetooth. Note: due to Bluetooth, you must be in the same physical space as this device to control it.`;
+                        return product;
+                    }).forEach(product => productsMap.set(product.productId, product));
+            }
 
             const lanProducts = products.filter(product => product.network.lan);
             // Assistant-based control via Wi-Fi.
-            lanProducts.filter(product => this.currentSetup.controls.assistants.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant)))
-                .map(product => {
-                    product.compatScore = noHubs ? 5 : 4;
-                    product.compatMsg = `Can connect to ${this.$getName.control(this.currentSetup.controls.assistants.find(assistant => product.control.includes(assistant)))} via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
-                    return product;
-                }).forEach(product => productsMap.set(product.productId, product));
+            if (this.currentSetup.controls.assistants.length > 0) {
+                lanProducts.filter(product => this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant)))
+                    .map(product => {
+                        product.compatScore = noHubs ? 5 : 4;
+                        product.compatMsg = `Can connect to ${this.$getName.control(this.currentSetup.controls.assistants.find(assistant => product.control.includes(assistant)))} via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
+                        return product;
+                    }).forEach(product => productsMap.set(product.productId, product));
+            }
             // Vendor app-based control via Wi-Fi.
-            lanProducts.filter(product => this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
-                .map(product => {
-                    product.compatScore = noHubs ? 5 : 4;
-                    product.compatMsg = `Can connect to the ${product.brand} app via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
-                    return product;
-                }).forEach(product => productsMap.set(product.productId, product));
+            if (this.currentSetup.controls.brandApps.length > 0) {
+                lanProducts.filter(product => this.currentSetup.controls.brandApps.some(brand => brand === product.brand))
+                    .map(product => {
+                        product.compatScore = noHubs ? 5 : 4;
+                        product.compatMsg = `Can connect to the ${product.brand} app via ${product.network.wifi ? "Wi-Fi" : "an ethernet cable"}.`;
+                        return product;
+                    }).forEach(product => productsMap.set(product.productId, product));
+            }
         },
 
         setFilterRulesForReplacement() {
