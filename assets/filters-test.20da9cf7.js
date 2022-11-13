@@ -1,0 +1,1 @@
+const o={brandApps:["Ikea"]},c=[{name:"Main Room",location:{x:0,y:0}}],s=[{productId:"3f57663c-39f0-452e-ab4c-c749ff4b017d",localId:"c0bad215-c7d5-41f7-8ef5-3ab127350694",room:"Main Room",location:1}],a={controls:o,rooms:c,devices:s};export{o as controls,a as default,s as devices,c as rooms};
