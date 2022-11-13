@@ -201,6 +201,9 @@ export default {
                     || (this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
             ));
 
+            // The user's non-hub products
+            const setupProducts = this.setupProducts.filter(product => product.category !== "hub");
+
             // Get all non-hub products.
             const products = Object.values(this.allProducts).filter(product => product.category !== "hub");
 
@@ -243,9 +246,7 @@ export default {
                             return product;
                         }).forEach(product => productsMap.set(product.productId, product));
                     }
-                }
-
-                if (hub.brand === "Amazon") {
+                } else if (hub.brand === "Amazon") {
                     if (hub.model === "Echo" || hub.model.includes("Echo Studio") || hub.model.includes("Echo Show 10")) {
                         // The Amazon Echo, Echo Studio, and Echo Show 10 can speak to Zigbee devices,
                         // as well as to Philips Hue Bluetooth devices (via Philip's custom Alexa Gadget Interface).
@@ -268,19 +269,25 @@ export default {
                             return product;
                         }).forEach(product => productsMap.set(product.productId, product));
                     }
-                }
-
-                if (hub.brand === "Aeotec" && hub.model === "Smart Home Hub") {
-                    // It's a relatively open platform speaking relatively modern versions of Zigbee and Z-Wave.
-                    const relevantProducts = products.filter(product => product.network.zigbee || product.network.zWave);
-                    this.filterRules.networks.addAllowed("zigbee");
-                    this.filterRules.networks.addAllowed("zWave");
-
-                    relevantProducts.map(product => {
-                        product.compatScore = 5;
-                        product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
-                        return product;
-                    }).forEach(product => productsMap.set(product.productId, product));
+                } else {
+                    // Generic Zigbee hub logic
+                    if (hub.network.zigbee) {
+                        this.filterRules.networks.addAllowed("zigbee");
+                        products.filter(product => product.network.zigbee).map(product => {
+                            product.compatScore = 5;
+                            product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
+                            return product;
+                        }).forEach(product => productsMap.set(product.productId, product));
+                    }
+                    // Generic Z-Wave hub logic
+                    if (hub.network.zWave) {
+                        this.filterRules.networks.addAllowed("zWave");
+                        products.filter(product => product.network.zWave).map(product => {
+                            product.compatScore = 5;
+                            product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
+                            return product;
+                        }).forEach(product => productsMap.set(product.productId, product));
+                    }
                 }
             }
 
@@ -288,7 +295,7 @@ export default {
             // In the absence of hubs (with the required control options), Wi-Fi and Bluetooth are instead scored higher at 5 and 4, respectively.
             // Also, switches are handled separately, since direct connectivity to other products must be ensured.
             if (setupHubs.length <= 0) {
-                const relevantSetupProducts = this.setupProducts.filter(product => product.category !== "hub" && product.category !== "switch" && !product.category.includes("switch"));
+                const relevantSetupProducts = setupProducts.filter(product => product.category !== "switch" && !product.category.includes("switch"));
 
                 // If there are no products in the setup which could be controlled via a switch, we treat switches as any other device.
                 if (relevantSetupProducts.length <= 0) {
@@ -326,19 +333,28 @@ export default {
             }
 
 
-            const setupProducts = this.setupProducts.filter(product => product.category !== "hub");
-
             // Special Ikea rule
-            // Unlike with most Zigbee products, Ikea's implementation of Zigbee allows their devices to communicate with each other,
-            // even without a network-orchestrating hub. This mode does limit the network to 10 Ikea devices, but it still works.
+            // Unlike with most Zigbee products, Ikea's implementation of Zigbee allows their devices to communicate with each other, even without a network-orchestrating hub.
+            // This mode does limit the network to 10 Ikea devices and is not preferable when a hub is available.
             // (In essence, this extends the non-Philips case of the switches-logic, but for all categories of Ikea products.)
-            if (setupProducts.find(product => product.brand === "Ikea" && product.network.zigbee)) {
-                products.filter(product => product.brand === "Ikea" && product.network.zigbee)
-                    .map(product => {
-                        product.compatScore = 5;
-                        product.compatMsg = "Can directly connect to your other Ikea smart devices.";
-                        return product;
-                    }).forEach(product => productsMap.set(product.productId, product));
+            if (!setupHubs.find(hub => hub.network.zigbee && hub.brand !== "Philips Hue")
+                && setupProducts.find(product => product.brand === "Ikea" && product.network.zigbee)) {
+                // Due to the restrictiveness of Philips Hue hubs, their existence is nearly the same as no hub.
+                if (setupHubs.find(hub => hub.network.zigbee && hub.brand === "Philips Hue")) {
+                    products.filter(product => product.brand === "Ikea" && product.network.zigbee)
+                        .map(product => {
+                            product.compatScore = 3;
+                            product.compatMsg = "Can only connect to your Ikea devices but not to your Philips Hue hub.";
+                            return product;
+                        }).forEach(product => productsMap.set(product.productId, product));
+                } else {
+                    products.filter(product => product.brand === "Ikea" && product.network.zigbee)
+                        .map(product => {
+                            product.compatScore = 5;
+                            product.compatMsg = "Can directly connect to your other Ikea smart devices.";
+                            return product;
+                        }).forEach(product => productsMap.set(product.productId, product));
+                }
             }
 
 
