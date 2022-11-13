@@ -44,11 +44,15 @@ export default {
             this.tooltipContent = tooltipContent;
             this.tooltipShown = true;
 
+            await nextTick();
+            setTimeout(() => {
+                this.$refs.tooltipBody.style.opacity = "1";
+            }, 10);
+
             if (!this.tooltipContent.target) {
                 return;
             }
-
-            await nextTick();
+            this.tooltipContent.target.addEventListener("click", this.hideTooltip);
             this.floatTooltip(this.$refs.tooltipBody, this.tooltipContent.target);
         },
 
@@ -57,13 +61,21 @@ export default {
                 return;
             }
 
+            this.$refs.tooltipBody.style.opacity = "0";
+
             if (this.floatCleanup) {
                 this.floatCleanup();
                 this.floatCleanup = null;
             }
 
-            this.tooltipShown = false;
-            this.tooltipContent = null;
+            if (this.tooltipContent.target) {
+                this.tooltipContent.target.removeEventListener("click", this.hideTooltip);
+            }
+
+            setTimeout(() => {
+                this.tooltipShown = false;
+                this.tooltipContent = null;
+            }, 200);
         },
 
         floatTooltip() {
@@ -139,10 +151,13 @@ export default {
     box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
     border: 1px solid var(--green-tooltip-border);
 
+    z-index: 6;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 6;
+
+    opacity: 0;
+    transition: opacity 0.17s;
 }
 
 .tooltip-centered {
