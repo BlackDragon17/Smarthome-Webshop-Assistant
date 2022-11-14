@@ -35,7 +35,6 @@ export default {
 
 <style scoped>
 .emphasized-text {
-    /* font-weight: 600; */
     font-style: italic;
 }
 
