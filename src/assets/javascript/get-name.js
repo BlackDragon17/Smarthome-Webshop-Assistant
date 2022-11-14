@@ -20,12 +20,13 @@ export default class GetName {
     }
 
     // Return category headings.
-    categoryHeading(value) {
-        switch (value) {
+    categoryHeading(category) {
+        category = Array.isArray(category) ? category[0] : category;
+        switch (category) {
             case "hub":
             case "light":
             case "sensor":
-                return capitalize(value) + "s";
+                return capitalize(category) + "s";
             case "switch":
                 return "Buttons & Switches";
             default:
@@ -33,12 +34,13 @@ export default class GetName {
         }
     }
 
-    categoryHeadingSingular(value) {
-        switch (value) {
+    categoryHeadingSingular(category) {
+        category = Array.isArray(category) ? category[0] : category;
+        switch (category) {
             case "hub":
             case "light":
             case "sensor":
-                return capitalize(value);
+                return capitalize(category);
             case "switch":
                 return "Button / Switch";
             default:

@@ -30,27 +30,10 @@
 
         <hr>
 
-        <div class="products-list" v-if="!sortByRoom">
-            <div class="devices-group" v-for="category in Object.keys(devicesByCategory).sort()">
+        <div class="products-list">
+            <div class="devices-group" v-for="category in Object.keys(sortedDevices).sort()">
                 <p>{{ category }}</p>
-                <button class="device-card" v-for="device in devicesByCategory[category]" @click="$eventBus.$emit('open-device-info', device)">
-                    <span class="inline-icon material-symbols-rounded">
-                        {{ $getName.categoryIcon(allProducts[device.productId].category) }}
-                    </span>
-                    {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
-                </button>
-            </div>
-        </div>
-
-        <div class="products-list" v-else>
-            <div class="devices-group" v-for="room in Object.keys(devicesByRoom).sort()">
-                <p>{{ room }}</p>
-                <button class="device-card" v-for="device in devicesByRoom[room]" @click="$eventBus.$emit('open-device-info', device)">
-                    <span class="inline-icon material-symbols-rounded">
-                        {{ $getName.categoryIcon(allProducts[device.productId].category) }}
-                    </span>
-                    {{ allProducts[device.productId].brand }} {{ allProducts[device.productId].model }}
-                </button>
+                <DeviceCard v-for="device in sortedDevices[category]" :device="device" :product="allProducts[device.productId]"/>
             </div>
         </div>
     </aside>
@@ -58,12 +41,14 @@
 
 <script>
 import ModifyControlsModal from "./modals/ModifyControlsModal.vue";
+import DeviceCard from "@/components/HomeSetup/DeviceCard.vue";
 
 export default {
     name: "HomeSidebar",
 
     components: {
-        ModifyControlsModal
+        ModifyControlsModal,
+        DeviceCard
     },
 
     data() {
@@ -85,6 +70,14 @@ export default {
     inject: ["allProducts"],
 
     computed: {
+        sortedDevices() {
+            if (this.sortByRoom) {
+                return this.devicesByRoom;
+            } else {
+                return this.devicesByCategory;
+            }
+        },
+
         productsListBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgoldenrod";
         }
@@ -187,26 +180,5 @@ export default {
 .devices-group > :first-child {
     font-size: 1.05rem;
     font-weight: 500;
-}
-
-.device-card {
-    display: block;
-    margin: 0.6rem 0;
-    padding: 0.5rem;
-    width: 100%;
-    min-height: 5.5rem;
-
-    border: 1px solid lightgray;
-    border-radius: var(--button-border-radius);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
-    background-color: white;
-}
-
-.device-card:hover, .device-card:focus {
-    background-color: #EEE;
-}
-
-.device-card:active {
-    background-color: #DDD;
 }
 </style>
