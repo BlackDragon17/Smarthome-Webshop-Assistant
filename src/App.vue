@@ -22,6 +22,7 @@
 
     <TutorialTooltips v-if="showTutorial" :active-view="activeView"/>
     <TutorialTooltip/>
+    <Alerts :study-setup="this.currentSetup?.studySetup"/>
 </template>
 
 <script>
@@ -34,6 +35,7 @@ import ProductDatabase from "@/components/ProductDatabase/ProductDatabase.vue";
 import TaskCompleteModal from "@/components/TaskCompleteModal.vue";
 import TutorialTooltips from "@/components/TutorialTooltips.vue";
 import TutorialTooltip from "@/components/TutorialTooltip.vue";
+import Alerts from "@/components/Alerts.vue";
 
 // Data naming convention:
 //     product: a unique smart home product model released by a company.
@@ -62,7 +64,8 @@ export default {
         ProductDatabase,
         TaskCompleteModal,
         TutorialTooltips,
-        TutorialTooltip
+        TutorialTooltip,
+        Alerts
     },
 
     data() {
