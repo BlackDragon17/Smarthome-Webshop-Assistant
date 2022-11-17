@@ -32,7 +32,7 @@ export default {
             tutorialStepHomeSetup: 0,
             homeSetupTotalSteps: 4,
             tutorialStepProductDatabase: 0,
-            productDatabaseTotalSteps: 2,
+            productDatabaseTotalSteps: 3,
 
             currentFocustrap: null,
             floatCleanup: null
@@ -198,10 +198,25 @@ export default {
                     break;
 
                 case 3:
-                    this.currentFocustrap.deactivate();
+                    this.tooltipContent.paragraphs = [
+                        "To expand your setup beyond the currently compatible, you can always switch off the filters."
+                    ];
+                    this.tooltipContent.showArrow = true;
+
                     highlightedEl = document.querySelector("aside.sidebar");
                     highlightedEl.classList.remove("tutorial-element-highlight");
+
+                    highlightedEl = document.querySelector("div.compatibility-switch.form-check.form-switch");
+                    highlightedEl.classList.add("tutorial-element-highlight");
+                    highlightedEl.parentElement.classList.add("tutorial-element-parent");
+                    this.floatTooltip(highlightedEl, this.$refs.tooltipBody, "right");
                     break;
+
+                case 4:
+                    this.currentFocustrap.deactivate();
+                    highlightedEl = document.querySelector("div.compatibility-switch.form-check.form-switch");
+                    highlightedEl.classList.remove("tutorial-element-highlight");
+                    highlightedEl.parentElement.classList.remove("tutorial-element-parent");
             }
         },
 
@@ -263,9 +278,13 @@ export default {
 </script>
 
 <style>
+.tutorial-element-parent {
+    z-index: 6 !important;
+}
+
 .tutorial-element-highlight {
     box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.4) !important;
-    z-index: 5 !important;
+    z-index: 7 !important;
 }
 </style>
 
@@ -277,7 +296,7 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 6;
+    z-index: 8;
 }
 
 .curtain-dark-bg {

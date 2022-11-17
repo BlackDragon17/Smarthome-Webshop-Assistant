@@ -380,7 +380,7 @@ export default {
          * Finds compatible hubs based on the given setup products and adds them to the productsMap.
          * Can be used both for either finding hubs generally compatible to the whole setup, or compatible to one specific device.
          * @param {product[]} setupProducts Array of product(s) to base the filtering off of.
-         * @param {Map} productsMap A productsMap to add the results to.
+         * @param {Map} productsMap the productsMap to add the results to.
          */
         findCompatibleHubs(setupProducts, productsMap) {
             // Get all hub products which support the user's preferred control method.
@@ -394,6 +394,23 @@ export default {
             // except here we don't for-loop over the setupProducts since we don't want to add hubs which can only
             // connect to a single device in the house -- or at least be able to penalize the compatScore appropriately.
             // Also like above, we begin with the worst connectivity options and end with the best.
+
+
+            // If the user uses voice assistants, the native hubs for these voice assistants should be recommended.
+            if (this.currentSetup.controls.assistants.includes("alexa")) {
+                hubs.filter(hub => hub.brand === "Amazon" && hub.control.includes("alexa")).map(hub => {
+                    hub.compatScore = 4;
+                    hub.compatMsg = "Lets you issue voice commands to Alexa.";
+                    return hub;
+                }).forEach(hub => productsMap.set(hub.productId, hub));
+            }
+            if (this.currentSetup.controls.assistants.includes("googleAssistant")) {
+                hubs.filter(hub => hub.brand === "Google" && hub.control.includes("googleAssistant")).map(hub => {
+                    hub.compatScore = 4;
+                    hub.compatMsg = "Lets you issue voice commands to Google Assistant.";
+                    return hub;
+                }).forEach(hub => productsMap.set(hub.productId, hub));
+            }
 
             // Amazon Echo hubs offer the unique capability of controlling Philips Hue devices via Bluetooth.
             if (setupProducts.filter(product => product.brand === "Philips Hue" && product.category === "light" && product.network.bluetooth).length > 0) {
