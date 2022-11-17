@@ -35,20 +35,20 @@ export default {
 
             this.alertText = "This action cannot be currently performed.";
             if (this.studySetup) {
-                this.alertText = "This action cannot be performed in the current part of the study.";
+                this.alertText = "This action cannot be performed in this part of the study.";
             }
 
             this.showAlert = true;
             await nextTick();
 
-            this.$refs.alertEl.addEventListener("mouseenter", () => this.alertTimer.pause());
-            this.$refs.alertEl.addEventListener("mouseleave", () => this.alertTimer.resume());
-            this.alertTimer = new PauseableTimeout(this.hideAlert, 3 * 1000);
+            this.$refs.alertEl.addEventListener("mouseenter", () => this.alertTimer?.pause());
+            this.$refs.alertEl.addEventListener("mouseleave", () => this.alertTimer?.resume());
+            this.alertTimer = new PauseableTimeout(this.hideAlert, 4 * 1000);
         },
 
         resetTimer() {
             this.alertTimer.clearTimeout();
-            this.alertTimer = new PauseableTimeout(this.hideAlert, 3 * 1000);
+            this.alertTimer = new PauseableTimeout(this.hideAlert, 4 * 1000);
         },
 
         hideAlert() {
@@ -56,10 +56,14 @@ export default {
                 return;
             }
 
-            this.showAlert = false;
-            this.alertText = "";
+            this.$refs.alertEl.style.opacity = "0";
             this.alertTimer.clearTimeout();
             this.alertTimer = null;
+
+            setTimeout(() => {
+                this.showAlert = false;
+                this.alertText = "";
+            }, 200);
         }
     },
 
@@ -86,7 +90,9 @@ export default {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 6;
+    z-index: 2000;
+
+    transition: opacity 0.18s;
 }
 
 .alert-icon {
