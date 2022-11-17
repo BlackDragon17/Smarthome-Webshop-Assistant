@@ -59,7 +59,7 @@
 
 <script>
 import { nextTick } from "vue";
-import Device from "@/assets/javascript/device";
+import Device from "@/assets/javascript/dto/device";
 import Popover from "../Popover.vue";
 
 export default {

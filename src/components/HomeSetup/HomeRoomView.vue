@@ -54,7 +54,7 @@ import { nextTick } from "vue";
 import AddRoomModal from "./modals/AddRoomModal.vue";
 import RemoveRoomModal from "./modals/RemoveRoomModal.vue";
 import Room from "./Room.vue";
-import TooltipContent from "@/assets/javascript/tooltip-content";
+import TooltipContent from "@/assets/javascript/dto/tooltip-content";
 
 export default {
     name: "HomeRoomView",

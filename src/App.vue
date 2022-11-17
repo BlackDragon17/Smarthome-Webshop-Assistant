@@ -26,7 +26,7 @@
 
 <script>
 import { nextTick } from "vue";
-import Device from "@/assets/javascript/device";
+import Device from "@/assets/javascript/dto/device";
 import NavHeader from "@/components/NavHeader.vue";
 import HomeSetup from "@/components/HomeSetup/HomeSetup.vue";
 import ProductDatabase from "@/components/ProductDatabase/ProductDatabase.vue";

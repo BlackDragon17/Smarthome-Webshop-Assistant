@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import Device from "@/assets/javascript/device";
+import Device from "@/assets/javascript/dto/device";
 
 export default {
     name: "DeviceCard",

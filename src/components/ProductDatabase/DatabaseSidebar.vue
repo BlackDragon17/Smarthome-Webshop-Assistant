@@ -338,8 +338,8 @@
 
 <script>
 import { capitalize } from "vue";
-import FilterRules from "@/assets/javascript/filter-rules";
-import FilterValues from "@/assets/javascript/filter-values";
+import FilterRules from "@/assets/javascript/dto/filter-rules";
+import FilterValues from "@/assets/javascript/dto/filter-values";
 
 export default {
     name: "DatabaseSidebar",

@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import FilterRules from "@/assets/javascript/filter-rules";
-import FilterValues from "@/assets/javascript/filter-values";
+import FilterRules from "@/assets/javascript/dto/filter-rules";
+import FilterValues from "@/assets/javascript/dto/filter-values";
 import ConfirmCancelActionModal from "@/components/ConfirmCancelActionModal.vue";
 import DatabaseSidebar from "./DatabaseSidebar.vue";
 import DatabaseProductView from "./DatabaseProductView.vue";
