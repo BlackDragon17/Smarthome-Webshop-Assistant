@@ -23,6 +23,7 @@
 
 <script>
 import Modal from "bootstrap/js/dist/modal";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "ConfirmCancelActionModal",
@@ -40,7 +41,7 @@ export default {
         replaceProduct: Object
     },
 
-    emits: ["cancel-action", "change-view"],
+    emits: [Events.CANCEL_ACTION, Events.FOCUS_HOME_SETUP],
 
     computed: {
         modalId() {
@@ -76,7 +77,7 @@ export default {
         resetModal() {
             this.switchTarget = null;
             if (this.currentView === "HomeSetup") {
-                this.$eventBus.$emit("focus-home-setup");
+                this.$eventBus.$emit(Events.FOCUS_HOME_SETUP);
             }
         },
 
@@ -88,7 +89,7 @@ export default {
         },
 
         leavePage() {
-            this.$emit("cancel-action", this.switchTarget);
+            this.$emit(Events.CANCEL_ACTION, this.switchTarget);
             this.bsModal.hide();
         }
     },

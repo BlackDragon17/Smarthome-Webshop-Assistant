@@ -8,7 +8,7 @@
                     <button class="device"
                             v-for="device in cellArray[i].devices"
                             :key="device.localId"
-                            @click="$eventBus.$emit('open-device-info', device)">
+                            @click="openDeviceInfoModal(device)">
                         <span class="device-icon material-symbols-rounded">
                             {{ $getName.categoryIcon(allProducts[device.productId].category) }}
                         </span>
@@ -29,7 +29,7 @@
                             <button class="device"
                                     v-for="device in cellArray[i].devices"
                                     :key="device.localId + 'overflow'"
-                                    @click="$eventBus.$emit('open-device-info', device)">
+                                    @click="openDeviceInfoModal(device)">
                                 <span class="device-icon material-symbols-rounded">
                                     {{ $getName.categoryIcon(allProducts[device.productId].category) }}
                                 </span>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <button class="remove-room-overlay" v-if="viewState === 'removing-room'" @click="$emit('remove-room')">
+        <button class="remove-room-overlay" v-if="viewState === 'removing-room'" @click="removeRoom">
             <span class="remove-room-icon-bg">
                 <span class="remove-room-icon material-symbols-rounded">delete</span>
             </span>
@@ -60,6 +60,7 @@
 <script>
 import { nextTick } from "vue";
 import Device from "@/assets/javascript/dto/device";
+import Events from "@/assets/javascript/events";
 import Popover from "../Popover.vue";
 
 export default {
@@ -84,7 +85,7 @@ export default {
         deviceQueue: Array
     },
 
-    emits: ["added-device", "remove-room", "open-device-info"],
+    emits: [Events.ADDED_DEVICE, Events.REMOVE_ROOM, Events.OPEN_DEVICE_INFO],
 
     inject: ["allProducts"],
 
@@ -209,9 +210,11 @@ export default {
             }
         },
 
+
+        // Grid button callbacks
+
         /**
-         * Grid button callback.
-         * @param {number} location Where to place the device at.
+         * @param {number} location where to place the device at.
          */
         addDeviceAt(location) {
             const device = Device.createFromDTO(
@@ -220,8 +223,20 @@ export default {
                 location
             );
             this.currentDevices.push(device);
-            this.$emit("added-device");
+            this.$emit(Events.ADDED_DEVICE);
         },
+
+        /**
+         * @param {Device} device the device to open the DeviceInfoModal for.
+         */
+        openDeviceInfoModal(device) {
+            this.$eventBus.$emit(Events.OPEN_DEVICE_INFO, device);
+        },
+
+        removeRoom() {
+            this.$emit(Events.REMOVE_ROOM);
+        },
+
 
         printDebug() {
             if (this.room.name === "Bedroom") {
@@ -249,7 +264,7 @@ export default {
     },
 
     mounted() {
-        this.$eventBus.$on("print-debug", this.printDebug);
+        this.$eventBus.$on(Events.PRINT_DEBUG, this.printDebug);
 
         this.resizeObserver = new ResizeObserver(() => {
             this.checkCellOverflow();
@@ -259,7 +274,7 @@ export default {
     },
 
     beforeUnmount() {
-        this.$eventBus.$off("print-debug", this.printDebug);
+        this.$eventBus.$off(Events.PRINT_DEBUG, this.printDebug);
     }
 };
 </script>

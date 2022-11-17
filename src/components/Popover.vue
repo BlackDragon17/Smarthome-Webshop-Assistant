@@ -14,6 +14,7 @@
 
 <script>
 import { autoUpdate, computePosition, offset, shift, arrow, autoPlacement, hide } from "@floating-ui/dom";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "Popover",
@@ -34,7 +35,7 @@ export default {
         }
     },
 
-    emits: ["popover-shown", "popover-hidden", "focus-home-setup"],
+    emits: [Events.POPOVER_SHOWN, Events.FOCUS_HOME_SETUP],
 
     methods: {
         handleClick(event) {
@@ -53,7 +54,7 @@ export default {
 
             this.$refs.popoverBody.style.visibility = "visible";
             this.$refs.popoverBody.style.opacity = "1";
-            this.$eventBus.$emit("popover-shown", true);
+            this.$eventBus.$emit(Events.POPOVER_SHOWN, true);
 
             this.popoverCleanup = autoUpdate(this.$refs.popoverTarget, this.$refs.popoverBody, () => {
                     computePosition(this.$refs.popoverTarget, this.$refs.popoverBody, {
@@ -114,7 +115,7 @@ export default {
                     elementResize: false
                 });
 
-            this.$eventBus.$emit("focus-home-setup");
+            this.$eventBus.$emit(Events.FOCUS_HOME_SETUP);
         },
 
         hidePopover() {
@@ -128,7 +129,7 @@ export default {
             this.$refs.popoverBody.style.opacity = "0";
             this.$refs.popoverBody.style.visibility = "hidden";
             this.popoverCleanup();
-            this.$eventBus.$emit("popover-shown", false);
+            this.$eventBus.$emit(Events.POPOVER_SHOWN, false);
         }
     },
 
@@ -142,7 +143,7 @@ export default {
 
     mounted() {
         window.addEventListener("click", this.handleClick);
-        this.$eventBus.$on("popover-hide", this.hidePopover);
+        this.$eventBus.$on(Events.POPOVER_HIDE, this.hidePopover);
     },
 
     beforeUnmount() {
@@ -150,7 +151,7 @@ export default {
         if (this.popoverCleanup) {
             this.popoverCleanup();
         }
-        this.$eventBus.$off("popover-hide", this.hidePopover);
+        this.$eventBus.$off(Events.POPOVER_HIDE, this.hidePopover);
     }
 };
 </script>

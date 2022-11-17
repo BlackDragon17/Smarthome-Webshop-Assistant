@@ -1,5 +1,5 @@
 <template>
-    <button class="device-card" @click="$eventBus.$emit('open-device-info', device)">
+    <button class="device-card" @click="openDeviceInfoModal">
         <span class="device-icon material-symbols-rounded">
             {{ $getName.categoryIcon(product.category) }}
         </span>
@@ -16,6 +16,7 @@
 
 <script>
 import Device from "@/assets/javascript/dto/device";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "DeviceCard",
@@ -28,6 +29,14 @@ export default {
         product: {
             type: Object,
             required: true
+        }
+    },
+
+    emits: [Events.OPEN_DEVICE_INFO],
+
+    methods: {
+        openDeviceInfoModal() {
+            this.$eventBus.$emit(Events.OPEN_DEVICE_INFO, this.device);
         }
     }
 };

@@ -60,6 +60,7 @@
 
 <script>
 import Modal from "bootstrap/js/dist/modal";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "RemoveRoomModal",
@@ -79,7 +80,7 @@ export default {
         currentSetup: Object
     },
 
-    emits: ["removed-room", "focus-home-setup"],
+    emits: [Events.REMOVED_ROOM, Events.FOCUS_HOME_SETUP],
 
     methods: {
         openModal(removingRoom) {
@@ -92,7 +93,7 @@ export default {
             this.removingRoom = {};
             this.roomDevices = [];
             this.keepRoomDevices = false;
-            this.$eventBus.$emit("focus-home-setup");
+            this.$eventBus.$emit(Events.FOCUS_HOME_SETUP);
         },
 
         removeRoom() {
@@ -105,7 +106,7 @@ export default {
 
             const roomIndex = this.currentSetup.rooms.findIndex(room => room.name.toLowerCase() === this.removingRoom.name.toLowerCase());
             this.currentSetup.rooms.splice(roomIndex, 1);
-            this.$emit("removed-room");
+            this.$emit(Events.REMOVED_ROOM);
             this.bsModal.hide();
         }
     },

@@ -42,6 +42,7 @@
 <script>
 import ModifyControlsModal from "./modals/ModifyControlsModal.vue";
 import DeviceCard from "@/components/HomeSetup/DeviceCard.vue";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "HomeSidebar",
@@ -65,7 +66,7 @@ export default {
         setupHasRooms: Boolean
     },
 
-    emits: ["open-device-info", "header-click"],
+    emits: [Events.HEADER_CLICK],
 
     inject: ["allProducts"],
 
@@ -85,7 +86,7 @@ export default {
 
     methods: {
         addNewDevice() {
-            this.$eventBus.$emit("header-click", "ProductDatabase");
+            this.$eventBus.$emit(Events.HEADER_CLICK, "ProductDatabase");
         },
 
         openControlsModal() {

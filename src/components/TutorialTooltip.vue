@@ -18,6 +18,7 @@
 <script>
 import { nextTick } from "vue";
 import { autoUpdate, computePosition, offset, arrow, autoPlacement } from "@floating-ui/dom";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "TutorialTooltip",
@@ -128,13 +129,13 @@ export default {
     },
 
     mounted() {
-        this.$eventBus.$on("show-tooltip", this.openTooltip);
-        this.$eventBus.$on("view-changed", this.hideTooltip);
+        this.$eventBus.$on(Events.SHOW_TOOLTIP, this.openTooltip);
+        this.$eventBus.$on(Events.VIEW_CHANGED, this.hideTooltip);
     },
 
     beforeUnmount() {
-        this.$eventBus.$off("show-tooltip", this.openTooltip);
-        this.$eventBus.$off("view-changed", this.hideTooltip);
+        this.$eventBus.$off(Events.SHOW_TOOLTIP, this.openTooltip);
+        this.$eventBus.$off(Events.VIEW_CHANGED, this.hideTooltip);
     }
 };
 </script>

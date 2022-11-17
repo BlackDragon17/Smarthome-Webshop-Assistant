@@ -36,6 +36,7 @@
 <script>
 import { capitalize } from "vue";
 import Modal from "bootstrap/js/dist/modal";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "AddRoomModal",
@@ -58,7 +59,7 @@ export default {
         setupRooms: Array
     },
 
-    emits: ["added-room", "focus-home-setup"],
+    emits: [Events.ADDED_ROOM, Events.FOCUS_HOME_SETUP],
 
     methods: {
         onInput() {
@@ -85,7 +86,7 @@ export default {
             this.errorMsg = "";
             this.newRoomLocation = null;
             this.roomForm.reset();
-            this.$eventBus.$emit("focus-home-setup");
+            this.$eventBus.$emit(Events.FOCUS_HOME_SETUP);
         },
 
         submitRoom() {
@@ -114,7 +115,7 @@ export default {
                 name: capitalize(input),
                 location: {...this.newRoomLocation}
             });
-            this.$emit("added-room");
+            this.$emit(Events.ADDED_ROOM);
             this.bsModal.hide();
         }
     },

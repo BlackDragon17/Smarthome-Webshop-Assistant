@@ -50,11 +50,11 @@
 
 <script>
 import { nextTick } from "vue";
-
+import Events from "@/assets/javascript/events";
+import TooltipContent from "@/assets/javascript/dto/tooltip-content";
 import AddRoomModal from "./modals/AddRoomModal.vue";
 import RemoveRoomModal from "./modals/RemoveRoomModal.vue";
 import Room from "./Room.vue";
-import TooltipContent from "@/assets/javascript/dto/tooltip-content";
 
 export default {
     name: "HomeRoomView",
@@ -83,7 +83,7 @@ export default {
         deviceQueue: Array
     },
 
-    emits: ["change-state"],
+    emits: [Events.CHANGE_STATE, Events.SHOW_TOOLTIP],
 
     computed: {
         lowestCoords() {
@@ -240,19 +240,19 @@ export default {
             this.createAddRoomButtons();
 
             this.actionHeadingText = "Select a spot to add the new room at:";
-            this.$emit("change-state", "adding-room");
+            this.$emit(Events.CHANGE_STATE, "adding-room");
             this.checkHeaderOverflow();
         },
 
         addFirstRoom() {
-            this.$emit("change-state", "adding-first-room");
+            this.$emit(Events.CHANGE_STATE, "adding-first-room");
             const locationObject = {location: {x: 0, y: 0}};
             this.$refs.addRoomModal.openModal(locationObject);
         },
 
         removeRoom() {
             this.actionHeadingText = "Select a room to be removed:";
-            this.$emit("change-state", "removing-room");
+            this.$emit(Events.CHANGE_STATE, "removing-room");
             this.checkHeaderOverflow();
         },
 
@@ -264,13 +264,13 @@ export default {
             } else {
                 this.actionHeadingText = "Select a spot to move the device to:";
             }
-            this.$emit("change-state", "moving-device");
+            this.$emit(Events.CHANGE_STATE, "moving-device");
             this.checkHeaderOverflow();
         },
 
         addNewDevice() {
             this.actionHeadingText = "Select a spot to place the new device at:";
-            this.$emit("change-state", "adding-device");
+            this.$emit(Events.CHANGE_STATE, "adding-device");
             this.checkHeaderOverflow();
         },
 
@@ -307,7 +307,7 @@ export default {
                     return;
             }
 
-            this.$emit("change-state", "normal");
+            this.$emit(Events.CHANGE_STATE, "normal");
             this.actionHeadingText = "";
             this.allowMarginOverride = true;
         },
@@ -325,7 +325,7 @@ export default {
             const tooltipText = [
                 "Don't forget to set your preferred methods of controlling your smart home"
             ];
-            this.$eventBus.$emit("show-tooltip",
+            this.$eventBus.$emit(Events.SHOW_TOOLTIP,
                 new TooltipContent(null, tooltipText, modifyControlsButton, "right", true));
         },
 
@@ -360,18 +360,18 @@ export default {
     },
 
     mounted() {
-        this.$eventBus.$on("room-view-cancel", this.endAction);
-        this.$eventBus.$on("move-device", this.moveDevice);
-        this.$eventBus.$on("add-new-device", this.addNewDevice);
+        this.$eventBus.$on(Events.ROOM_VIEW_CANCEL, this.endAction);
+        this.$eventBus.$on(Events.MOVE_DEVICE, this.moveDevice);
+        this.$eventBus.$on(Events.ADD_NEW_DEVICE, this.addNewDevice);
 
         this.initialCalculations();
-        this.$emit("change-state", "normal");
+        this.$emit(Events.CHANGE_STATE, "normal");
     },
 
     beforeUnmount() {
-        this.$eventBus.$off("room-view-cancel", this.endAction);
-        this.$eventBus.$off("move-device", this.moveDevice);
-        this.$eventBus.$off("add-new-device", this.addNewDevice);
+        this.$eventBus.$off(Events.ROOM_VIEW_CANCEL, this.endAction);
+        this.$eventBus.$off(Events.MOVE_DEVICE, this.moveDevice);
+        this.$eventBus.$off(Events.ADD_NEW_DEVICE, this.addNewDevice);
     }
 };
 </script>

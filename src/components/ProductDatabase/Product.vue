@@ -55,6 +55,7 @@
 
 <script>
 import { capitalize } from "vue";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "Product",
@@ -73,7 +74,7 @@ export default {
         homeSetupNoRooms: Boolean
     },
 
-    emits: ["get-new-product"],
+    emits: [Events.REPLACE_DEVICE, Events.GET_NEW_PRODUCT],
 
     computed: {
         categoryText() {
@@ -138,9 +139,9 @@ export default {
             }
 
             if (this.replaceId) {
-                this.$eventBus.$emit("replace-device", this.product);
+                this.$eventBus.$emit(Events.REPLACE_DEVICE, this.product);
             } else {
-                this.$eventBus.$emit("get-new-product", this.product);
+                this.$eventBus.$emit(Events.GET_NEW_PRODUCT, this.product);
             }
         }
     }

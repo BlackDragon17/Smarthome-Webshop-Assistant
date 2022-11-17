@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import Events from "@/assets/javascript/events";
 import ConfirmCancelActionModal from "@/components/ConfirmCancelActionModal.vue";
 import DeviceInfoModal from "./modals/DeviceInfoModal.vue";
 import HomeSidebar from "./HomeSidebar.vue";
@@ -55,7 +56,7 @@ export default {
         deviceQueue: Array
     },
 
-    emits: ["change-view", "print-debug", "room-view-cancel", "popover-hide"],
+    emits: [Events.CHANGE_VIEW, Events.PRINT_DEBUG, Events.ROOM_VIEW_CANCEL, Events.POPOVER_HIDE],
 
     computed: {
         showSidebar() {
@@ -90,26 +91,26 @@ export default {
 
         emitEscAction() {
             if (this.popoverShown) {
-                this.$eventBus.$emit("popover-hide");
+                this.$eventBus.$emit(Events.POPOVER_HIDE);
             } else if (this.viewState !== "normal" && this.viewState !== "init") {
-                this.$eventBus.$emit("room-view-cancel");
+                this.$eventBus.$emit(Events.ROOM_VIEW_CANCEL);
             }
         },
         emitEscRoomViewAction() {
             if (this.viewState !== "normal" && this.viewState !== "init") {
-                this.$eventBus.$emit("room-view-cancel");
+                this.$eventBus.$emit(Events.ROOM_VIEW_CANCEL);
             }
         },
         emitPrintDebug(event) {
             if (event.keyCode === 68) {
-                this.$eventBus.$emit("print-debug");
+                this.$eventBus.$emit(Events.PRINT_DEBUG);
             }
         },
 
         // ConfirmCancelActionModal callback
         confirmCancel(switchTarget) {
             this.emitEscRoomViewAction();
-            this.$emit("change-view", switchTarget);
+            this.$emit(Events.CHANGE_VIEW, switchTarget);
         },
 
         // Header action handling
@@ -121,7 +122,7 @@ export default {
             if (this.viewState !== "normal" && this.viewState !== "init") {
                 this.$refs.confirmCancelActionModal.openModal(target);
             } else {
-                this.$emit("change-view", target);
+                this.$emit(Events.CHANGE_VIEW, target);
             }
         }
     },
@@ -129,19 +130,19 @@ export default {
     mounted() {
         this.$root.activeViewRoot = this.$el;
 
-        this.$eventBus.$on("header-click", this.headerAction);
-        this.$eventBus.$on("focus-home-setup", this.focusThis);
-        this.$eventBus.$on("open-device-info", this.openDeviceInfo);
-        this.$eventBus.$on("popover-shown", this.setPopoverShown);
+        this.$eventBus.$on(Events.HEADER_CLICK, this.headerAction);
+        this.$eventBus.$on(Events.FOCUS_HOME_SETUP, this.focusThis);
+        this.$eventBus.$on(Events.OPEN_DEVICE_INFO, this.openDeviceInfo);
+        this.$eventBus.$on(Events.POPOVER_SHOWN, this.setPopoverShown);
 
         window.addEventListener("keydown", this.emitPrintDebug);
     },
 
     beforeUnmount() {
-        this.$eventBus.$off("header-click", this.headerAction);
-        this.$eventBus.$off("focus-home-setup", this.focusThis);
-        this.$eventBus.$off("open-device-info", this.openDeviceInfo);
-        this.$eventBus.$off("popover-shown", this.setPopoverShown);
+        this.$eventBus.$off(Events.HEADER_CLICK, this.headerAction);
+        this.$eventBus.$off(Events.FOCUS_HOME_SETUP, this.focusThis);
+        this.$eventBus.$off(Events.OPEN_DEVICE_INFO, this.openDeviceInfo);
+        this.$eventBus.$off(Events.POPOVER_SHOWN, this.setPopoverShown);
 
         window.removeEventListener("keydown", this.emitPrintDebug);
     }

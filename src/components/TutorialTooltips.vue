@@ -20,6 +20,7 @@
 import { nextTick } from "vue";
 import { autoUpdate, computePosition, offset, arrow } from "@floating-ui/dom";
 import FocusTrap from "bootstrap/js/dist/util/focustrap";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "TutorialTooltips",
@@ -250,13 +251,13 @@ export default {
     },
 
     mounted() {
-        this.$eventBus.$on("view-changed", this.nextTooltip);
+        this.$eventBus.$on(Events.VIEW_CHANGED, this.nextTooltip);
 
         this.nextTooltip();
     },
 
     beforeUnmount() {
-        this.$eventBus.$off("view-changed", this.nextTooltip);
+        this.$eventBus.$off(Events.VIEW_CHANGED, this.nextTooltip);
     }
 };
 </script>

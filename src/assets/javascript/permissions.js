@@ -1,3 +1,5 @@
+import Events from "@/assets/javascript/events";
+
 /**
  * Checks whether the user can commit various actions in SHWA. Used for the study setups.
  * Will also send an event on the {@link EventBus} to display a notification when an action is not allowed.
@@ -34,18 +36,18 @@ class Permissions {
         switch (this.setupNumber) {
             case "1":
                 if (product.category !== "light" || (!product.network.zigbee && !product.network.lan)) {
-                    this.eventBus.$emit("illegal-action");
+                    this.eventBus.$emit(Events.ILLEGAL_ACTION);
                     return false;
                 }
                 return true;
             case "2":
                 if (!product.category.includes("sensor") || (!product.network.zigbee && !product.network.lan)) {
-                    this.eventBus.$emit("illegal-action");
+                    this.eventBus.$emit(Events.ILLEGAL_ACTION);
                     return false;
                 }
                 return true;
             case "4":
-                this.eventBus.$emit("illegal-action");
+                this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
             default:
                 return true;
@@ -63,12 +65,12 @@ class Permissions {
             case "1":
             case "2":
                 if (device.localId === this.IDs.philipsHueBridgeLocalId) {
-                    this.eventBus.$emit("illegal-action");
+                    this.eventBus.$emit(Events.ILLEGAL_ACTION);
                     return false;
                 }
                 return true;
             case "4":
-                this.eventBus.$emit("illegal-action");
+                this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
             default:
                 return true;
@@ -85,12 +87,12 @@ class Permissions {
         switch (this.setupNumber) {
             case "1":
                 if (device.localId === this.IDs.oldLampLocalId) {
-                    this.eventBus.$emit("illegal-action");
+                    this.eventBus.$emit(Events.ILLEGAL_ACTION);
                     return false;
                 }
                 return true;
             case "4":
-                this.eventBus.$emit("illegal-action");
+                this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
             default:
                 return true;
@@ -109,12 +111,12 @@ class Permissions {
             case "2":
                 const product = this.allProducts[device.productId];
                 if (["hub", "light"].some(category => product.category === category)) {
-                    this.eventBus.$emit("illegal-action");
+                    this.eventBus.$emit(Events.ILLEGAL_ACTION);
                     return false;
                 }
                 return true;
             case "4":
-                this.eventBus.$emit("illegal-action");
+                this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
             default:
                 return true;
@@ -131,18 +133,18 @@ class Permissions {
         switch (this.setupNumber) {
             case "1":
                 if (["Living Room", "Bedroom"].some(roomName => room.name === roomName)) {
-                    this.eventBus.$emit("illegal-action");
+                    this.eventBus.$emit(Events.ILLEGAL_ACTION);
                     return false;
                 }
                 return true;
             case "2":
                 if (["Living Room", "Bedroom", "Foyer"].some(roomName => room.name === roomName)) {
-                    this.eventBus.$emit("illegal-action");
+                    this.eventBus.$emit(Events.ILLEGAL_ACTION);
                     return false;
                 }
                 return true;
             case "4":
-                this.eventBus.$emit("illegal-action");
+                this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
             default:
                 return true;
@@ -159,10 +161,10 @@ class Permissions {
         switch (this.setupNumber) {
             case "1":
             case "2":
-                this.eventBus.$emit("illegal-action");
+                this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
             case "4":
-                this.eventBus.$emit("illegal-action");
+                this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
             default:
                 return true;

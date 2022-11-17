@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import Events from "@/assets/javascript/events";
 import FilterRules from "@/assets/javascript/dto/filter-rules";
 import FilterValues from "@/assets/javascript/dto/filter-values";
 import ConfirmCancelActionModal from "@/components/ConfirmCancelActionModal.vue";
@@ -57,7 +58,7 @@ export default {
         allBrands: Array
     },
 
-    emits: ["change-view"],
+    emits: [Events.CHANGE_VIEW, Events.REPLACE_DEVICE],
 
     inject: ["allProducts"],
 
@@ -626,7 +627,7 @@ export default {
 
         // ConfirmCancelActionModal callback
         confirmCancel() {
-            this.$eventBus.$emit("replace-device", null);
+            this.$eventBus.$emit(Events.REPLACE_DEVICE, null);
         },
 
         // Header action handling
@@ -638,7 +639,7 @@ export default {
             if (this.replaceId) {
                 this.$refs.confirmCancelActionModal.openModal(target);
             } else {
-                this.$emit("change-view", target);
+                this.$emit(Events.CHANGE_VIEW, target);
             }
         }
     },
@@ -688,11 +689,11 @@ export default {
     mounted() {
         this.$root.activeViewRoot = this.$el;
 
-        this.$eventBus.$on("header-click", this.headerAction);
+        this.$eventBus.$on(Events.HEADER_CLICK, this.headerAction);
     },
 
     beforeUnmount() {
-        this.$eventBus.$off("header-click", this.headerAction);
+        this.$eventBus.$off(Events.HEADER_CLICK, this.headerAction);
     }
 };
 </script>

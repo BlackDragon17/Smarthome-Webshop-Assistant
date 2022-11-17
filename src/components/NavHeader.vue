@@ -18,6 +18,7 @@
 
 <script>
 import ActivePageIndicator from "./ActivePageIndicator.vue";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "NavHeader",
@@ -36,7 +37,7 @@ export default {
         activeView: String
     },
 
-    emits: ["header-click"],
+    emits: [Events.HEADER_CLICK],
 
     computed: {
         headerColor() {
@@ -46,7 +47,7 @@ export default {
 
     methods: {
         headerAction(target) {
-            this.$eventBus.$emit("header-click", target);
+            this.$eventBus.$emit(Events.HEADER_CLICK, target);
         },
 
         // This can't be a computed property since those run pre-mount, and would thus return undefined.

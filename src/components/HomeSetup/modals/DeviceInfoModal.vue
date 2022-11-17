@@ -33,6 +33,7 @@
 
 <script>
 import Modal from "bootstrap/js/dist/modal";
+import Events from "@/assets/javascript/events";
 
 export default {
     name: "DeviceInfoModal",
@@ -52,7 +53,7 @@ export default {
         setupHasRooms: Boolean
     },
 
-    emits: ["move-device", "device-removed", "focus-home-setup"],
+    emits: [Events.MOVE_DEVICE, Events.DEVICE_REMOVED, Events.GET_REPLACEMENT, Events.FOCUS_HOME_SETUP],
 
     inject: ["allProducts"],
 
@@ -79,7 +80,7 @@ export default {
         resetModal() {
             this.device = null;
             this.product = null;
-            this.$eventBus.$emit("focus-home-setup");
+            this.$eventBus.$emit(Events.FOCUS_HOME_SETUP);
         },
 
 
@@ -90,7 +91,7 @@ export default {
                 return;
             }
 
-            this.$eventBus.$emit("get-replacement", this.device);
+            this.$eventBus.$emit(Events.GET_REPLACEMENT, this.device);
             this.bsModal.hide();
         },
 
@@ -102,7 +103,7 @@ export default {
             const deviceIndex = this.currentDevices.findIndex(device => device.localId === this.device.localId);
             this.currentDevices.splice(deviceIndex, 1);
             this.deviceQueue.push(this.device);
-            this.$eventBus.$emit("move-device");
+            this.$eventBus.$emit(Events.MOVE_DEVICE);
             this.bsModal.hide();
         },
 
@@ -113,7 +114,7 @@ export default {
 
             const deviceIndex = this.currentDevices.findIndex(device => device.localId === this.device.localId);
             this.currentDevices.splice(deviceIndex, 1);
-            this.$emit("device-removed");
+            this.$emit(Events.DEVICE_REMOVED);
             this.bsModal.hide();
         }
     },

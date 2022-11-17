@@ -27,6 +27,7 @@
 <script>
 import { nextTick } from "vue";
 import Device from "@/assets/javascript/dto/device";
+import Events from "@/assets/javascript/events";
 import NavHeader from "@/components/NavHeader.vue";
 import HomeSetup from "@/components/HomeSetup/HomeSetup.vue";
 import ProductDatabase from "@/components/ProductDatabase/ProductDatabase.vue";
@@ -86,7 +87,7 @@ export default {
         };
     },
 
-    emits: ["add-new-device", "view-changed"],
+    emits: [Events.ADD_NEW_DEVICE, Events.VIEW_CHANGED],
 
     computed: {
         devicesByCategory() {
@@ -224,7 +225,7 @@ export default {
         async changeView(target) {
             this.activeView = target;
             await nextTick();
-            this.$eventBus.$emit("view-changed", target);
+            this.$eventBus.$emit(Events.VIEW_CHANGED, target);
         },
 
 
@@ -236,7 +237,7 @@ export default {
         async getNewProduct(product) {
             this.deviceQueue = [product];
             await this.changeView("HomeSetup");
-            this.$eventBus.$emit("add-new-device");
+            this.$eventBus.$emit(Events.ADD_NEW_DEVICE);
         },
 
         /**
@@ -249,7 +250,6 @@ export default {
             this.replaceId = device.productId;
 
             await this.changeView("ProductDatabase");
-            this.$eventBus.$emit("replace-product");
         },
 
         /**
@@ -314,7 +314,7 @@ export default {
 
             if (success) {
                 console.log(`Task ${taskNumber} successful.`);
-                this.openTaskCompleteModal("task-successful");
+                this.openTaskCompleteModal(Events.TASK_SUCCESSFUL);
             }
         },
 
@@ -362,9 +362,9 @@ export default {
             if (event.origin !== "https://umtlstudies.dfki.de") {
                 return;
             }
-            if (event.data === "task-failed") {
+            if (event.data === Events.TASK_FAILED) {
                 this.openTaskCompleteModal();
-            } else if (event.data === "reset-state") {
+            } else if (event.data === Events.RESET_STATE) {
                 location.reload();
             }
         });
@@ -376,18 +376,17 @@ export default {
         this.$refs.app.style.height = `calc(100vh - ${headerHeight}px)`;
         this.$refs.app.style.maxHeight = `calc(100vh - ${headerHeight}px)`;
 
-        this.$eventBus.$on("change-view", this.changeView);
-        this.$eventBus.$on("get-new-product", this.getNewProduct);
-        this.$eventBus.$on("get-replacement", this.getReplacement);
-        this.$eventBus.$on("replace-device", this.replaceDevice);
-        this.$eventBus.$on("aaa", () => console.log("got aaa"));
+        this.$eventBus.$on(Events.CHANGE_VIEW, this.changeView);
+        this.$eventBus.$on(Events.GET_NEW_PRODUCT, this.getNewProduct);
+        this.$eventBus.$on(Events.GET_REPLACEMENT, this.getReplacement);
+        this.$eventBus.$on(Events.REPLACE_DEVICE, this.replaceDevice);
     },
 
     beforeUnmount() {
-        this.$eventBus.$off("change-view", this.changeView);
-        this.$eventBus.$off("get-new-product", this.getNewProduct);
-        this.$eventBus.$off("get-replacement", this.getReplacement);
-        this.$eventBus.$off("replace-device", this.replaceDevice);
+        this.$eventBus.$off(Events.CHANGE_VIEW, this.changeView);
+        this.$eventBus.$off(Events.GET_NEW_PRODUCT, this.getNewProduct);
+        this.$eventBus.$off(Events.GET_REPLACEMENT, this.getReplacement);
+        this.$eventBus.$off(Events.REPLACE_DEVICE, this.replaceDevice);
     }
 };
 </script>

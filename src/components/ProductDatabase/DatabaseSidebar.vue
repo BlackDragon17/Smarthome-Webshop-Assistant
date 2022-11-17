@@ -338,6 +338,7 @@
 
 <script>
 import { capitalize } from "vue";
+import Events from "@/assets/javascript/events";
 import FilterRules from "@/assets/javascript/dto/filter-rules";
 import FilterValues from "@/assets/javascript/dto/filter-values";
 
@@ -353,7 +354,7 @@ export default {
         replaceId: String
     },
 
-    emits: ["replace-device"],
+    emits: [Events.REPLACE_DEVICE],
 
     computed: {
         activeFilterRules() {
@@ -368,7 +369,7 @@ export default {
     methods: {
         // Cancel button callback
         cancelReplacement() {
-            this.$eventBus.$emit("replace-device", null);
+            this.$eventBus.$emit(Events.REPLACE_DEVICE, null);
         },
 
         // Checkbox callbacks
