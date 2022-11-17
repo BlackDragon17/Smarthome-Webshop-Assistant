@@ -18,7 +18,8 @@ export default {
         return {
             showAlert: false,
             alertText: "",
-            alertTimer: null
+            alertTimer: null,
+            alertAnimation: null
         };
     },
 
@@ -44,11 +45,21 @@ export default {
             this.$refs.alertEl.addEventListener("mouseenter", () => this.alertTimer?.pause());
             this.$refs.alertEl.addEventListener("mouseleave", () => this.alertTimer?.resume());
             this.alertTimer = new PauseableTimeout(this.hideAlert, 4 * 1000);
+
+            this.alertAnimation = this.$refs.alertEl.animate([
+                {}, {backgroundColor: "#E9818A", borderColor: "#E9818A", offset: 0.2}, {}
+            ], {
+                easing: "ease",
+                duration: 400
+            });
+            this.alertAnimation.cancel();
         },
 
         resetTimer() {
             this.alertTimer.clearTimeout();
             this.alertTimer = new PauseableTimeout(this.hideAlert, 4 * 1000);
+            this.alertAnimation.cancel();
+            this.alertAnimation.play();
         },
 
         hideAlert() {
@@ -59,6 +70,7 @@ export default {
             this.$refs.alertEl.style.opacity = "0";
             this.alertTimer.clearTimeout();
             this.alertTimer = null;
+            this.alertAnimation = null;
 
             setTimeout(() => {
                 this.showAlert = false;
