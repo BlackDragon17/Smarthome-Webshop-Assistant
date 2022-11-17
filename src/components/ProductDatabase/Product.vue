@@ -133,6 +133,10 @@ export default {
         },
 
         getNewProduct() {
+            if (!this.$permissions.addProduct(this.product)) {
+                return;
+            }
+
             if (this.replaceId) {
                 this.$eventBus.$emit("replace-device", this.product);
             } else {

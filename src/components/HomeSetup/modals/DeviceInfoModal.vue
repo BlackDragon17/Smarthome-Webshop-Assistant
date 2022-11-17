@@ -86,11 +86,19 @@ export default {
         // Button callbacks
 
         getReplacement() {
+            if (!this.$permissions.replaceDevice(this.device)) {
+                return;
+            }
+
             this.$eventBus.$emit("get-replacement", this.device);
             this.bsModal.hide();
         },
 
         moveDevice() {
+            if (!this.$permissions.moveDevice(this.device)) {
+                return;
+            }
+
             const deviceIndex = this.currentDevices.findIndex(device => device.localId === this.device.localId);
             this.currentDevices.splice(deviceIndex, 1);
             this.deviceQueue.push(this.device);
@@ -99,6 +107,10 @@ export default {
         },
 
         removeDevice() {
+            if (!this.$permissions.removeDevice(this.device)) {
+                return;
+            }
+
             const deviceIndex = this.currentDevices.findIndex(device => device.localId === this.device.localId);
             this.currentDevices.splice(deviceIndex, 1);
             this.$emit("device-removed");

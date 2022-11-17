@@ -290,46 +290,38 @@ export default {
             console.log("App: setup changed");
 
             const sharedVars = {
-                philipsHueBridgeLocalId: "c0bad215-c7d5-41f7-8ef5-3ab127350694"
+                philipsHueBridgeLocalId: "c0bad215-c7d5-41f7-8ef5-3ab127350694",
+                oldLampLocalId: "abf33fec-1753-41f3-bec6-12a7de40a918"
             };
 
             const taskNumber = currentSetup.name.match(/\d/)?.[0];
-            if (!taskNumber || taskNumber < 1) {
-                return;
+
+            let success = false;
+            switch (taskNumber) {
+                case "1":
+                    success = this.checkTask1Success(currentSetup, sharedVars);
+                    break;
+                case "2":
+                    success = this.checkTask2Success(currentSetup, sharedVars);
+                    break;
+                case "3":
+                    success = this.checkTask3Success(currentSetup);
+                    break;
+                case "4":
+                    success = this.checkTask4Success();
+                    break;
             }
 
-            if (this[`checkTask${taskNumber}Failure`](currentSetup, sharedVars)) {
-                console.log(`Task ${taskNumber} failed.`);
-                this.openTaskCompleteModal("task-failed");
-            } else if (this[`checkTask${taskNumber}Success`](currentSetup, sharedVars)) {
+            if (success) {
                 console.log(`Task ${taskNumber} successful.`);
                 this.openTaskCompleteModal("task-successful");
             }
         },
 
-        checkTask1Failure(currentSetup, sharedVars) {
-            return !currentSetup.controls.assistants.includes("alexa")
-                || !["Living Room", "Bedroom"].every(room => currentSetup.rooms.find(setupRoom => setupRoom.name === room))
-                || currentSetup.devices.length !== 5
-                || !currentSetup.devices.find(device => device.localId === sharedVars.philipsHueBridgeLocalId && device.room === "Bedroom")
-                || currentSetup.devices.filter(device => this.allProducts[device.productId].category === "hub").length > 1
-                || !currentSetup.devices.find(device => device.room === "Bedroom" && device.location === 1
-                    && this.allProducts[device.productId].category === "light");
-        },
-        checkTask1Success(currentSetup) {
-            const oldLampLocalId = "abf33fec-1753-41f3-bec6-12a7de40a918";
-
+        checkTask1Success(currentSetup, sharedVars) {
             return currentSetup.devices.find(device => device.room === "Bedroom" && device.location === 1
-                && device.localId !== oldLampLocalId
+                && device.localId !== sharedVars.oldLampLocalId
                 && this.allProducts[device.productId].category === "light");
-        },
-
-        checkTask2Failure(currentSetup, sharedVars) {
-            return !currentSetup.controls.assistants.includes("alexa")
-                || !["Living Room", "Bedroom", "Foyer"].every(room => currentSetup.rooms.find(setupRoom => setupRoom.name === room))
-                || currentSetup.devices.length < 5
-                || !currentSetup.devices.find(device => device.localId === sharedVars.philipsHueBridgeLocalId)
-                || currentSetup.devices.filter(device => this.allProducts[device.productId].category === "hub").length > 1;
         },
         checkTask2Success(currentSetup) {
             const foyerDevice = currentSetup.devices.find(device => device.room === "Foyer");
@@ -340,19 +332,11 @@ export default {
                 && foyerProduct.senses.includes("motion")
                 && (foyerProduct.network.zigbee || foyerProduct.network.lan);
         },
-
-        checkTask3Failure() {
-            return false;
-        },
         checkTask3Success(currentSetup) {
             return currentSetup.devices.filter((device) => {
                 const product = this.allProducts[device.productId];
                 return product.category === "light" || product.category === "switch" || product.category.includes("switch");
             }).length >= 3;
-        },
-
-        checkTask4Failure(currentSetup) {
-            // any modifications
         },
         checkTask4Success() {
             return false;
@@ -361,6 +345,7 @@ export default {
 
     async beforeMount() {
         await this.parseUrlQuery();
+        this.$permissions.init(this.currentSetup.name, this.currentSetup.studySetup, this.$eventBus, this.allProducts);
 
         // Online study-specific code
         if (!this.currentSetup.studySetup) {
@@ -395,6 +380,7 @@ export default {
         this.$eventBus.$on("get-new-product", this.getNewProduct);
         this.$eventBus.$on("get-replacement", this.getReplacement);
         this.$eventBus.$on("replace-device", this.replaceDevice);
+        this.$eventBus.$on("aaa", () => console.log("got aaa"));
     },
 
     beforeUnmount() {

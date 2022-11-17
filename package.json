@@ -8,7 +8,7 @@
     "deploy": "node resources/scripts/gh-pages-deploy.js"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.0.4",
+    "@floating-ui/dom": "^1.0.6",
     "bootstrap": "^5.2.2",
     "vue": "^3.2.45",
     "vue-select": "^4.0.0-beta.6"
@@ -16,6 +16,6 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",
     "execa": "^6.1.0",
-    "vite": "^3.2.3"
+    "vite": "^3.2.4"
   }
 }

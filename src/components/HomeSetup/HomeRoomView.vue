@@ -226,6 +226,10 @@ export default {
         },
 
         removeSelectedRoom(room) {
+            if (!this.$permissions.removeRoom(room)) {
+                return;
+            }
+
             this.$refs.removeRoomModal.openModal(room);
         },
 

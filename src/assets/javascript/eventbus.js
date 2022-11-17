@@ -1,3 +1,6 @@
+/**
+ * The global event bus.
+ */
 class EventBus {
     constructor() {
         this.events = {};

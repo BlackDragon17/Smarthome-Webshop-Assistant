@@ -121,6 +121,14 @@ export default {
                 return;
             }
 
+            const newControls = {
+                assistants: this.selectedAssistants,
+                brandApps: this.selectedBrandApps
+            }
+            if (!this.$permissions.modifyControls(newControls)) {
+                return;
+            }
+
             this.setupControls.assistants = [...this.selectedAssistants];
             this.setupControls.brandApps = [...this.selectedBrandApps];
             this.bsModal.hide();
