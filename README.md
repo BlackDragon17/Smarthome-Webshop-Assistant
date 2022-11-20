@@ -6,7 +6,7 @@
 
 The developed webapp will indefinitely be hosted on GitHub Pages under https://blackdragon17.github.io/Smarthome-Webshop-Assistant/
 
-### Repository structure
+## Repository structure
 
 This repository follows the standard Vite structure.
 
@@ -32,6 +32,6 @@ root
   └─vite.config.js           Vite build configuration
 ```
 
-### Future work / TODOs
+## Future work / TODOs
 
-A short bullet point list of things to still be implemented can be found in the [TODO.md file](../blob/main/TODO.md).
+A short bullet point list of things to still be implemented can be found in the [TODO.md file](./TODO.md).
