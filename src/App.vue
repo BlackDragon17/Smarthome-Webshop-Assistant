@@ -38,16 +38,6 @@ import TutorialTooltips from "@/components/TutorialTooltips.vue";
 import TutorialTooltip from "@/components/TutorialTooltip.vue";
 import Alerts from "@/components/Alerts.vue";
 
-// TODO:
-// - add bars-like compatScore display to Product
-// - add action completion toast for at least device replacement
-// - add more products
-// - add purchase buttons to products
-// - add translation (i18n)
-// - add user-customizable product sorting to DatabaseProductView
-// - add Vue Router
-// - move event names etc. to enums
-
 const defaultView = "HomeSetup";
 
 export default {

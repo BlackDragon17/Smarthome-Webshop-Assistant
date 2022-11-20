@@ -13,6 +13,7 @@ export const useProductsStore = defineStore("products", {
             allBrands: null
         };
     },
+
     actions: {
         initStore() {
             this.initAllProducts();

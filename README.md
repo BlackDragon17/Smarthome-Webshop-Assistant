@@ -31,3 +31,7 @@ root
   ├─package.json             Direct project dependencies
   └─vite.config.js           Vite build configuration
 ```
+
+### Future work / TODOs
+
+A short bullet point list of things to still be implemented can be found in the [TODO.md file](../blob/main/TODO.md).
