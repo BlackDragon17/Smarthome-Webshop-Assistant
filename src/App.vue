@@ -16,7 +16,6 @@
                          :current-setup="currentSetup"
                          :setup-products="setupProducts"
                          :replace-id="replaceId"
-                         :all-brands="allBrands"
                          @change-view="changeView"/>
     </main>
 
@@ -27,6 +26,8 @@
 
 <script>
 import { nextTick } from "vue";
+import { mapState } from "pinia";
+import { useProductsStore } from "@/stores/products-store";
 import Device from "@/assets/javascript/dto/device";
 import Events from "@/assets/javascript/events";
 import NavHeader from "@/components/NavHeader.vue";
@@ -36,12 +37,6 @@ import TaskCompleteModal from "@/components/TaskCompleteModal.vue";
 import TutorialTooltips from "@/components/TutorialTooltips.vue";
 import TutorialTooltip from "@/components/TutorialTooltip.vue";
 import Alerts from "@/components/Alerts.vue";
-
-// Data naming convention:
-//     product: a unique smart home product model released by a company.
-//     device: a device within a user's home setup.
-//             In a setup there can be multiple devices which are the same product (same productId but different localId).
-import allProducts from "/resources/products/packed/PackedJSONs.json";
 
 // TODO:
 // - add bars-like compatScore display to Product
@@ -73,7 +68,6 @@ export default {
             activeView: null,
             activeViewRoot: null,
 
-            allProducts: allProducts.data,
             currentSetup: null,
             deviceQueue: [],
             replaceId: null,
@@ -83,16 +77,11 @@ export default {
         };
     },
 
-    provide() {
-        return {
-            allProducts: this.allProducts,
-            allBrands: this.allBrands
-        };
-    },
-
     emits: [Events.ADD_NEW_DEVICE, Events.VIEW_CHANGED],
 
     computed: {
+        ...mapState(useProductsStore, ["allProducts"]),
+
         devicesByCategory() {
             const byCategory = {};
             for (const device of this.currentSetup.devices) {
@@ -151,16 +140,6 @@ export default {
         //     return byRoom;
         // }
 
-        allBrands() {
-            const brands = [];
-            for (const productId in this.allProducts) {
-                if (!brands.includes(this.allProducts[productId].brand)) {
-                    brands.push(this.allProducts[productId].brand);
-                }
-            }
-            return brands.sort();
-        },
-
         showTutorial() {
             return this.currentSetup?.studySetup && this.currentSetup?.name.includes("0") && !this.tutorialShown;
         }
@@ -178,6 +157,9 @@ export default {
             let setup = null;
             try {
                 setup = await import(`./assets/default_setups/${setupParam}.json`);
+                if (setup == null) {
+                    throw new Error("Imported setup is empty, falling back to example1.");
+                }
             } catch (e) {
                 setupParam = "example1";
                 setup = await import(`./assets/default_setups/${setupParam}.json`);
@@ -187,6 +169,7 @@ export default {
 
         /**
          * Checks integrity of given setup and saves it to the shared variable.
+         *
          * @param {Object} setup setup to load.
          * @param {string} name name to attach to loaded setup.
          */
@@ -225,14 +208,14 @@ export default {
             this.activeView = defaultView;
         },
 
+
+        // Inter-view action handlers
+
         async changeView(target) {
             this.activeView = target;
             await nextTick();
             this.$eventBus.$emit(Events.VIEW_CHANGED, target);
         },
-
-
-        // Inter-view action handlers
 
         /**
          * Called by ProductDatabase, adds the given product to the HomeSetup.
@@ -346,7 +329,11 @@ export default {
         }
     },
 
-    async beforeMount() {
+    beforeCreate() {
+        useProductsStore().initStore();
+    },
+
+    async created() {
         await this.parseUrlQuery();
         this.$permissions.init(this.currentSetup.name, this.currentSetup.studySetup, this.$eventBus, this.allProducts);
 

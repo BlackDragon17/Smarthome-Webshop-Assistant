@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useProductsStore } from "@/stores/products-store";
 import Product from "@/components/ProductDatabase/Product.vue";
 
 /**
@@ -70,9 +72,9 @@ export default {
         homeSetupNoRooms: Boolean
     },
 
-    inject: ["allProducts"],
-
     computed: {
+        ...mapState(useProductsStore, ["allProducts"]),
+
         headingText() {
             if (this.filteredProducts.length === 1) {
                 return this.filteredProducts.length + " " + this.$getName.categoryHeadingSingular(this.currentCategory).toLowerCase();

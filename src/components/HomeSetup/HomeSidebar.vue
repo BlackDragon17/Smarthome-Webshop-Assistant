@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useProductsStore } from "@/stores/products-store";
 import ModifyControlsModal from "./modals/ModifyControlsModal.vue";
 import DeviceCard from "@/components/HomeSetup/DeviceCard.vue";
 import Events from "@/assets/javascript/events";
@@ -68,9 +70,9 @@ export default {
 
     emits: [Events.HEADER_CLICK],
 
-    inject: ["allProducts"],
-
     computed: {
+        ...mapState(useProductsStore, ["allProducts"]),
+
         sortedDevices() {
             if (this.sortByRoom) {
                 return this.devicesByRoom;

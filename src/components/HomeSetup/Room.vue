@@ -62,6 +62,8 @@ import { nextTick } from "vue";
 import Device from "@/assets/javascript/dto/device";
 import Events from "@/assets/javascript/events";
 import Popover from "../Popover.vue";
+import { mapState } from "pinia";
+import { useProductsStore } from "@/stores/products-store";
 
 export default {
     name: "Room",
@@ -87,9 +89,9 @@ export default {
 
     emits: [Events.ADDED_DEVICE, Events.REMOVE_ROOM, Events.OPEN_DEVICE_INFO],
 
-    inject: ["allProducts"],
-
     computed: {
+        ...mapState(useProductsStore, ["allProducts"]),
+
         cssAlignTitle() {
             if (this.cellArray[8].devices.length <= 0) {
                 return "bottom: 0; margin-bottom: 0.1rem;";

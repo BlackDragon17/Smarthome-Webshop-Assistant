@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useProductsStore } from "@/stores/products-store";
 import Modal from "bootstrap/js/dist/modal";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
@@ -71,9 +73,9 @@ export default {
         setupControls: Object
     },
 
-    inject: ["allBrands"],
-
     computed: {
+        ...mapState(useProductsStore, ["allBrands"]),
+
         modalId() {
             return this.$options.name.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
         },

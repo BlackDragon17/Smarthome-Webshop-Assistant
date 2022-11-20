@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useProductsStore } from "@/stores/products-store";
 import Modal from "bootstrap/js/dist/modal";
 import Events from "@/assets/javascript/events";
 
@@ -55,9 +57,9 @@ export default {
 
     emits: [Events.MOVE_DEVICE, Events.DEVICE_REMOVED, Events.GET_REPLACEMENT, Events.FOCUS_HOME_SETUP],
 
-    inject: ["allProducts"],
-
     computed: {
+        ...mapState(useProductsStore, ["allProducts"]),
+
         showAddToRoomButton() {
             return this.device?.room === this.deviceTray && this.setupHasRooms;
         },

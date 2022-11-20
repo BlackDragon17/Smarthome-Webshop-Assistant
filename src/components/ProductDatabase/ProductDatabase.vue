@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useProductsStore } from "@/stores/products-store";
 import Events from "@/assets/javascript/events";
 import FilterRules from "@/assets/javascript/dto/filter-rules";
 import FilterValues from "@/assets/javascript/dto/filter-values";
@@ -54,15 +56,14 @@ export default {
     props: {
         currentSetup: Object,
         setupProducts: Array,
-        replaceId: String,
-        allBrands: Array
+        replaceId: String
     },
 
     emits: [Events.CHANGE_VIEW, Events.REPLACE_DEVICE],
 
-    inject: ["allProducts"],
-
     computed: {
+        ...mapState(useProductsStore, ["allProducts", "allBrands"]),
+
         // Return arrays of possible option values, in order to create filter inputs via v-for instead of manually
         allCategories() {
             // Pre-populate the array to show these categories in the specified order.
@@ -394,7 +395,6 @@ export default {
             // except here we don't for-loop over the setupProducts since we don't want to add hubs which can only
             // connect to a single device in the house -- or at least be able to penalize the compatScore appropriately.
             // Also like above, we begin with the worst connectivity options and end with the best.
-
 
             // If the user uses voice assistants, the native hubs for these voice assistants should be recommended.
             if (this.currentSetup.controls.assistants.includes("alexa")) {
