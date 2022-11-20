@@ -26,6 +26,7 @@ root
   │  ├─components            Vue single-file-components
   │  ├─App.vue               Webapp root
   │  └─main.js               Webapp logic entry point
+  ├─stores                   Pinia store definitions
   ├─index.html               The main HTML file hosting the Vue webapp
   ├─package-lock.json        Auto-generated list of all dependencies (ensures same package versions)
   ├─package.json             Direct project dependencies
