@@ -22,11 +22,15 @@ export const useProductsStore = defineStore("products", {
 
         initAllProducts() {
             const allProducts = {};
+            const brokenProducts = [];
 
             for (const productId in productsFile.data) {
                 const product = productsFile.data[productId];
 
                 if (!product || !product.brand || !product.model || !product.category || !product.network || !product.productId) {
+                    if (product) {
+                        brokenProducts.push(product);
+                    }
                     continue;
                 }
 
@@ -45,6 +49,9 @@ export const useProductsStore = defineStore("products", {
             }
 
             this.allProducts = allProducts;
+            if (brokenProducts.length > 0) {
+                console.error(brokenProducts.length, "broken product definitions found:", brokenProducts);
+            }
         },
 
         initAllBrands() {
