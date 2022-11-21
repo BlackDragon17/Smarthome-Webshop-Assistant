@@ -1,0 +1,31 @@
+{
+  "brand": "Ledvance",
+  "model": "SMART+ WiFi Candle Multicolour",
+  "generation": "N/A",
+  "revision": "2022",
+  "category": "light",
+  "type": "bulb",
+  "network": {
+    "lan": [
+      "wifi"
+    ],
+    "wifi": []
+  },
+  "control": [
+    "brandApp",
+    "alexa",
+    "googleAssistant"
+  ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "eu": "B08KYBM1VX"
+  },
+  "lumen": 470,
+  "varLumen": true,
+  "varKelvin": true,
+  "multicolor": true,
+  "socket": "e14",
+  "productId": "7538a6f4-6637-4e2a-a2d5-5466f5dde7b4"
+}

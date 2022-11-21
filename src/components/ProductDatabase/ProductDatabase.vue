@@ -251,9 +251,11 @@ export default {
                 } else if (hub.brand === "Amazon") {
                     if (hub.model === "Echo" || hub.model.includes("Echo Studio") || hub.model.includes("Echo Show 10")) {
                         // The Amazon Echo, Echo Studio, and Echo Show 10 can speak to Zigbee devices,
-                        // as well as to Philips Hue Bluetooth devices (via Philip's custom Alexa Gadget Interface).
+                        // as well as to Philips Hue and Ledvance Bluetooth devices (via custom Alexa Gadget interfaces).
                         // Note that devices communicating with Alexa via Wi-Fi do not ever (directly) communicate to an Echo devices and are thus not relevant here.
-                        const relevantProducts = products.filter(product => product.network.zigbee || (product.brand === "Philips Hue" && product.network.bluetooth));
+                        const relevantProducts = products.filter(product => product.network.zigbee
+                            || (product.brand === "Philips Hue" && product.network.bluetooth)
+                            || (product.brand === "Ledvance" && product.network.bluetooth));
                         this.filterRules.networks.addAllowed("zigbee");
 
                         // No further filtering needed.
@@ -412,8 +414,9 @@ export default {
                 }).forEach(hub => productsMap.set(hub.productId, hub));
             }
 
-            // Amazon Echo hubs offer the unique capability of controlling Philips Hue devices via Bluetooth.
-            if (setupProducts.filter(product => product.brand === "Philips Hue" && product.category === "light" && product.network.bluetooth).length > 0) {
+            // Amazon Echo hubs offer the unique capability of controlling Philips Hue and Ledvance devices via Bluetooth.
+            if (setupProducts.filter(product => (product.brand === "Philips Hue" || product.brand === "Ledvance")
+                && product.category === "light" && product.network.bluetooth).length > 0) {
                 const relevantHubs = hubs.filter(hub => hub.brand === "Amazon" && hub.model.includes("Echo"));
                 relevantHubs.map(hub => {
                     hub.compatScore = 3;

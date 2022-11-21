@@ -327,7 +327,8 @@ export default {
                 && filterValues.type === "bulb"
                 && filterValues.formFactor === "e14"
                 && !filterValues.anyBrand
-                && filterValues.brands
+                && filterValues.brands.length === 1
+                && filterValues.brands.includes("Ledvance")
             ) {
                 console.log("Task 3 successful.");
                 this.openTaskCompleteModal(Events.TASK_SUCCESSFUL);

@@ -1,0 +1,29 @@
+{
+  "brand": "Ledvance",
+  "model": "SMART+ Candle Tunable White",
+  "generation": "N/A",
+  "revision": "2022",
+  "category": "light",
+  "type": "bulb",
+  "network": {
+    "bluetooth": []
+  },
+  "control": [
+    "brandApp",
+    "alexa",
+    "googleAssistant",
+    "homeKit"
+  ],
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "eu": "B08KYBKRPB"
+  },
+  "lumen": 470,
+  "varLumen": true,
+  "varKelvin": true,
+  "multicolor": false,
+  "socket": "e14",
+  "productId": "5a3a2d3c-e498-482d-bc10-91904b583444"
+}

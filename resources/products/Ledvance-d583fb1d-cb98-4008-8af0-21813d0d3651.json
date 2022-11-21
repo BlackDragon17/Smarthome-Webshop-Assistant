@@ -1,0 +1,25 @@
+{
+  "brand": "Ledvance",
+  "model": "SMART+ Candle Dimmable",
+  "generation": "N/A",
+  "revision": "2022",
+  "category": "light",
+  "type": "bulb",
+  "network": {
+    "zigbee": [
+      "gen3"
+    ]
+  },
+  "powerSource": [
+    "wall"
+  ],
+  "amazonDP": {
+    "eu": "B07MSPL4LY"
+  },
+  "lumen": 470,
+  "varLumen": true,
+  "varKelvin": false,
+  "multicolor": false,
+  "socket": "e14",
+  "productId": "d583fb1d-cb98-4008-8af0-21813d0d3651"
+}
