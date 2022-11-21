@@ -1,0 +1,14 @@
+.normal-heading-text {
+    font-size: 30px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.normal-heading-text > small {
+    margin-left: 0.3rem;
+}
+
+.normal-p-text {
+    font-size: 15px;
+    line-height: 1.5;
+}
