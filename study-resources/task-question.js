@@ -1,5 +1,5 @@
-import htmlToElements from "./html-to-elements";
-import showModal from "./timeout-modal";
+import htmlToElements from "./html-to-elements.js";
+import showModal from "./timeout-modal.js";
 
 if (!window.questionId || typeof window.questionId !== "string" || window.taskNumber == null || typeof window.taskNumber !== "number") {
     throw new Error(`Global variables not set! questionId: ${window.questionId} taskNumber: ${window.taskNumber}`);
@@ -80,7 +80,7 @@ $(document).on("ready pjax:scriptcomplete", function() {
 
         taskTimeoutTimerId = setTimeout(function() {
             showModal(window.questionId);
-        // }, taskTimeout * 60000);
+            // }, taskTimeout * 60000);
         }, 5 * 1000);
     });
 
