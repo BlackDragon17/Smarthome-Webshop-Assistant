@@ -1,9 +1,6 @@
 import htmlToElements from "./html-to-elements.js";
 import showModal from "./timeout-modal.js";
-
-if (!window.questionId || typeof window.questionId !== "string" || window.taskNumber == null || typeof window.taskNumber !== "number") {
-    throw new Error(`Global variables not set! questionId: ${window.questionId} taskNumber: ${window.taskNumber}`);
-}
+import "./task-question.css";
 
 const iframeHtml = `
 <button type="button" id="start-task-button" class="btn btn-lg btn-success">Begin</button>
@@ -27,9 +24,10 @@ const resetShwaButtonEl = htmlToElements(resetShwaButtonHtml);
 const skipButtonDelay = 15; // Button-show delay in seconds
 const taskTimeout = 5; // Task timeout in minutes
 
-let taskStartTime = 0;
-let skipButtonTimerId = 0;
-let taskTimeoutTimerId = 0;
+let taskStartTime = null;
+let shwaResets = 0;
+let skipButtonTimerId = null;
+let taskTimeoutTimerId = null;
 
 
 $(document).on("ready pjax:scriptcomplete", function() {
@@ -56,7 +54,8 @@ $(document).on("ready pjax:scriptcomplete", function() {
 
         clearTimeout(skipButtonTimerId);
         clearTimeout(taskTimeoutTimerId);
-        $("input#answer" + window.questionId).val(Date.now() - taskStartTime);
+        const taskTime = Date.now() - taskStartTime;
+        $("input#answer" + window.questionId).val(`time:${taskTime}; resets:${shwaResets}`);
         $("button#skip-task-button").hide();
         $("button#reset-shwa-button").hide();
         $("button#ls-button-submit").fadeIn(500);
@@ -68,8 +67,9 @@ $(document).on("ready pjax:scriptcomplete", function() {
         $("div#shwa-iframe-container").show();
         $("button#reset-shwa-button").show();
         skipButtonTimerId = setTimeout(() => $("button#skip-task-button").fadeIn(500), skipButtonDelay * 1000);
+        taskTimeoutTimerId = setTimeout(() => showModal("button#skip-task-button"), taskTimeout * 60000);
 
-        const containerPosition = $("#shwa-iframe-container")[0].getBoundingClientRect().top;
+        const containerPosition = $("div#shwa-iframe-container")[0].getBoundingClientRect().top;
         const offsetPosition = containerPosition + window.pageYOffset - navbarHeight - 10;
         window.scrollTo({
             top: offsetPosition,
@@ -77,21 +77,17 @@ $(document).on("ready pjax:scriptcomplete", function() {
         });
 
         taskStartTime = Date.now();
-
-        taskTimeoutTimerId = setTimeout(function() {
-            showModal("button#skip-task-button");
-            // }, taskTimeout * 60000);
-        }, 5 * 1000);
     });
 
     // Set task skip logic
     $("button#skip-task-button").on("click", function() {
-        $("input#answer" + window.questionId).val("SKIPPED");
+        $("input#answer" + window.questionId).val("time:SKIPPED; resets:" + shwaResets);
         $("button#ls-button-submit").trigger("click");
     });
 
     // Add SHWA reset postMessage
     $("button#reset-shwa-button").on("click", function() {
         $("iframe#shwa-iframe")[0].contentWindow.postMessage("reset-state", "https://blackdragon17.github.io/Smarthome-Webshop-Assistant/");
+        shwaResets++;
     });
 });
