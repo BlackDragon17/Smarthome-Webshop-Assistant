@@ -1,6 +1,5 @@
 import htmlToElements from "./html-to-elements.js";
 import showModal from "./timeout-modal.js";
-import "./task-question.css";
 
 const cssImportHtml = `<link rel="stylesheet" href="https://blackdragon17.github.io/Smarthome-Webshop-Assistant/study-resources/task-question.css">`;
 const cssImportEl = htmlToElements(cssImportHtml);
