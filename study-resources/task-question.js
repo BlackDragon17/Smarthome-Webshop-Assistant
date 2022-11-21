@@ -1,17 +1,8 @@
+import htmlToElements from "./html-to-elements";
+import showModal from "./timeout-modal";
+
 if (!window.questionId || typeof window.questionId !== "string" || window.taskNumber == null || typeof window.taskNumber !== "number") {
     throw new Error(`Global variables not set! questionId: ${window.questionId} taskNumber: ${window.taskNumber}`);
-}
-
-/**
- * Converts HTML in string-form to a list of HTMLElement objects.
- *
- * @param {string} html
- * @returns {NodeListOf<ChildNode>}
- */
-function htmlToElements(html) {
-    const template = document.createElement("template");
-    template.innerHTML = html;
-    return template.content.childNodes;
 }
 
 const iframeHtml = `
@@ -34,7 +25,7 @@ const resetShwaButtonEl = htmlToElements(resetShwaButtonHtml);
 
 
 const skipButtonDelay = 15; // Button-show delay in seconds
-const taskTimeout = 3; // Task timeout in minutes
+const taskTimeout = 5; // Task timeout in minutes
 
 let taskStartTime = 0;
 let skipButtonTimerId = 0;
@@ -53,10 +44,11 @@ $(document).on("ready pjax:scriptcomplete", function() {
     $("#ls-button-submit")[0].after(...skipTaskButtonEl);
     $("div.col-xs-6.text-left")[0].after(...resetShwaButtonEl);
 
+    // Set iframe height
     const navbarHeight = $(".navbar.navbar-default")[0].offsetHeight;
     $("#shwa-iframe-container").css({height: `calc(100vh - ${navbarHeight}px - 20px)`});
 
-
+    // Add postMessage listener
     window.addEventListener("message", (event) => {
         if (event.origin !== "https://blackdragon17.github.io" || event.data !== "task-successful") {
             return;
@@ -70,6 +62,7 @@ $(document).on("ready pjax:scriptcomplete", function() {
         $("#ls-button-submit").fadeIn(500);
     });
 
+    // Set task start logic
     $("#start-task-button").on("click", function() {
         $("#start-task-button").hide();
         $("#shwa-iframe-container").show();
@@ -86,19 +79,18 @@ $(document).on("ready pjax:scriptcomplete", function() {
         taskStartTime = Date.now();
 
         taskTimeoutTimerId = setTimeout(function() {
-            $("#shwa-iframe")[0].contentWindow.postMessage("task-failed", "https://blackdragon17.github.io/Smarthome-Webshop-Assistant/");
-            $("input#answer" + window.questionId).val("TIMEOUT");
-            $("#skip-task-button").hide();
-            $("#reset-shwa-button").hide();
-            $("#ls-button-submit").fadeIn(500);
-        }, taskTimeout * 60000);
+            showModal(window.questionId);
+        // }, taskTimeout * 60000);
+        }, 5 * 1000);
     });
 
+    // Set task skip logic
     $("#skip-task-button").on("click", function() {
         $("input#answer" + window.questionId).val("SKIPPED");
         $("#ls-button-submit").trigger("click");
     });
 
+    // Add SHWA reset postMessage
     $("#reset-shwa-button").on("click", function() {
         $("#shwa-iframe")[0].contentWindow.postMessage("reset-state", "https://blackdragon17.github.io/Smarthome-Webshop-Assistant/");
     });
