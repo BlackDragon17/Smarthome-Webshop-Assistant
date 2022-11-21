@@ -29,52 +29,49 @@ const taskTimeout = 5; // Task timeout in minutes
 let taskStartTime = 0;
 let shwaResets = 0;
 
-console.log("before load");
+console.log("load");
 
-$(document).on("ready pjax:scriptcomplete", function() {
-    console.log("after load");
-    // Hide not needed elements
-    $("button#ls-button-submit").hide();
-    $("button#ls-button-previous").hide();
-    $(".question-container").css({background: "none", border: "none"});
-    $(".answer-container").hide();
+// Hide not needed elements
+$("button#ls-button-submit").hide();
+$("button#ls-button-previous").hide();
+$(".question-container").css({background: "none", border: "none"});
+$(".answer-container").hide();
 
-    // Inject HTML
-    $("div#ls-question-text-" + window.questionId)[0].append(...cssImportEl, ...iframeEl);
-    $("button#ls-button-submit")[0].after(...ownSubmitButtonEl);
-    $("div.col-xs-6.text-left")[0].after(...resetShwaButtonEl);
+// Inject HTML
+$("div#ls-question-text-" + window.questionId)[0].append(...cssImportEl, ...iframeEl);
+$("button#ls-button-submit")[0].after(...ownSubmitButtonEl);
+$("div.col-xs-6.text-left")[0].after(...resetShwaButtonEl);
 
-    // Set iframe height
-    const navbarHeight = $(".navbar.navbar-default")[0].offsetHeight;
-    $("#shwa-iframe-container").css({height: `calc(100vh - ${navbarHeight}px - 20px)`});
+// Set iframe height
+const navbarHeight = $(".navbar.navbar-default")[0].offsetHeight;
+$("#shwa-iframe-container").css({height: `calc(100vh - ${navbarHeight}px - 20px)`});
 
-    // Set task start logic
-    $("button#start-task-button").on("click", function() {
-        $("button#start-task-button").hide();
-        $("div#shwa-iframe-container").show();
-        setTimeout(() => $("button#own-submit-button").fadeIn(500), skipButtonDelay * 1000);
-        setTimeout(() => showModal("button#own-submit-button"), taskTimeout * 60000);
+// Set task start logic
+$("button#start-task-button").on("click", function() {
+    $("button#start-task-button").hide();
+    $("div#shwa-iframe-container").show();
+    setTimeout(() => $("button#own-submit-button").fadeIn(500), skipButtonDelay * 1000);
+    setTimeout(() => showModal("button#own-submit-button"), taskTimeout * 60000);
 
-        const containerPosition = $("div#shwa-iframe-container")[0].getBoundingClientRect().top;
-        const offsetPosition = containerPosition + window.pageYOffset - navbarHeight - 10;
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-        });
-
-        taskStartTime = Date.now();
+    const containerPosition = $("div#shwa-iframe-container")[0].getBoundingClientRect().top;
+    const offsetPosition = containerPosition + window.pageYOffset - navbarHeight - 10;
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
     });
 
-    // Set task submit logic
-    $("button#own-submit-button").on("click", function() {
-        const taskTime = Date.now() - taskStartTime;
-        $("input#answer" + window.questionId).val(`time:${taskTime}; resets:${shwaResets}`);
-        $("button#ls-button-submit").trigger("click");
-    });
+    taskStartTime = Date.now();
+});
 
-    // Add SHWA reset postMessage
-    $("button#reset-shwa-button").on("click", function() {
-        $("iframe#shwa-iframe")[0].contentWindow.postMessage("reset-state", "https://blackdragon17.github.io/Smarthome-Webshop-Assistant/");
-        shwaResets++;
-    });
+// Set task submit logic
+$("button#own-submit-button").on("click", function() {
+    const taskTime = Date.now() - taskStartTime;
+    $("input#answer" + window.questionId).val(`time:${taskTime}; resets:${shwaResets}`);
+    $("button#ls-button-submit").trigger("click");
+});
+
+// Add SHWA reset postMessage
+$("button#reset-shwa-button").on("click", function() {
+    $("iframe#shwa-iframe")[0].contentWindow.postMessage("reset-state", "https://blackdragon17.github.io/Smarthome-Webshop-Assistant/");
+    shwaResets++;
 });
