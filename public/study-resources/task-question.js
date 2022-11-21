@@ -5,6 +5,7 @@ if (!window.questionId || typeof window.questionId !== "string" || window.taskNu
     throw new Error(`Global variables not set! questionId: ${window.questionId} taskNumber: ${window.taskNumber}`);
 }
 
+
 const iframeHtml = `
 <button type="button" id="start-task-button" class="btn btn-lg btn-success">Begin</button>
 <div id="shwa-iframe-container" style="display: none">
@@ -27,26 +28,27 @@ const resetShwaButtonEl = htmlToElements(resetShwaButtonHtml);
 const skipButtonDelay = 15; // Button-show delay in seconds
 const taskTimeout = 5; // Task timeout in minutes
 
-let taskStartTime = 0;
-let skipButtonTimerId = 0;
-let taskTimeoutTimerId = 0;
+let taskStartTime = null;
+let shwaResets = 0;
+let skipButtonTimerId = null;
+let taskTimeoutTimerId = null;
 
 
 $(document).on("ready pjax:scriptcomplete", function() {
     // Hide not needed elements
-    $("#ls-button-submit").hide();
-    $("#ls-button-previous").hide();
+    $("button#ls-button-submit").hide();
+    $("button#ls-button-previous").hide();
     $(".question-container").css({background: "none", border: "none"});
     $(".answer-container").hide();
 
     // Inject HTML
     $("div#ls-question-text-" + window.questionId)[0].append(...iframeEl);
-    $("#ls-button-submit")[0].after(...skipTaskButtonEl);
+    $("button#ls-button-submit")[0].after(...skipTaskButtonEl);
     $("div.col-xs-6.text-left")[0].after(...resetShwaButtonEl);
 
     // Set iframe height
     const navbarHeight = $(".navbar.navbar-default")[0].offsetHeight;
-    $("#shwa-iframe-container").css({height: `calc(100vh - ${navbarHeight}px - 20px)`});
+    $("div#shwa-iframe-container").css({height: `calc(100vh - ${navbarHeight}px - 20px)`});
 
     // Add postMessage listener
     window.addEventListener("message", (event) => {
@@ -56,20 +58,22 @@ $(document).on("ready pjax:scriptcomplete", function() {
 
         clearTimeout(skipButtonTimerId);
         clearTimeout(taskTimeoutTimerId);
-        $("input#answer" + window.questionId).val(Date.now() - taskStartTime);
-        $("#skip-task-button").hide();
-        $("#reset-shwa-button").hide();
-        $("#ls-button-submit").fadeIn(500);
+        const taskTime = Date.now() - taskStartTime;
+        $("input#answer" + window.questionId).val(`time:${taskTime}; resets:${shwaResets}`);
+        $("button#skip-task-button").hide();
+        $("button#reset-shwa-button").hide();
+        $("button#ls-button-submit").fadeIn(500);
     });
 
     // Set task start logic
-    $("#start-task-button").on("click", function() {
-        $("#start-task-button").hide();
-        $("#shwa-iframe-container").show();
-        $("#reset-shwa-button").show();
-        skipButtonTimerId = setTimeout(() => $("#skip-task-button").fadeIn(500), skipButtonDelay * 1000);
+    $("button#start-task-button").on("click", function() {
+        $("button#start-task-button").hide();
+        $("div#shwa-iframe-container").show();
+        $("button#reset-shwa-button").show();
+        skipButtonTimerId = setTimeout(() => $("button#skip-task-button").fadeIn(500), skipButtonDelay * 1000);
+        taskTimeoutTimerId = setTimeout(() => showModal("button#skip-task-button"), taskTimeout * 60000);
 
-        const containerPosition = $("#shwa-iframe-container")[0].getBoundingClientRect().top;
+        const containerPosition = $("div#shwa-iframe-container")[0].getBoundingClientRect().top;
         const offsetPosition = containerPosition + window.pageYOffset - navbarHeight - 10;
         window.scrollTo({
             top: offsetPosition,
@@ -77,21 +81,17 @@ $(document).on("ready pjax:scriptcomplete", function() {
         });
 
         taskStartTime = Date.now();
-
-        taskTimeoutTimerId = setTimeout(function() {
-            showModal(window.questionId);
-            // }, taskTimeout * 60000);
-        }, 5 * 1000);
     });
 
     // Set task skip logic
-    $("#skip-task-button").on("click", function() {
-        $("input#answer" + window.questionId).val("SKIPPED");
-        $("#ls-button-submit").trigger("click");
+    $("button#skip-task-button").on("click", function() {
+        $("input#answer" + window.questionId).val("time:SKIPPED; resets:" + shwaResets);
+        $("button#ls-button-submit").trigger("click");
     });
 
     // Add SHWA reset postMessage
-    $("#reset-shwa-button").on("click", function() {
-        $("#shwa-iframe")[0].contentWindow.postMessage("reset-state", "https://blackdragon17.github.io/Smarthome-Webshop-Assistant/");
+    $("button#reset-shwa-button").on("click", function() {
+        $("iframe#shwa-iframe")[0].contentWindow.postMessage("reset-state", "https://blackdragon17.github.io/Smarthome-Webshop-Assistant/");
+        shwaResets++;
     });
 });
