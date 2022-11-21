@@ -29,7 +29,10 @@ const taskTimeout = 5; // Task timeout in minutes
 let taskStartTime = 0;
 let shwaResets = 0;
 
+console.log("before load");
+
 $(document).on("ready pjax:scriptcomplete", function() {
+    console.log("after load");
     // Hide not needed elements
     $("button#ls-button-submit").hide();
     $("button#ls-button-previous").hide();
