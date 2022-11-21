@@ -1,6 +1,6 @@
 import htmlToElements from "./html-to-elements.js";
 
-let currentQuestionId = "";
+let proceedButton = "";
 
 const modalHtml = `
 <div id="timeout-modal" class="modal fade" tabindex="-1" role="dialog">
@@ -24,17 +24,19 @@ const modalHtml = `
 `.trim();
 const modalEl = htmlToElements(modalHtml);
 
-console.log("beginScripts:", $("div#beginScripts"));
-
 $("div#myModalPrivacyEN")[0].after(...modalEl);
 $("div#timeout-modal button#modal-proceed-button").on("click", function() {
-    console.log("modal: proceed");
+    if (proceedButton) {
+        $(proceedButton).trigger("click");
+    }
 });
 
 /**
- * @param {string} questionId
+ * Opens the timeout modal.
+ *
+ * @param {string} proceedButtonQuery query selector of which button click() on proceed button press.
  */
-export default function showModal(questionId) {
-    currentQuestionId = questionId;
+export default function showModal(proceedButtonQuery) {
+    proceedButton = proceedButtonQuery;
     $("div#timeout-modal").modal("show");
 }
