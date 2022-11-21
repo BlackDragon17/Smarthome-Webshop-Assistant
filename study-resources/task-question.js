@@ -1,4 +1,4 @@
-if (!window.questionId || typeof window.questionId !== "string" || !window.taskNumber || typeof window.taskNumber !== "number") {
+if (!window.questionId || typeof window.questionId !== "string" || window.taskNumber == null || typeof window.taskNumber !== "number") {
     throw new Error(`Global variables not set! questionId: ${window.questionId} taskNumber: ${window.taskNumber}`);
 }
 
