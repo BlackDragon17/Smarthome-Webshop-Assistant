@@ -1,4 +1,4 @@
-import htmlToElements from "./html-to-elements";
+import htmlToElements from "./html-to-elements.js";
 
 let currentQuestionId = "";
 
