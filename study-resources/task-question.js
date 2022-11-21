@@ -63,9 +63,9 @@ $(document).on("ready pjax:scriptcomplete", function() {
         }
 
         if (event.data === "task-successful") {
-            $("#" + window.questionId).val(Date.now() - taskStartTime);
+            $("input#answer" + window.questionId).val(Date.now() - taskStartTime);
         } else if (event.data === "task-failed") {
-            $("#" + window.questionId).val("FAILED");
+            $("input#answer" + window.questionId).val("FAILED");
         } else {
             return;
         }
@@ -94,7 +94,7 @@ $(document).on("ready pjax:scriptcomplete", function() {
 
         taskTimeoutTimerId = setTimeout(function() {
             $("#shwa-iframe")[0].contentWindow.postMessage("task-failed", "https://blackdragon17.github.io/Smarthome-Webshop-Assistant/");
-            $("#" + window.questionId).val("TIMEOUT");
+            $("input#answer" + window.questionId).val("TIMEOUT");
             $("#skip-task-button").hide();
             $("#reset-shwa-button").hide();
             $("#ls-button-submit").fadeIn(500);
@@ -102,7 +102,7 @@ $(document).on("ready pjax:scriptcomplete", function() {
     });
 
     $("#skip-task-button").on("click", function() {
-        $("#" + window.questionId).val("SKIPPED");
+        $("input#answer" + window.questionId).val("SKIPPED");
         $("#ls-button-submit").trigger("click");
     });
 
