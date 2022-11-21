@@ -1,10 +1,8 @@
 import htmlToElements from "./html-to-elements.js";
 import showModal from "./timeout-modal.js";
 
-if (!window.questionId || typeof window.questionId !== "string" || window.taskNumber == null || typeof window.taskNumber !== "number") {
-    throw new Error(`Global variables not set! questionId: ${window.questionId} taskNumber: ${window.taskNumber}`);
-}
-
+const cssImportHtml = `<link rel="stylesheet" href="https://blackdragon17.github.io/Smarthome-Webshop-Assistant/study-resources/task-question.css">`;
+const cssImportEl = htmlToElements(cssImportHtml);
 
 const iframeHtml = `
 <button type="button" id="start-task-button" class="btn btn-lg btn-success">Begin</button>
@@ -42,7 +40,7 @@ $(document).on("ready pjax:scriptcomplete", function() {
     $(".answer-container").hide();
 
     // Inject HTML
-    $("div#ls-question-text-" + window.questionId)[0].append(...iframeEl);
+    $("div#ls-question-text-" + window.questionId)[0].append(...cssImportEl, ...iframeEl);
     $("button#ls-button-submit")[0].after(...skipTaskButtonEl);
     $("div.col-xs-6.text-left")[0].after(...resetShwaButtonEl);
 
