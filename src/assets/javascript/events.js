@@ -31,6 +31,7 @@ const Events = {
     OPEN_DEVICE_INFO: "open-device-info",
     SHOW_TOOLTIP: "show-tooltip",
 
+    FILTER_VALUES_CHANGED: "filter-values-changed",
     PRINT_DEBUG: "print-debug",
 
     // postMessage study events

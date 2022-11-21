@@ -280,11 +280,11 @@ export default {
                 case "2":
                     success = this.checkTask2Success(currentSetup, sharedVars);
                     break;
-                case "3":
-                    success = this.checkTask3Success(currentSetup);
+                case "5":
+                    success = this.checkTask5Success(currentSetup);
                     break;
-                case "4":
-                    success = this.checkTask4Success();
+                default:
+                    success = false;
                     break;
             }
 
@@ -308,14 +308,30 @@ export default {
                 && foyerProduct.senses.includes("motion")
                 && (foyerProduct.network.zigbee || foyerProduct.network.lan);
         },
-        checkTask3Success(currentSetup) {
-            return currentSetup.devices.filter((device) => {
-                const product = this.allProducts[device.productId];
-                return product.category === "light" || product.category === "switch" || product.category.includes("switch");
-            }).length >= 3;
+        checkTask5Success(currentSetup) {
+            const setupProducts = currentSetup.devices.map(device => this.allProducts[device.productId]);
+            const lights = setupProducts.filter(product => product.category === "light");
+            const switches = setupProducts.filter(product => product.category === "switch" || product.category.includes("switch"));
+            return lights.length >= 2 && switches.length >= 1;
         },
-        checkTask4Success() {
-            return false;
+
+        /**
+         * The above checks are made specifically for checking the Home Setup state, which is managed by the App.
+         * Checking the filterValues state, which is managed by ProductDatabase, without cutting into the
+         * mid-action state which we explicitly avoid above, is easiest to be done separately via events.
+         *
+         * @param {FilterValues} filterValues the current filter values.
+         */
+        checkTask3Success(filterValues) {
+            if (filterValues.category === "light"
+                && filterValues.type === "bulb"
+                && filterValues.formFactor === "e14"
+                && !filterValues.anyBrand
+                && filterValues.brands
+            ) {
+                console.log("Task 3 successful.");
+                this.openTaskCompleteModal(Events.TASK_SUCCESSFUL);
+            }
         }
     },
 
@@ -325,7 +341,7 @@ export default {
 
     async created() {
         await this.parseUrlQuery();
-        this.$permissions.init(this.currentSetup.name, this.currentSetup.studySetup, this.$eventBus, this.allProducts);
+        this.$permissions.init(this.currentSetup.name, this.currentSetup.studySetup, this.$eventBus);
 
         // Online study-specific code
         if (!this.currentSetup.studySetup) {
@@ -360,6 +376,7 @@ export default {
         this.$eventBus.$on(Events.GET_NEW_PRODUCT, this.getNewProduct);
         this.$eventBus.$on(Events.GET_REPLACEMENT, this.getReplacement);
         this.$eventBus.$on(Events.REPLACE_DEVICE, this.replaceDevice);
+        this.$eventBus.$on(Events.FILTER_VALUES_CHANGED, this.checkTask3Success);
     },
 
     beforeUnmount() {
@@ -367,6 +384,7 @@ export default {
         this.$eventBus.$off(Events.GET_NEW_PRODUCT, this.getNewProduct);
         this.$eventBus.$off(Events.GET_REPLACEMENT, this.getReplacement);
         this.$eventBus.$off(Events.REPLACE_DEVICE, this.replaceDevice);
+        this.$eventBus.$off(Events.FILTER_VALUES_CHANGED, this.checkTask3Success);
     }
 };
 </script>

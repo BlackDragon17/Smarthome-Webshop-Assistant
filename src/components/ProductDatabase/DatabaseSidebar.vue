@@ -1,5 +1,5 @@
 <template>
-    <aside class="sidebar">
+    <aside class="sidebar" @change="filterValuesChanged">
         <button v-if="replaceId" class="cancel-replace-button btn btn-danger" @click="cancelReplacement">Cancel replacement</button>
 
         <h3 class="sidebar-heading">Filter products</h3>
@@ -414,7 +414,11 @@ export default {
                 return false;
             }
             return this.activeFilterRules[option].allowed !== "all" || this.activeFilterRules[option].required.length > 0;
-        }
+        },
+
+        filterValuesChanged() {
+            this.$eventBus.$emit(Events.FILTER_VALUES_CHANGED, this.filterValues);
+        },
     }
 };
 </script>

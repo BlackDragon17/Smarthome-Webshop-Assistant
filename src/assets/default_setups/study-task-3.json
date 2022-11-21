@@ -1,8 +1,82 @@
 {
   "controls": {
+    "assistants": [
+      "alexa"
+    ]
   },
   "rooms": [
+    {
+      "name": "Foyer",
+      "location": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "Living Room",
+      "location": {
+        "x": -1,
+        "y": 0
+      }
+    },
+    {
+      "name": "Kitchen",
+      "location": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    {
+      "name": "Bedroom",
+      "location": {
+        "x": -1,
+        "y": -1
+      }
+    },
+    {
+      "name": "Bathroom",
+      "location": {
+        "x": 0,
+        "y": -1
+      }
+    }
   ],
   "devices": [
+    {
+      "productId": "75e6f686-f057-4d84-86a5-95635f43a8be",
+      "localId": "c0bad215-c7d5-41f7-8ef5-3ab127350694",
+      "room": "Bedroom",
+      "location": 9
+    },
+    {
+      "productId": "e0626e96-0b93-44df-841c-7200a25a82fc",
+      "localId": "abf33fec-1753-41f3-bec6-12a7de40a918",
+      "room": "Bedroom",
+      "location": 1
+    },
+    {
+      "productId": "03137251-6156-45f9-b32e-fc6482cbba32",
+      "localId": "cd366b73-66f2-47ab-a496-6a9694d3b52f",
+      "room": "Living Room",
+      "location": 7
+    },
+    {
+      "productId": "3f57663c-39f0-452e-ab4c-c749ff4b017d",
+      "localId": "5fc97180-e73c-47f4-b0f3-058edc392386",
+      "room": "Living Room",
+      "location": 5
+    },
+    {
+      "productId": "9ee4cade-fccd-4d2a-bc23-6e41d1eb21b9",
+      "localId": "3478766c-57b6-42c8-bfc1-0ba8240b1fff",
+      "room": "Kitchen",
+      "location": 3
+    },
+    {
+      "productId": "30f60724-3466-4198-a6c7-19b97a0ebceb",
+      "localId": "76da9e21-1b73-4606-beea-cc37f00ac2cf",
+      "room": "Foyer",
+      "location": 7
+    }
   ]
 }

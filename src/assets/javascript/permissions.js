@@ -1,4 +1,5 @@
 import Events from "@/assets/javascript/events";
+import { useProductsStore } from "@/stores/products-store";
 
 /**
  * Checks whether the user can commit various actions in SHWA. Used for the study setups.
@@ -16,14 +17,12 @@ class Permissions {
      * @param {string} setupName
      * @param {boolean} studySetup
      * @param {EventBus} eventBus
-     * @param {Object} allProducts
      */
-    init(setupName, studySetup, eventBus, allProducts) {
+    init(setupName, studySetup, eventBus) {
         this.setupName = setupName;
         this.studySetup = studySetup;
         this.setupNumber = studySetup ? setupName.match(/\d/)?.[0] : null;
         this.eventBus = eventBus;
-        this.allProducts = allProducts;
     }
 
     /**
@@ -46,6 +45,7 @@ class Permissions {
                     return false;
                 }
                 return true;
+            case "3":
             case "4":
                 this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
@@ -69,6 +69,7 @@ class Permissions {
                     return false;
                 }
                 return true;
+            case "3":
             case "4":
                 this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
@@ -91,6 +92,7 @@ class Permissions {
                     return false;
                 }
                 return true;
+            case "3":
             case "4":
                 this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
@@ -109,12 +111,13 @@ class Permissions {
         switch (this.setupNumber) {
             case "1":
             case "2":
-                const product = this.allProducts[device.productId];
+                const product = useProductsStore().allProducts[device.productId];
                 if (["hub", "light"].some(category => product.category === category)) {
                     this.eventBus.$emit(Events.ILLEGAL_ACTION);
                     return false;
                 }
                 return true;
+            case "3":
             case "4":
                 this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
@@ -143,6 +146,7 @@ class Permissions {
                     return false;
                 }
                 return true;
+            case "3":
             case "4":
                 this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
@@ -163,6 +167,7 @@ class Permissions {
             case "2":
                 this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
+            case "3":
             case "4":
                 this.eventBus.$emit(Events.ILLEGAL_ACTION);
                 return false;
