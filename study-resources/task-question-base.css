@@ -1,0 +1,21 @@
+#shwa-iframe-container {
+    margin: auto;
+    width: 1px;
+    height: 50vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#shwa-iframe {
+    width: 90vw;
+
+    display: block;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+div.group-container {
+    margin-bottom: 0;
+}

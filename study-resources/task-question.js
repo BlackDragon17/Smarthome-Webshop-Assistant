@@ -45,7 +45,7 @@ $(document).on("ready pjax:scriptcomplete", function() {
     // Hide not needed elements
     $("#ls-button-submit").hide();
     $("#ls-button-previous").hide();
-    $(".question-container").css({ background: "none", border: "none" });
+    $(".question-container").css({background: "none", border: "none"});
     $(".answer-container").hide();
 
     // Inject HTML
@@ -54,24 +54,17 @@ $(document).on("ready pjax:scriptcomplete", function() {
     $("div.col-xs-6.text-left")[0].after(...resetShwaButtonEl);
 
     const navbarHeight = $(".navbar.navbar-default")[0].offsetHeight;
-    $("#shwa-iframe-container").css({ height: `calc(100vh - ${ navbarHeight }px - 20px)` });
+    $("#shwa-iframe-container").css({height: `calc(100vh - ${navbarHeight}px - 20px)`});
 
 
     window.addEventListener("message", (event) => {
-        if (event.origin !== "https://blackdragon17.github.io") {
-            return;
-        }
-
-        if (event.data === "task-successful") {
-            $("input#answer" + window.questionId).val(Date.now() - taskStartTime);
-        } else if (event.data === "task-failed") {
-            $("input#answer" + window.questionId).val("FAILED");
-        } else {
+        if (event.origin !== "https://blackdragon17.github.io" || event.data !== "task-successful") {
             return;
         }
 
         clearTimeout(skipButtonTimerId);
         clearTimeout(taskTimeoutTimerId);
+        $("input#answer" + window.questionId).val(Date.now() - taskStartTime);
         $("#skip-task-button").hide();
         $("#reset-shwa-button").hide();
         $("#ls-button-submit").fadeIn(500);
