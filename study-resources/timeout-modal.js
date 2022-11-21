@@ -24,6 +24,8 @@ const modalHtml = `
 `.trim();
 const modalEl = htmlToElements(modalHtml);
 
+console.log("beginScripts:", $("div#beginScripts"));
+
 $("div#myModalPrivacyEN")[0].after(...modalEl);
 $("div#timeout-modal button#modal-proceed-button").on("click", function() {
     console.log("modal: proceed");
