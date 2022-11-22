@@ -36,5 +36,5 @@ export default function showModal(proceedButtonQuery, timeoutDelayMin = 5) {
         }
     });
 
-    $("div#timeout-modal").modal("show");
+    $("div#timeout-modal").modal({backdrop: "static"});
 }

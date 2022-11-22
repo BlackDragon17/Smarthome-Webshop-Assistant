@@ -1,0 +1,22 @@
+@import "task-group.css";
+
+.normal-heading-text {
+    padding-bottom: 15px;
+    font-size: 28px;
+}
+
+/* Prettify free-text questions */
+div.row.text-short.question-container > div.question-title-container,
+div.row.text-long.question-container > div.question-title-container {
+    padding-bottom: 0;
+}
+
+.question-text {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+/* Prettify array questions */
+div.row.array-flexible-row.question-container > div.answer-container {
+    padding-bottom: 15px;
+}

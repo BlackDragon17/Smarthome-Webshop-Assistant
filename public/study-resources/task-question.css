@@ -1,5 +1,28 @@
-@import "task-question-base.css";
+/* iframe styles */
+#shwa-iframe-container {
+    margin: auto;
+    width: 1px;
+    height: 50vh;
 
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#shwa-iframe {
+    width: 90vw;
+
+    display: block;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+/* Reduce needless page length */
+div.group-container {
+    margin-bottom: 0;
+}
+
+/* Reset button styling */
 div.col-xs-6 {
     width: 33.3%;
 }
