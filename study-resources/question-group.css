@@ -1,10 +1,12 @@
 @import "task-group.css";
 
 .normal-heading-text {
+    padding-bottom: 15px;
     font-size: 28px;
 }
 
-/* Prettify long-text questions */
+/* Prettify free-text questions */
+div.row.text-short.question-container > div.question-title-container,
 div.row.text-long.question-container > div.question-title-container {
     padding-bottom: 0;
 }
