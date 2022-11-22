@@ -26,7 +26,7 @@ const resetShwaButtonEl = htmlToElements(resetShwaButtonHtml);
 
 
 // Define variables
-const skipButtonDelay = 15; // Button-show delay in seconds
+const skipButtonDelay = window.disableSkipTimer ? 0.1 : 15; // Button-show delay in seconds
 const taskTimeout = 5; // Task timeout in minutes
 
 let taskStartTime = null;
