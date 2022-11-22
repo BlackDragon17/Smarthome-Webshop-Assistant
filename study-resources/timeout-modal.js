@@ -12,7 +12,7 @@ const modalHtml = `
             </div>
             <div class="modal-body">
                 <p>This step of the study was meant to take less than 5 minutes of your time.</p>
-                <p>Would you like to proceed to the next step instead?</p>
+                <p>Would you like to proceed to the next study step now?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Stay on this step</button>

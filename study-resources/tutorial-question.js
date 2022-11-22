@@ -1,6 +1,7 @@
 import htmlToElements from "./html-to-elements.js";
 import showModal from "./timeout-modal.js";
 
+// Define HTML elements
 const cssImportHtml = `<link rel="stylesheet" href="https://blackdragon17.github.io/Smarthome-Webshop-Assistant/study-resources/task-question.css">`;
 const cssImportEl = htmlToElements(cssImportHtml);
 
@@ -22,14 +23,12 @@ const resetShwaButtonHtml = `
 `.trim();
 const resetShwaButtonEl = htmlToElements(resetShwaButtonHtml);
 
-
+// Define variables
 const skipButtonDelay = 10; // Button-show delay in seconds
 const taskTimeout = 5; // Task timeout in minutes
 
 let taskStartTime = 0;
 let shwaResets = 0;
-
-console.log("load");
 
 // Hide not needed elements
 $("button#ls-button-submit").hide();
@@ -50,6 +49,7 @@ $("#shwa-iframe-container").css({height: `calc(100vh - ${navbarHeight}px - 20px)
 $("button#start-task-button").on("click", function() {
     $("button#start-task-button").hide();
     $("div#shwa-iframe-container").show();
+    $("button#reset-shwa-button").show();
     setTimeout(() => $("button#own-submit-button").fadeIn(500), skipButtonDelay * 1000);
     setTimeout(() => showModal("button#own-submit-button"), taskTimeout * 60000);
 
