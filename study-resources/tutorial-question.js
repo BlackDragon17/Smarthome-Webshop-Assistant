@@ -51,7 +51,8 @@ $("button#start-task-button").on("click", function() {
     $("div#shwa-iframe-container").show();
     $("button#reset-shwa-button").show();
     setTimeout(() => $("button#own-submit-button").fadeIn(500), skipButtonDelay * 1000);
-    setTimeout(() => showModal("button#own-submit-button"), taskTimeout * 60000);
+    // setTimeout(() => showModal("button#own-submit-button"), taskTimeout * 60000);
+    setTimeout(() => showModal("button#own-submit-button"), 5 * 1000);
 
     const containerPosition = $("div#shwa-iframe-container")[0].getBoundingClientRect().top;
     const offsetPosition = containerPosition + window.pageYOffset - navbarHeight - 10;
