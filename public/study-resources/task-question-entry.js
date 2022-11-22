@@ -16,6 +16,7 @@ switch (window.taskNumber) {
         import("./task-question.js");
         break;
     case 4:
+        import("./task-4-question.js");
         break;
     case 5:
         window.questionId = "563851X1016X16181";

@@ -14,8 +14,8 @@ const iframeHtml = `
 `.trim();
 const iframeEl = htmlToElements(iframeHtml);
 
-const skipTaskButtomHtml = `<button type="button" id="skip-task-button" class="btn btn-lg btn-danger" style="display: none;">Skip step</button>`;
-const skipTaskButtonEl = htmlToElements(skipTaskButtomHtml);
+const ownSubmitButtonHtml = `<button type="button" id="own-submit-button" class="btn btn-lg btn-primary" style="display: none;">Next</button>`;
+const ownSubmitButtonEl = htmlToElements(ownSubmitButtonHtml);
 
 const resetShwaButtonHtml = `
 <div id="reset-button-container" class="col-xs-6 text-middle">
@@ -26,25 +26,31 @@ const resetShwaButtonEl = htmlToElements(resetShwaButtonHtml);
 
 
 // Define variables
-const skipButtonDelay = 15; // Button-show delay in seconds
+const questionId = "563851X1005X15665";
+const radioInputIds = [
+    "answer563851X1005X15667Yes", "answer563851X1005X15667No", "answer563851X1005X15667"
+];
+
 const taskTimeout = 5; // Task timeout in minutes
 
 let taskStartTime = null;
 let shwaResets = 0;
-let skipButtonTimerId = null;
-let taskTimeoutTimerId = null;
 
 
 // Hide not needed elements
 $("button#ls-button-submit").hide();
 $("button#ls-button-previous").hide();
-$(".question-container").css({background: "none", border: "none"});
-$(".answer-container").hide();
+$("#question15665").css({background: "none", border: "none"});
+$("#question15665 > .answer-container").hide();
+
+for (const item of radioInputIds) {
+    $("#" + item).prop("disabled", true);
+}
 
 
 // Inject HTML
-$("div#ls-question-text-" + window.questionId)[0].append(...cssImportEl, ...iframeEl);
-$("button#ls-button-submit")[0].after(...skipTaskButtonEl);
+$("div#ls-question-text-" + questionId)[0].append(...cssImportEl, ...iframeEl);
+$("button#ls-button-submit")[0].after(...ownSubmitButtonEl);
 $("div.col-xs-6.text-left")[0].after(...resetShwaButtonEl);
 
 
@@ -53,29 +59,16 @@ const navbarHeight = $(".navbar.navbar-default")[0].offsetHeight;
 $("div#shwa-iframe-container").css({height: `calc(100vh - ${navbarHeight}px - 20px)`});
 
 
-// Add postMessage listener
-window.addEventListener("message", (event) => {
-    if (event.origin !== "https://blackdragon17.github.io" || event.data !== "task-successful") {
-        return;
-    }
-
-    clearTimeout(skipButtonTimerId);
-    clearTimeout(taskTimeoutTimerId);
-    const taskTime = Date.now() - taskStartTime;
-    $("input#answer" + window.questionId).val(`time:${taskTime}; resets:${shwaResets}`);
-    $("button#skip-task-button").hide();
-    $("button#reset-shwa-button").hide();
-    $("button#ls-button-submit").fadeIn(500);
-});
-
-
 // Set task start logic
 $("button#start-task-button").on("click", function() {
     $("button#start-task-button").hide();
     $("div#shwa-iframe-container").show();
-    $("button#reset-shwa-button").show();
-    skipButtonTimerId = setTimeout(() => $("button#skip-task-button").fadeIn(500), skipButtonDelay * 1000);
-    taskTimeoutTimerId = setTimeout(() => showModal("button#skip-task-button", taskTimeout), taskTimeout * 60000);
+    $("button#own-submit-button").show();
+    setTimeout(() => showModal("button#own-submit-button", taskTimeout), taskTimeout * 60000);
+
+    for (const item of radioInputIds) {
+        $("#" + item).prop("disabled", false);
+    }
 
     const containerPosition = $("div#shwa-iframe-container")[0].getBoundingClientRect().top;
     const offsetPosition = containerPosition + window.pageYOffset - navbarHeight - 10;
@@ -88,9 +81,10 @@ $("button#start-task-button").on("click", function() {
 });
 
 
-// Set task skip logic
-$("button#skip-task-button").on("click", function() {
-    $("input#answer" + window.questionId).val("time:SKIPPED; resets:" + shwaResets);
+// Set task submit logic
+$("button#own-submit-button").on("click", function() {
+    const taskTime = Date.now() - taskStartTime;
+    $("input#answer" + questionId).val(`time:${taskTime}; resets:${shwaResets}`);
     $("button#ls-button-submit").trigger("click");
 });
 
