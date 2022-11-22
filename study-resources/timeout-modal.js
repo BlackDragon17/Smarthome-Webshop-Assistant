@@ -1,6 +1,7 @@
 import htmlToElements from "./html-to-elements.js";
 
 let proceedButton = "";
+let timeoutMinutes = 0;
 
 const modalHtml = `
 <div id="timeout-modal" class="modal fade" tabindex="-1" role="dialog">
@@ -11,7 +12,7 @@ const modalHtml = `
                 <h4 class="modal-title">Would you like to proceed?</h4>
             </div>
             <div class="modal-body">
-                <p>This step of the study was meant to take less than 5 minutes of your time.</p>
+                <p>This step of the study was meant to take less than ${timeoutMinutes} minutes of your time.</p>
                 <p>Would you like to proceed to the next study step now?</p>
             </div>
             <div class="modal-footer">
@@ -36,7 +37,8 @@ $("div#timeout-modal button#modal-proceed-button").on("click", function() {
  *
  * @param {string} proceedButtonQuery query selector of which button click() on proceed button press.
  */
-export default function showModal(proceedButtonQuery) {
+export default function showModal(proceedButtonQuery, timeoutDelayMin) {
     proceedButton = proceedButtonQuery;
+    timeoutMinutes = timeoutDelayMin;
     $("div#timeout-modal").modal("show");
 }
