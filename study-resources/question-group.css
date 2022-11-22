@@ -20,3 +20,8 @@ div.row.text-long.question-container > div.question-title-container {
 div.row.array-flexible-row.question-container > div.answer-container {
     padding-bottom: 15px;
 }
+
+div.answer-container > div.ls-answers.text-item > input[type=number] {
+    width: unset;
+    min-width: 15rem;
+}
