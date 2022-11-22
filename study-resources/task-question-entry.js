@@ -1,3 +1,5 @@
+window.disableSkipTimer = true;
+
 switch (window.taskNumber) {
     case 0:
         window.questionId = "563851X974X15289";
