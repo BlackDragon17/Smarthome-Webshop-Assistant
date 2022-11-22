@@ -1,5 +1,6 @@
-import htmlToElements from "./html-to-elements.js";
-import showModal from "./timeout-modal.js";
+import htmlToElements from "./util/html-to-elements.js";
+import showModal from "./util/timeout-modal.js";
+import scrollTo from "./util/scroll-to.js";
 
 
 // Define HTML elements
@@ -56,15 +57,10 @@ $("button#start-task-button").on("click", function() {
     $("button#start-task-button").hide();
     $("div#shwa-iframe-container").show();
     $("button#reset-shwa-button").show();
+
     setTimeout(() => $("button#own-submit-button").fadeIn(500), skipButtonDelay * 1000);
     setTimeout(() => showModal("button#own-submit-button", taskTimeout), taskTimeout * 60000);
-
-    const containerPosition = $("div#shwa-iframe-container")[0].getBoundingClientRect().top;
-    const offsetPosition = containerPosition + window.pageYOffset - navbarHeight - 10;
-    window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-    });
+    scrollTo($("div#shwa-iframe-container")[0]);
 
     taskStartTime = Date.now();
 });
