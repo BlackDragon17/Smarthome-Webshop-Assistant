@@ -150,7 +150,7 @@
             </div>
 
             <!-- Form factor -->
-            <div class="filter-group" v-if="filterValues.type === 'bulb'">
+            <div class="filter-group" v-if="showFormFactorFilters" @change="formFactorChanged">
                 <h4 class="filter-group-heading">Form factor</h4>
                 <div class="form-check">
                     <input type="radio"
@@ -361,6 +361,10 @@ export default {
             return this.compatFiltersControl.value ? this.filterRules : new FilterRules();
         },
 
+        showFormFactorFilters() {
+            return this.filterValues.category === "light" && (this.filterValues.type === "any" || this.filterValues.type === "bulb");
+        },
+
         filterListBorder() {
             return import.meta.env.PROD || this.hideBorders ? "none" : "1px solid darkgoldenrod";
         }
@@ -380,6 +384,11 @@ export default {
         },
         typeChanged() {
             this.filterValues.resetProperties("formFactor");
+        },
+        formFactorChanged() {
+            if (this.filterValues.category === "light" && this.filterValues.type !== "bulb" && this.filterValues.formFactor !== "any") {
+                this.filterValues.type = "bulb";
+            }
         },
 
 

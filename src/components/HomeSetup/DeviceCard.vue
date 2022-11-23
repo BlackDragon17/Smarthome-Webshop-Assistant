@@ -7,7 +7,7 @@
             <span class="device-name">{{ product.brand }} {{ product.model }}</span>
             <span class="device-location">
                 <span class="emphasized-text">{{ $getName.categoryHeadingSingular(product.category) }}</span>
-                in the
+                in
                 <span class="emphasized-text">{{ device.room.toLowerCase() }}</span>
             </span>
         </span>

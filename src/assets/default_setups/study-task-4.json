@@ -1,7 +1,7 @@
 {
   "controls": {
     "assistants": [
-      "homeKit"
+      "alexa"
     ]
   },
   "rooms": [

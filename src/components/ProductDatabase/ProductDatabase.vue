@@ -135,7 +135,7 @@ export default {
             // console.log("amount after filter step 2:", filteredProducts.length);
             // Form factor
             if (this.filterValues.formFactor !== this.defaultFilterValues.formFactor) {
-                if (this.filterValues.type === "bulb") {
+                if (this.filterValues.category === "light" && this.filterValues.type === "bulb") {
                     filteredProducts = filteredProducts.filter(product => product.socket === this.filterValues.formFactor);
                 }
             }
@@ -678,7 +678,7 @@ export default {
             // We only want pre-selections to apply when the "compatibility filters" switch is on.
             // Conditional usage of the productsMap based on the switch for filtering products is realized inside the filteredProducts function.
             handler(newValue) {
-                this.filterValues.resetAllProperties("category");
+                this.filterValues.resetAllProperties("category", "anyBrand", "brands");
                 if (newValue) {
                     this.createFilterValues(this.filterValues);
                 }
