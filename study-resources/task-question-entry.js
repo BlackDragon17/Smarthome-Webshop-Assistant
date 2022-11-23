@@ -1,4 +1,4 @@
-window.disableSkipTimer = true;
+window.disableSkipTimer = false;
 
 switch (window.taskNumber) {
     case 0:
