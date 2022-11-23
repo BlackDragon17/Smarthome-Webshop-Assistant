@@ -92,12 +92,19 @@ export default class GetName {
         }
     }
 
+    allCategories = {
+        hub: "Hub",
+        light: "Light",
+        switch: "Switch / Button",
+        sensor: "Sensor"
+    };
+
     allAssistants = {
         alexa: "Alexa",
         googleAssistant: "Google Assistant",
         homeKit: "Apple HomeKit",
-        smartThings: "Samsung SmartThings",
-    }
+        smartThings: "Samsung SmartThings"
+    };
 
     allControls = {
         ...this.allAssistants,

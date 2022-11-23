@@ -102,7 +102,7 @@ export default {
             }
         },
         emitPrintDebug(event) {
-            if (event.keyCode === 68) {
+            if (event.key.toLowerCase() === "d") {
                 this.$eventBus.$emit(Events.PRINT_DEBUG);
             }
         },
@@ -135,7 +135,7 @@ export default {
         this.$eventBus.$on(Events.OPEN_DEVICE_INFO, this.openDeviceInfo);
         this.$eventBus.$on(Events.POPOVER_SHOWN, this.setPopoverShown);
 
-        window.addEventListener("keydown", this.emitPrintDebug);
+        window.addEventListener("keyup", this.emitPrintDebug);
     },
 
     beforeUnmount() {
@@ -144,7 +144,7 @@ export default {
         this.$eventBus.$off(Events.OPEN_DEVICE_INFO, this.openDeviceInfo);
         this.$eventBus.$off(Events.POPOVER_SHOWN, this.setPopoverShown);
 
-        window.removeEventListener("keydown", this.emitPrintDebug);
+        window.removeEventListener("keyup", this.emitPrintDebug);
     }
 };
 </script>
