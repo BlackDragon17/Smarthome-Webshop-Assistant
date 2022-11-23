@@ -1,0 +1,24 @@
+{
+  "brand": "LIFX",
+  "model": "Smart Switch White 2 Button",
+  "generation": "N/A",
+  "revision": "2021",
+  "category": "switch",
+  "type": "switch",
+  "subtype": "lightSwitch",
+  "network": {
+    "lan": [
+      "wifi"
+    ],
+    "wifi": [
+      "2.4GHz"
+    ]
+  },
+  "powerSource": [
+    "self"
+  ],
+  "amazonDP": {
+    "com": "B09FRJPHM1"
+  },
+  "productId": "7894310a-7bb4-445b-b151-c3c106537a0e"
+}
