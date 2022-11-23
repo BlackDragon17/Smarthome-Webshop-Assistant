@@ -1,5 +1,5 @@
 <template>
-    <Teleport to="body" v-if="visualizerOpen">
+    <Teleport to="body">
         <div ref="background" class="background">
             <div class="device-grid">
                 <div class="device" v-for="n in gridColumns * gridRows">
@@ -13,14 +13,11 @@
 </template>
 
 <script>
-import { nextTick } from "vue";
-
 export default {
     name: "Visualizer",
 
     data() {
         return {
-            visualizerOpen: false,
             gridColumns: 1,
             gridRows: 1,
             remInPx: 16,
@@ -29,37 +26,6 @@ export default {
     },
 
     methods: {
-        async openVisualizer() {
-            if (this.visualizerOpen) {
-                return;
-            }
-
-            this.visualizerOpen = true;
-            await nextTick();
-
-            window.addEventListener("keyup", this.handleEsc);
-            this.resizeObserver = new ResizeObserver(this.setGridDimensions);
-            this.resizeObserver.observe(this.$refs.background);
-        },
-
-        closeVisualizer() {
-            if (!this.visualizerOpen) {
-                return;
-            }
-
-            window.removeEventListener("keyup", this.handleEsc);
-            this.resizeObserver.disconnect();
-            this.resizeObserver = null;
-
-            this.visualizerOpen = false;
-        },
-
-        handleEsc(event) {
-            if (event.key === "Escape") {
-                this.closeVisualizer();
-            }
-        },
-
         randomDeviceContent() {
             const allCategories = Object.keys(this.$getName.allCategories);
             const randomInt = Math.floor(Math.random() * allCategories.length);
@@ -80,6 +46,9 @@ export default {
 
     mounted() {
         this.remInPx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("font-size"));
+
+        this.resizeObserver = new ResizeObserver(this.setGridDimensions);
+        this.resizeObserver.observe(this.$refs.background);
     }
 };
 </script>

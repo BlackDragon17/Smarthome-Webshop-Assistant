@@ -1,10 +1,8 @@
 <template>
-    <Visualizer ref="visualizer" v-if="allowVisualizer"/>
     <ModifyControlsModal ref="modifyControlsModal" :setup-controls="currentSetup.controls"/>
     <aside class="sidebar">
         <button v-if="setupHasRooms" class="add-device-button btn btn-success" @click="addNewDevice">Add new device</button>
         <button class="modify-controls-button btn btn-secondary" @click="openControlsModal">Modify your controls</button>
-        <button v-if="allowVisualizer" class="btn btn-secondary" @click="$refs.visualizer.openVisualizer()">Open Visualiser</button>
 
         <div class="sort-group">
             <span class="sort-label">Sort devices by</span>
@@ -46,7 +44,6 @@ import { mapState } from "pinia";
 import { useProductsStore } from "@/stores/products-store";
 import ModifyControlsModal from "./modals/ModifyControlsModal.vue";
 import DeviceCard from "@/components/HomeSetup/DeviceCard.vue";
-import Visualizer from "@/components/Visualizer.vue";
 import Events from "@/assets/javascript/events";
 
 export default {
@@ -54,14 +51,12 @@ export default {
 
     components: {
         ModifyControlsModal,
-        DeviceCard,
-        Visualizer
+        DeviceCard
     },
 
     data() {
         return {
-            sortByRoom: false,
-            allowVisualizer: false
+            sortByRoom: false
         };
     },
 

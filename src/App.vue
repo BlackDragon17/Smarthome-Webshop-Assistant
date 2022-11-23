@@ -21,7 +21,8 @@
 
     <TutorialTooltips v-if="showTutorial" :active-view="activeView"/>
     <TutorialTooltip/>
-    <Alerts :study-setup="this.currentSetup?.studySetup"/>
+    <Alerts :study-setup="currentSetup?.studySetup"/>
+    <Visualizer v-if="currentSetup?.name === 'visualizer'"/>
 </template>
 
 <script>
@@ -37,6 +38,7 @@ import TaskCompleteModal from "@/components/TaskCompleteModal.vue";
 import TutorialTooltips from "@/components/TutorialTooltips.vue";
 import TutorialTooltip from "@/components/TutorialTooltip.vue";
 import Alerts from "@/components/Alerts.vue";
+import Visualizer from "@/components/Visualizer.vue";
 
 const defaultView = "HomeSetup";
 
@@ -50,7 +52,8 @@ export default {
         TaskCompleteModal,
         TutorialTooltips,
         TutorialTooltip,
-        Alerts
+        Alerts,
+        Visualizer
     },
 
     data() {
