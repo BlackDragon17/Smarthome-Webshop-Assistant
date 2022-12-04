@@ -1,6 +1,9 @@
 {
   "name": "smarthome-webshop-assistant",
   "version": "0.4.0",
+  "author": "Michal",
+  "description": "A webshop-like assistant for finding compatible smart home products.",
+  "homepage": "https://github.com/BlackDragon17/Smarthome-Webshop-Assistant",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
