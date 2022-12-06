@@ -15,7 +15,7 @@
     ]
   },
   "powerSource": [
-    "self"
+    "wall"
   ],
   "amazonDP": {
     "com": "B09FRJPHM1"

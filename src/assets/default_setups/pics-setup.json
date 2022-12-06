@@ -1,0 +1,97 @@
+{
+  "controls": {
+    "assistants": [
+      "alexa"
+    ],
+    "brandApps": [
+      "LIFX", "Ikea"
+    ]
+  },
+  "rooms": [
+    {
+      "name": "Kitchen",
+      "location": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "Bathroom",
+      "location": {
+        "x": -1,
+        "y": 0
+      }
+    },
+    {
+      "name": "Living Room",
+      "location": {
+        "x": 0,
+        "y": -1
+      }
+    },
+    {
+      "name": "Bedroom",
+      "location": {
+        "x": 1,
+        "y": -1
+      }
+    },
+    {
+      "name": "Balcony",
+      "location": {
+        "x": 0,
+        "y": -2
+      }
+    }
+  ],
+  "devices": [
+    {
+      "productId": "e0626e96-0b93-44df-841c-7200a25a82fc",
+      "localId": "5fc97180-e73c-47f4-b0f3-058edc392386",
+      "room": "Living Room",
+      "location": 5
+    },
+    {
+      "productId": "30f60724-3466-4198-a6c7-19b97a0ebceb",
+      "localId": "444f815a-1418-42fd-9f55-e6392258af52",
+      "room": "Living Room",
+      "location": 7
+    },
+    {
+      "productId": "2d863444-87aa-46d4-a9c1-0aaafbab1c90",
+      "localId": "c0bad215-c7d5-41f7-8ef5-3ab127350694",
+      "room": "Living Room",
+      "location": 7
+    },
+    {
+      "productId": "03137251-6156-45f9-b32e-fc6482cbba32",
+      "localId": "cd366b73-66f2-47ab-a496-6a9694d3b52f",
+      "room": "Living Room",
+      "location": 7
+    },
+    {
+      "productId": "3c5367c4-7554-4a5b-8413-22a1f7086720",
+      "localId": "f429bde8-570a-416d-83e0-884e8b4d0153",
+      "room": "Living Room",
+      "location": 7
+    },
+    {
+      "productId": "f9455816-348d-4936-97fc-cbf6085ae45e",
+      "localId": "abf33fec-1753-41f3-bec6-12a7de40a918",
+      "room": "Bedroom",
+      "location": 7
+    },
+    {
+      "productId": "239f42e6-0fa0-474f-b3bc-f1587445e35c",
+      "localId": "982179a3-c956-49c0-8a4f-4fd38c947ca4",
+      "room": "Bedroom",
+      "location": 8
+    },
+    {
+      "productId": "c846940e-f68c-4b14-808b-5c35dee691de",
+      "localId": "500385de-6794-4e10-9fd1-a60dab3d722e",
+      "room": "Kitchen",
+      "location": 9
+    }
+  ]
+}
