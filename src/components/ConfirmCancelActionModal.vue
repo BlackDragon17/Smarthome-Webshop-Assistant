@@ -59,6 +59,8 @@ export default {
                         return "adding a new room";
                     case "removing-room":
                         return "removing a room";
+                    case "adding-device":
+                        return "adding a new device";
                     case "moving-device":
                         return "moving one of your devices";
                 }
