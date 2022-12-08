@@ -12,7 +12,8 @@
                             Are you sure you want to remove the "<strong>{{ removingRoom.name }}</strong>" from your home?
                         </div>
                         <div v-else>
-                            The <strong>{{ removingRoom.name }}</strong> contains <strong>{{ roomDevices.length }}</strong> devices.
+                            The <strong>{{ removingRoom.name }}</strong> contains <strong>{{ roomDevices.length }}</strong>
+                            {{ roomDevices.length === 1 ? "device" : "devices" }}.
                             What would you like to do with them?
                             <div class="devices-button-group btn-group-vertical"
                                  role="group"
