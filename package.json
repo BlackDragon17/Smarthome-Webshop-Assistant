@@ -1,6 +1,6 @@
 {
   "name": "smarthome-webshop-assistant",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Michal",
   "description": "A webshop-like assistant for finding compatible smart home products.",
   "homepage": "https://github.com/BlackDragon17/Smarthome-Webshop-Assistant",
@@ -18,8 +18,8 @@
     "vue-select": "^4.0.0-beta.6"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "~3.2.0",
+    "@vitejs/plugin-vue": "~4.0.0",
     "execa": "~6.1.0",
-    "vite": "~3.2.5"
+    "vite": "~4.0.0"
   }
 }
