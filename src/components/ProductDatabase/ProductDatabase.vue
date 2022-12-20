@@ -188,7 +188,7 @@ export default {
         createCompatFilters() {
             this.filterRules = new FilterRules();
 
-            // If the user has specified no control methods, add allAssistants to controls,
+            // If the user has specified no control methods, add all assistants to controls,
             // except for Apple HomeKit, as that comes with many restrictions.
             let mockedAssistants = false;
             if (this.currentSetup.controls.assistants.length <= 0 && this.currentSetup.controls.brandApps.length <= 0) {
@@ -199,8 +199,8 @@ export default {
 
             // Find setup hubs which support user's preferred control method.
             const setupHubs = this.setupProducts.filter(product => product.category === "hub" && (
-                (this.currentSetup.controls.assistants.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
-                    || (this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
+                (this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
+                    || (product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
             ));
 
             // The user's non-hub products
@@ -249,25 +249,22 @@ export default {
                         }).forEach(product => productsMap.set(product.productId, product));
                     }
                 } else if (hub.brand === "Amazon") {
-                    if (hub.model === "Echo" || hub.model.includes("Echo Studio") || hub.model.includes("Echo Show 10")) {
-                        // The Amazon Echo, Echo Studio, and Echo Show 10 can speak to Zigbee devices,
-                        // as well as to Philips Hue and Ledvance Bluetooth devices (via custom Alexa Gadget interfaces).
-                        // Note that devices communicating with Alexa via Wi-Fi do not ever (directly) communicate to an Echo devices and are thus not relevant here.
-                        const relevantProducts = products.filter(product => product.network.zigbee
-                            || (product.brand === "Philips Hue" && product.network.bluetooth)
-                            || (product.brand === "Ledvance" && product.network.bluetooth));
-                        this.filterRules.networks.addAllowed("zigbee");
+                    // The Amazon Echo, Echo Studio, and Echo Show 10 can speak to Zigbee devices,
+                    // as well as to Philips Hue and Ledvance Bluetooth devices (via custom Alexa Gadget interfaces).
+                    // Note that devices communicating with Alexa via Wi-Fi do not ever (directly) communicate to an Echo device and are thus not relevant here.
+                    const bluetoothProducts = products.filter(product => product.network.bluetooth
+                        && (product.brand === "Philips Hue" || product.brand === "Ledvance"));
 
-                        // No further filtering needed.
-                        relevantProducts.map(product => {
+                    if (hub.model === "Echo" || hub.model.includes("Echo Studio") || hub.model.includes("Echo Show 10")) {
+                        this.filterRules.networks.addAllowed("zigbee");
+                        products.filter(product => product.network.zigbee).concat(bluetoothProducts).map(product => {
                             product.compatScore = 5;
                             product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
                             return product;
                         }).forEach(product => productsMap.set(product.productId, product));
                     } else {
                         // Other Echos only do Bluetooth.
-                        const relevantProducts = products.filter(product => product.brand === "Philips Hue" && product.network.bluetooth);
-                        relevantProducts.map(product => {
+                        bluetoothProducts.map(product => {
                             product.compatScore = 5;
                             product.compatMsg = `Can connect to your ${hub.brand} ${hub.model} hub.`;
                             return product;

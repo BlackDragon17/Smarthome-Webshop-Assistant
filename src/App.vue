@@ -171,10 +171,10 @@ export default {
                 assistants: [],
                 brandApps: []
             };
-            if (Array.isArray(setup.controls.assistants) && setup.controls.assistants.length > 0) {
+            if (Array.isArray(setup.controls.assistants)) {
                 controls.assistants = setup.controls.assistants.filter(assistant => Object.keys(this.$getName.allAssistants).includes(assistant));
             }
-            if (Array.isArray(setup.controls.brandApps) && setup.controls.brandApps.length > 0) {
+            if (Array.isArray(setup.controls.brandApps)) {
                 controls.brandApps = setup.controls.brandApps.filter(brandApp => brandApp && typeof brandApp === "string");
             }
 
