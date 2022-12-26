@@ -312,6 +312,7 @@ export default {
                     for (const setupProduct of relevantSetupProducts) {
                         // An exception is made for Philips Hue, where other vendors can implement the Friends Of Hue protocol.
                         if (setupProduct.brand === "Philips Hue") {
+                            // Philips only does direct or hub-less switch connections via Bluetooth.
                             if (!setupProduct.network.bluetooth) {
                                 continue;
                             }
@@ -337,7 +338,7 @@ export default {
             // Special Ikea rule
             // Unlike with most Zigbee products, Ikea's implementation of Zigbee allows their devices to communicate with each other, even without a network-orchestrating hub.
             // This mode does limit the network to 10 Ikea devices and is not preferable when a hub is available.
-            // (In essence, this extends the non-Philips case of the switches-logic, but for all categories of Ikea products.)
+            // (In essence, this extends the non-Philips case of the switches-logic, but for all categories of Ikea products. E.g., motion sensor can control lights directly here.)
             if (!setupHubs.find(hub => hub.network.zigbee && hub.brand !== "Philips Hue")
                 && setupProducts.find(product => product.brand === "Ikea" && product.network.zigbee)) {
                 // Due to the restrictiveness of Philips Hue hubs, their existence is nearly the same as no hub.
@@ -362,12 +363,12 @@ export default {
             // Hubs filtering
             // Unlike with the filtering of other devices, the general compatibility filtering of hubs will not be adding any network entries to FilterRules.
             // This is because we cannot make any pre-selections in an all-of filter, as that could cause us to not display any compatible products.
-            // Leaving networks filtering at any-of for hubs isn't an option either, since the user would then have no way of e.g. enforcing the hubs to have Bluetooth.
+            // Leaving networks filtering at any-of for hubs isn't an option either, since the user would then have no way of e.g. enforcing the hubs to have Bluetooth and Zigbee.
             // The option of mixing all-of and any-of with visual annotation is overly complex both for the usability and program logic. Thus, no pre-selections.
             this.findCompatibleHubs(setupProducts, productsMap);
 
 
-            // Reverse the mocking of assistants described above, if it had been done
+            // Reverse the mocking of assistants described above, if it had been done.
             if (mockedAssistants) {
                 this.currentSetup.controls.assistants = [];
             }
@@ -385,9 +386,8 @@ export default {
         findCompatibleHubs(setupProducts, productsMap) {
             // Get all hub products which support the user's preferred control method.
             let hubs = Object.values(this.allProducts).filter(product => product.category === "hub" && (
-                (this.currentSetup.controls.assistants.length > 0 && this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant))
-                    || (this.currentSetup.controls.brandApps.length > 0 && product.control.includes("brandApp")
-                        && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
+                this.currentSetup.controls.assistants.some(assistant => product.control.includes(assistant)
+                    || (product.control.includes("brandApp") && this.currentSetup.controls.brandApps.some(brand => brand === product.brand)))
             ));
 
             // Similarly to how product filtering is setupHub-centric, hub filtering is setupProduct-centric,
@@ -412,8 +412,8 @@ export default {
             }
 
             // Amazon Echo hubs offer the unique capability of controlling Philips Hue and Ledvance devices via Bluetooth.
-            if (setupProducts.filter(product => (product.brand === "Philips Hue" || product.brand === "Ledvance")
-                && product.category === "light" && product.network.bluetooth).length > 0) {
+            if (setupProducts.find(product => (product.brand === "Philips Hue" || product.brand === "Ledvance")
+                && product.category === "light" && product.network.bluetooth)) {
                 const relevantHubs = hubs.filter(hub => hub.brand === "Amazon" && hub.model.includes("Echo"));
                 relevantHubs.map(hub => {
                     hub.compatScore = 3;
@@ -598,7 +598,7 @@ export default {
         /**
          * Computes pre-selections of the sidebar filter checkboxes (modelled via filterValues)
          * based on the FilterRules created by {@link createCompatFilters}.
-         * @param {Object} [filterValues] filterValues instance to base the new filterValues off of.
+         * @param {FilterValues} [filterValues] filterValues instance to base the new filterValues off of.
          */
         createFilterValues(filterValues) {
             const baseFilters = filterValues ? filterValues : new FilterValues();
